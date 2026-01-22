@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "618012473906",
+    "project_id": "fixsy-app-1d3b7",
+    "storage_bucket": "fixsy-app-1d3b7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:618012473906:android:7c53ef2b3f32cd12ff5a2b",
+        "android_client_info": {
+          "package_name": "com.aplus.fixsy.fixsy_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "618012473906-fcop4um4knp3fjp128redh18jjr5d7qb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrTZ66VdbVYEkuhuEE88DMhlt-osYXr1g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "618012473906-fcop4um4knp3fjp128redh18jjr5d7qb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
