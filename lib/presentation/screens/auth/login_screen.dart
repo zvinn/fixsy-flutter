@@ -28,9 +28,6 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _obscurePassword = true;
   bool _rememberMe = false;
   
-  // Admin credentials - للاختبار
-  static const String _testEmail = 'mhamed.saad.ibrahim@gmail.com';
-  static const String _testPassword = 'Admin@Fixsy2026';
 
   @override
   void initState() {
@@ -42,13 +39,11 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       final prefs = await SharedPreferences.getInstance();
       final savedEmail = prefs.getString('saved_email');
-      final savedPassword = prefs.getString('saved_password');
       final rememberMe = prefs.getBool('remember_me') ?? false;
       
-      if (rememberMe && savedEmail != null && savedPassword != null) {
+      if (rememberMe && savedEmail != null) {
         setState(() {
           _emailController.text = savedEmail;
-          _passwordController.text = savedPassword;
           _rememberMe = true;
         });
       }
@@ -62,11 +57,10 @@ class _LoginScreenState extends State<LoginScreen> {
       final prefs = await SharedPreferences.getInstance();
       if (_rememberMe) {
         await prefs.setString('saved_email', _emailController.text);
-        await prefs.setString('saved_password', _passwordController.text);
         await prefs.setBool('remember_me', true);
       } else {
         await prefs.remove('saved_email');
-        await prefs.remove('saved_password');
+        await prefs.remove('saved_password'); // Ensure password is gone if old version saved it
         await prefs.setBool('remember_me', false);
       }
     } catch (e) {
@@ -74,16 +68,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void _fillTestCredentials() {
-    setState(() {
-      _emailController.text = _testEmail;
-      _passwordController.text = _testPassword;
-    });
-    Fluttertoast.showToast(
-      msg: "تم ملء بيانات الاختبار ✅",
-      backgroundColor: Colors.green,
-    );
-  }
 
   @override
   void dispose() {
@@ -220,21 +204,22 @@ class _LoginScreenState extends State<LoginScreen> {
                         'Fixsy',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 48,
-                          fontWeight: FontWeight.w700,
+                          fontSize: 56, // Increased from 48
+                          fontWeight: FontWeight.w900, // Heavier weight
                           color: AppTheme.primaryColor,
-                          letterSpacing: -1,
+                          letterSpacing: -1.5,
                         ),
                       ).animate().fadeIn(duration: 500.ms).slideY(begin: -0.2, end: 0),
                       
                       const SizedBox(height: 8),
                       
                       Text(
-                        'منصة صيانة المنازل',
+                        'منصة صيانة المنازل المتكاملة',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 16,
-                          color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
+                          fontSize: 18, // Slightly larger
+                          fontWeight: FontWeight.bold, // Bold for clarity
+                          color: AppTheme.textPrimaryLight.withOpacity(0.8),
                         ),
                       ).animate().fadeIn(delay: 200.ms, duration: 500.ms).slideY(begin: -0.2, end: 0),
                       
@@ -244,6 +229,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       TextFormField(
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
+                        autofillHints: const [AutofillHints.email],
                         validator: Validators.validateEmail,
                         decoration: const InputDecoration(
                           labelText: 'البريد الإلكتروني',
@@ -252,12 +238,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ).animate().fadeIn(delay: 400.ms).slideX(begin: -0.2, end: 0),
                       
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 20), // Increased from 16
 
                       // Password Field
                       TextFormField(
                         controller: _passwordController,
                         obscureText: _obscurePassword,
+                        autofillHints: const [AutofillHints.password],
                         validator: Validators.validatePassword,
                         decoration: InputDecoration(
                           labelText: 'كلمة المرور',
@@ -273,7 +260,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ).animate().fadeIn(delay: 500.ms).slideX(begin: -0.2, end: 0),
                       
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 20), // Increased from 16
 
                       // Remember Me Checkbox
                       Row(
@@ -286,13 +273,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             activeColor: AppTheme.primaryColor,
                           ),
                           const Text('تذكرني'),
-                          const Spacer(),
-                          // Quick Fill Button
-                          TextButton.icon(
-                            onPressed: _fillTestCredentials,
-                            icon: const Icon(Icons.flash_on, size: 16),
-                            label: const Text('ملء تلقائي'),
-                          ),
                         ],
                       ).animate().fadeIn(delay: 600.ms),
                       
@@ -314,7 +294,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                 )
                               : const Text(
                                   'تسجيل الدخول',
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                    fontSize: 18, // Slightly larger
+                                    fontWeight: FontWeight.w800, // Extra bold
+                                    letterSpacing: 0.5,
+                                  ),
                                 ),
                         ),
                       ).animate().fadeIn(delay: 700.ms).scale(),

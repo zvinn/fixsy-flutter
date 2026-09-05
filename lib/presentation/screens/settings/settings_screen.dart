@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/language_provider.dart';
 import '../../widgets/common/enhanced_widgets.dart';
@@ -125,7 +126,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ? Icon(Icons.check, color: Theme.of(context).primaryColor)
                     : null,
                 onTap: () {
-                  context.read<LanguageProvider>().changeLanguage(const Locale('ar'));
+                  context.read<LanguageProvider>().changeLanguage('ar');
                   Navigator.pop(context);
                 },
               ),
@@ -135,7 +136,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ? Icon(Icons.check, color: Theme.of(context).primaryColor)
                     : null,
                 onTap: () {
-                  context.read<LanguageProvider>().changeLanguage(const Locale('en'));
+                  context.read<LanguageProvider>().changeLanguage('en');
                   Navigator.pop(context);
                 },
               ),

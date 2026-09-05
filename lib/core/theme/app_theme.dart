@@ -16,9 +16,9 @@ class AppTheme {
   // Neutral Colors (Light)
   static const Color bgPrimaryLight = Color(0xFFF8FAFC);
   static const Color bgSecondaryLight = Color(0xFFFFFFFF);
-  static const Color textPrimaryLight = Color(0xFF1E293B);
-  static const Color textSecondaryLight = Color(0xFF64748B);
-  static const Color borderColorLight = Color(0xFFE2E8F0);
+  static const Color textPrimaryLight = Color(0xFF0F172A); // Darker for better contrast
+  static const Color textSecondaryLight = Color(0xFF475569); // More readable slate
+  static const Color borderColorLight = Color(0xFFCBD5E1); // Slightly more visible border
 
   // Neutral Colors (Dark)
   static const Color bgPrimaryDark = Color(0xFF0F172A);
@@ -62,6 +62,10 @@ class AppTheme {
       textTheme: GoogleFonts.cairoTextTheme().apply(
         bodyColor: textPrimaryLight,
         displayColor: textPrimaryLight,
+      ).copyWith(
+        bodyLarge: const TextStyle(fontSize: 16, height: 1.5),
+        bodyMedium: const TextStyle(fontSize: 14, height: 1.5),
+        titleLarge: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, height: 1.3),
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: bgPrimaryLight,
@@ -127,8 +131,15 @@ class AppTheme {
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: errorColor),
         ),
-        labelStyle: const TextStyle(color: textSecondaryLight, fontFamily: 'Cairo'),
-        hintStyle: const TextStyle(color: textSecondaryLight, fontFamily: 'Cairo'),
+        labelStyle: const TextStyle(
+          color: textPrimaryLight, // Darker labels for better visibility
+          fontWeight: FontWeight.w500,
+          fontFamily: 'Cairo',
+        ),
+        hintStyle: const TextStyle(
+          color: textSecondaryLight, 
+          fontFamily: 'Cairo',
+        ),
       ),
       cardTheme: CardThemeData(
         color: bgSecondaryLight,

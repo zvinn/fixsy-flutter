@@ -11,9 +11,9 @@ class AnalyticsService {
     try {
       await _analytics.logEvent(
         name: name,
-        parameters: parameters,
+        parameters: parameters?.cast<String, Object>(),
       );
-      AppLogger.info('Analytics Event: $name', error: parameters);
+      AppLogger.info('Analytics Event: $name', data: parameters);
     } catch (e) {
       AppLogger.error('Failed to log analytics event: $e');
     }

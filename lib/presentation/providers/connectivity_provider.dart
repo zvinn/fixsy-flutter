@@ -11,7 +11,7 @@ class ConnectivityProvider extends ChangeNotifier {
 
   void _init() {
     // Check initial status
-    Connectivity().checkConnectivity().then((result) {
+    Connectivity().checkConnectivity().then((List<ConnectivityResult> result) {
       _updateStatus(result);
     });
 
@@ -21,8 +21,8 @@ class ConnectivityProvider extends ChangeNotifier {
     });
   }
 
-  void _updateStatus(ConnectivityResult result) {
-    bool newStatus = result != ConnectivityResult.none;
+  void _updateStatus(List<ConnectivityResult> result) {
+    bool newStatus = !result.contains(ConnectivityResult.none);
     if (_isOnline != newStatus) {
       _isOnline = newStatus;
       notifyListeners();

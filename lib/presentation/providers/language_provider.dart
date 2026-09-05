@@ -36,7 +36,7 @@ class LanguageProvider extends ChangeNotifier {
   }
   
   /// Change app language
-  Future<void> setLanguage(String languageCode) async {
+  Future<void> changeLanguage(String languageCode) async {
     if (_locale.languageCode == languageCode) return;
     
     _locale = Locale(languageCode);
@@ -53,12 +53,12 @@ class LanguageProvider extends ChangeNotifier {
   /// Toggle between Arabic and English
   Future<void> toggleLanguage() async {
     final newLanguage = isArabic ? 'en' : 'ar';
-    await setLanguage(newLanguage);
+    await changeLanguage(newLanguage);
   }
   
   /// Set Arabic
-  Future<void> setArabic() => setLanguage('ar');
+  Future<void> setArabic() => changeLanguage('ar');
   
   /// Set English
-  Future<void> setEnglish() => setLanguage('en');
+  Future<void> setEnglish() => changeLanguage('en');
 }

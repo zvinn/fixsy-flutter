@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:provider/provider.dart';
+import 'package:provider/provider.dart' as p;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/config/env_config.dart';
@@ -49,7 +49,7 @@ class SharedAppRunner {
     } catch (_) {}
 
     runApp(
-      const ProviderScope(
+      ProviderScope(
         child: FixsyApp(config: config), // Wrapped for Riverpod support
       ),
     );
@@ -67,20 +67,20 @@ class FixsyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
+    return p.MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => LanguageProvider()),
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
-        ChangeNotifierProvider(create: (_) => ServicesProvider()),
-        ChangeNotifierProvider(create: (_) => BookingsProvider()),
-        ChangeNotifierProvider(create: (_) => ServiceRequestProvider()),
-        ChangeNotifierProvider(create: (_) => RatingProvider()),
-        ChangeNotifierProvider(create: (_) => NotificationProvider()..initialize()),
-        ChangeNotifierProvider(create: (_) => ChatProvider()),
-        ChangeNotifierProvider(create: (_) => ConnectivityProvider()),
-        ChangeNotifierProvider(create: (_) => LoyaltyProvider()),
+        p.ChangeNotifierProvider(create: (_) => LanguageProvider()),
+        p.ChangeNotifierProvider(create: (_) => AuthProvider()),
+        p.ChangeNotifierProvider(create: (_) => ServicesProvider()),
+        p.ChangeNotifierProvider(create: (_) => BookingsProvider()),
+        p.ChangeNotifierProvider(create: (_) => ServiceRequestProvider()),
+        p.ChangeNotifierProvider(create: (_) => RatingProvider()),
+        p.ChangeNotifierProvider(create: (_) => NotificationProvider()..initialize()),
+        p.ChangeNotifierProvider(create: (_) => ChatProvider()),
+        p.ChangeNotifierProvider(create: (_) => ConnectivityProvider()),
+        p.ChangeNotifierProvider(create: (_) => LoyaltyProvider()),
       ],
-      child: Consumer<LanguageProvider>(
+      child: p.Consumer<LanguageProvider>(
         builder: (context, languageProvider, _) {
           return MaterialApp(
             title: config.appTitle,
@@ -108,7 +108,7 @@ class FixsyApp extends StatelessWidget {
                    if (snapshot.data == false) return const OnboardingScreen();
                 }
                 
-                return Consumer<AuthProvider>(
+                return p.Consumer<AuthProvider>(
                   builder: (context, auth, _) {
                     if (!auth.isAuthenticated) return const LoginScreen();
                     

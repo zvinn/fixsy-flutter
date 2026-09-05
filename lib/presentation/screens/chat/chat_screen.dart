@@ -176,7 +176,7 @@ class _ChatScreenState extends State<ChatScreen> {
               },
             ),
           ),
-          _buildInputArea(chatProvider, currentUser.id, currentUser.name),
+          _buildInputArea(chatProvider, currentUser.id, currentUser.displayName ?? 'User'),
         ],
       ),
     );

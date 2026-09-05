@@ -3,11 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/l10n/app_localizations.dart';
-import '../../../providers/service_request_provider.dart';
-import '../../../providers/auth_provider.dart';
+import '../../providers/service_request_provider.dart';
+import '../../providers/auth_provider.dart';
 import '../../../../data/services/coupon_service.dart';
-import '../service_request/widgets/service_selector_widget.dart';
-import '../service_request/widgets/image_upload_widget.dart';
+import '../../screens/service_request/widgets/service_selector_widget.dart';
+import '../../screens/service_request/widgets/image_upload_widget.dart';
 import 'payment_method_selector.dart';
 import 'dart:io';
 
@@ -271,10 +271,10 @@ class _BookingModalState extends State<BookingModal> {
               ),
               const SizedBox(height: 16),
               
-              const ImageUploadWidget(
+              ImageUploadWidget(
                 // We'd need to bind this properly, simplified for now
                 images: [], 
-                onImagesChanged: null, 
+                onImagesChanged: (files) {}, 
               ),
               
               const SizedBox(height: 16),

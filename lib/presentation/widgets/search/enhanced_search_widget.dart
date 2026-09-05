@@ -207,7 +207,7 @@ class _EnhancedSearchWidgetState extends State<EnhancedSearchWidget> {
           ),
           child: Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.search,
                 color: isDark ? Colors.white54 : Colors.grey,
               ),
@@ -232,7 +232,7 @@ class _EnhancedSearchWidgetState extends State<EnhancedSearchWidget> {
               ),
               if (_searchController.text.isNotEmpty)
                 IconButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.close,
                     color: isDark ? Colors.white54 : Colors.grey,
                     size: 20,
@@ -266,7 +266,7 @@ class _EnhancedSearchWidgetState extends State<EnhancedSearchWidget> {
                       child: Container(
                         width: 8,
                         height: 8,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: AppTheme.primaryColor,
                           shape: BoxShape.circle,
                         ),
@@ -280,46 +280,48 @@ class _EnhancedSearchWidgetState extends State<EnhancedSearchWidget> {
 
         // Suggestions
         if (_suggestions.isNotEmpty)
-          Container(
-            margin: const EdgeInsets.only(top: 8),
-            decoration: BoxDecoration(
-              color: isDark ? AppTheme.darkCardColor : Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: _suggestions.length,
-              itemBuilder: (context, index) {
-                final suggestion = _suggestions[index];
-                return ListTile(
-                  leading: Icon(
-                    Icons.search,
-                    color: isDark ? Colors.white54 : Colors.grey,
-                    size: 20,
+          RepaintBoundary(
+            child: Container(
+              margin: const EdgeInsets.only(top: 8),
+              decoration: BoxDecoration(
+                color: isDark ? AppTheme.darkCardColor : Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
                   ),
-                  title: Text(
-                    suggestion,
-                    style: TextStyle(
-                      color: isDark ? Colors.white : Colors.black87,
+                ],
+              ),
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: _suggestions.length,
+                itemBuilder: (context, index) {
+                  final suggestion = _suggestions[index];
+                  return ListTile(
+                    leading: Icon(
+                      Icons.search,
+                      color: isDark ? Colors.white54 : Colors.grey,
+                      size: 20,
                     ),
-                  ),
-                  onTap: () {
-                    _searchController.text = suggestion;
-                    setState(() => _suggestions = []);
-                    _performSearch();
-                  },
-                );
-              },
-            ),
-          ).animate().fadeIn().slideY(begin: -0.1, end: 0),
+                    title: Text(
+                      suggestion,
+                      style: TextStyle(
+                        color: isDark ? Colors.white : Colors.black87,
+                      ),
+                    ),
+                    onTap: () {
+                      _searchController.text = suggestion;
+                      setState(() => _suggestions = []);
+                      _performSearch();
+                    },
+                  );
+                },
+              ),
+            ).animate().fadeIn().slideY(begin: -0.1, end: 0),
+          ),
 
         // Filters Panel
         if (_showFilters)

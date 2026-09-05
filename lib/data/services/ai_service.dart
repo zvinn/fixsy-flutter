@@ -1,8 +1,8 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import '../../core/config/env_config.dart';
+import '../../core/error/error_logger.dart';
 
 /// AI Diagnosis Result Model
 class AiDiagnosis {
@@ -45,7 +45,15 @@ class AiDiagnosis {
 class AiService {
   static const String _groqApiUrl = 'https://api.groq.com/openai/v1/chat/completions';
   
+  final Dio _dio = Dio();
   final String _apiKey = EnvConfig.groqApiKey;
+
+  AiService() {
+    _dio.options.headers = {
+      'Authorization': 'Bearer $_apiKey',
+      'Content-Type': 'application/json',
+    };
+  }
 
   /// Analyze problem from images and description
   Future<AiDiagnosis> analyzeProblem({
@@ -53,9 +61,6 @@ class AiService {
     required String description,
   }) async {
     try {
-      // For now, we'll use text-based analysis since vision models need base64 encoding
-      // In production, you'd send images as base64
-      
       final prompt = '''
 أنت خبير في صيانة المنازل. قم بتحليل المشكلة التالية وقدم تشخيصاً دقيقاً:
 
@@ -73,14 +78,10 @@ class AiService {
 أجب فقط بـ JSON بدون أي نص إضافي.
 ''';
 
-      final response = await http.post(
-        Uri.parse(_groqApiUrl),
-        headers: {
-          'Authorization': 'Bearer $_apiKey',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'model': 'llama-3.3-70b-versatile', // Fast and efficient model
+      final response = await _dio.post(
+        _groqApiUrl,
+        data: {
+          'model': 'llama-3.3-70b-versatile',
           'messages': [
             {
               'role': 'system',
@@ -93,29 +94,31 @@ class AiService {
           ],
           'temperature': 0.7,
           'max_tokens': 1000,
-        }),
+        },
       );
 
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final content = data['choices'][0]['message']['content'];
-        
-        // Extract JSON from response
+        final content = response.data['choices'][0]['message']['content'];
         final jsonMatch = RegExp(r'\{[\s\S]*\}').firstMatch(content);
+        
         if (jsonMatch != null) {
           final jsonStr = jsonMatch.group(0)!;
-          final diagnosisData = jsonDecode(jsonStr);
+          final diagnosisData = Map<String, dynamic>.from(
+            jsonStr.startsWith('{') ? (jsonStr.contains('}') ? (json.decode(jsonStr)) : {}) : {},
+          );
           return AiDiagnosis.fromJson(diagnosisData);
         }
       }
       
-      throw Exception('Failed to analyze problem: ${response.statusCode}');
-    } catch (e) {
+      throw Exception('Failed to analyze: ${response.statusCode}');
+    } catch (e, stack) {
+      ErrorLogger.logError(e, stack, reason: 'AI analysis failed');
+      
       // Fallback diagnosis
       return AiDiagnosis(
-        problem: 'تعذر التحليل التلقائي. الرجاء اختيار نوع الخدمة يدوياً.',
+        problem: 'تعذر التحليل التلقائي حالياً. الرجاء اختيار نوع الخدمة يدوياً.',
         suggestedService: 'غير محدد',
-        solution: 'يرجى إضافة المزيد من التفاصيل أو الاتصال بالدعم الفني.',
+        solution: 'سجل الطلب وسيقوم الفني بتقديم العرض المناسب بعد المعاينة.',
         estimatedPrice: 0,
         confidence: 'منخفض',
       );

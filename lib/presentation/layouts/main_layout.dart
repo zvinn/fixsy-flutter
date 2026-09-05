@@ -4,7 +4,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
 import '../providers/auth_provider.dart';
 import '../../core/theme/app_theme.dart';
-import '../../widgets/common/offline_indicator.dart';
+import '../widgets/common/offline_indicator.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/bookings/bookings_screen.dart';
 import '../screens/community/community_hub_screen.dart';

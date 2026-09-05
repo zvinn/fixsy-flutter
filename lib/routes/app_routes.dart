@@ -27,6 +27,8 @@ import '../presentation/screens/technician/tech_onboarding_screen.dart';
 import '../presentation/screens/onboarding/onboarding_screen.dart';
 import '../presentation/screens/gamification/loyalty_screen.dart';
 import '../presentation/screens/technician/verification_screen.dart';
+import '../presentation/screens/store/store_screen.dart';
+import '../presentation/screens/contracts/contracts_screen.dart';
 
 /// App Routes Configuration
 /// Centralized routing for the entire application
@@ -118,7 +120,14 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const TechSignupScreen());
       
       case chat:
-        return MaterialPageRoute(builder: (_) => const ChatScreen());
+        final args = routeSettings.arguments as Map<String, dynamic>? ?? {};
+        return MaterialPageRoute(
+          builder: (_) => ChatScreen(
+            conversationId: args['conversationId'] ?? '',
+            otherUserName: args['otherUserName'] ?? '',
+            otherUserId: args['otherUserId'] ?? '',
+          ),
+        );
       
       case notifications:
         return MaterialPageRoute(builder: (_) => const NotificationsScreen());
