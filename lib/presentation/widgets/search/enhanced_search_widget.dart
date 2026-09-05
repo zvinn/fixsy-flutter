@@ -207,7 +207,7 @@ class _EnhancedSearchWidgetState extends State<EnhancedSearchWidget> {
           ),
           child: Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.search,
                 color: isDark ? Colors.white54 : Colors.grey,
               ),
@@ -232,7 +232,7 @@ class _EnhancedSearchWidgetState extends State<EnhancedSearchWidget> {
               ),
               if (_searchController.text.isNotEmpty)
                 IconButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.close,
                     color: isDark ? Colors.white54 : Colors.grey,
                     size: 20,
@@ -573,3 +573,4 @@ class _SortChip extends StatelessWidget {
     );
   }
 }
+

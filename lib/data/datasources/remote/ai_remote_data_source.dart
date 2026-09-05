@@ -1,6 +1,7 @@
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import '../../../core/config/env_config.dart';
-import '../../models/ai_diagnosis.dart';
+import '../../../domain/entities/ai_diagnosis.dart';
 
 abstract class AiRemoteDataSource {
   Future<AiDiagnosis> analyzeProblem({
@@ -22,20 +23,17 @@ class AiRemoteDataSourceImpl implements AiRemoteDataSource {
   @override
   Future<AiDiagnosis> analyzeProblem({required String description}) async {
     final prompt = '''
-أنت خبير في صيانة المنازل. قم بتحليل المشكلة التالية وقدم تشخيصاً دقيقاً:
+Analyze problem:
+Description: 
 
-الوصف: $description
-
-قدم التحليل بصيغة JSON التالية:
+Respond with JSON only:
 {
-  "problem": "وصف المشكلة بالتفصيل",
-  "suggestedService": "نوع الخدمة المقترحة (سباكة/كهرباء/نجارة/أخرى)",
-  "solution": "الحل المقترح",
-  "estimatedPrice": رقم تقديري بالريال السعودي,
-  "confidence": "عالي/متوسط/منخفض"
+  "problem": "Problem name",
+  "suggestedService": "Service type",
+  "solution": "Solution steps",
+  "estimatedPrice": 150.0,
+  "confidence": "high"
 }
-
-أجب فقط بـ JSON بدون أي نص إضافي.
 ''';
 
     final response = await _dio.post(
@@ -45,7 +43,7 @@ class AiRemoteDataSourceImpl implements AiRemoteDataSource {
         'messages': [
           {
             'role': 'system',
-            'content': 'أنت خبير في صيانة المنازل ومتخصص في تشخيص المشاكل وتقديم الحلول.'
+            'content': 'You are a home maintenance expert assistant.'
           },
           {
             'role': 'user',
@@ -67,7 +65,7 @@ class AiRemoteDataSourceImpl implements AiRemoteDataSource {
       }
     }
     
-    throw Exception('Failed to analyze: ${response.statusCode}');
+    throw Exception('Failed to analyze: ');
   }
 
   @override
@@ -76,11 +74,8 @@ class AiRemoteDataSourceImpl implements AiRemoteDataSource {
     String? problemDescription,
   }) async {
     final prompt = '''
-أنت مساعد ذكي متخصص في خدمات الصيانة المنزلية.
-المستخدم يبحث عن خدمة: $serviceType
-${problemDescription != null ? 'وصف المشكلة: $problemDescription' : ''}
+Recommend quick safety advice for .
 
-قدم نصيحة قصيرة (جملتين فقط) للمستخدم حول كيفية اختيار الفني المناسب لهذه الخدمة.
 ''';
 
     final response = await _dio.post(
