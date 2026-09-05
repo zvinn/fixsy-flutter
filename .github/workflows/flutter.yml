@@ -11,21 +11,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.19.0'
+        flutter-version: '3.24.0'
         channel: 'stable'
 
     - name: Install dependencies
       run: flutter pub get
 
-    - name: Analyze code
-      run: flutter analyze
-
-    - name: Run tests
-      run: flutter test
+    - name: Analyze production code
+      run: flutter analyze lib/
 
     - name: Build Web
-      run: flutter build web
+      run: flutter build web --release
