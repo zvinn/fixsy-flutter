@@ -1,10 +1,10 @@
-﻿# 📱 Fixsy Mobile | Flutter Cross-Platform Super-App
+# 📱 Fixsy Mobile | Flutter Cross-Platform Super-App
 
 <div align="center">
 
 **Enterprise-Grade On-Demand Home Services & Maintenance Mobile Application for iOS & Android**
 
-[![Flutter](https://img.shields.io/badge/Flutter_3.10+-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev/)
+[![Flutter](https://img.shields.io/badge/Flutter_3.x-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev/)
 [![Dart](https://img.shields.io/badge/Dart_3-0175C2?style=for-the-badge&logo=dart&logoColor=white)](https://dart.dev/)
 [![Firebase](https://img.shields.io/badge/Firebase_Suite-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com/)
 [![Riverpod](https://img.shields.io/badge/State_Riverpod-00599C?style=for-the-badge)](https://riverpod.dev/)
@@ -53,7 +53,7 @@ lib/
 
 | Layer | Technologies |
 |---|---|
-| **Framework** | Flutter 3.10+ (Android, iOS, Web, macOS, Windows) |
+| **Framework** | Flutter 3.24+ / 3.38+ (Android, iOS, Web, macOS, Windows) |
 | **Language** | Dart 3.0+ |
 | **State Management** | Flutter Riverpod & Provider |
 | **Backend & Database** | Firebase Authentication, Cloud Firestore, Cloud Storage, Cloud Messaging (FCM) |

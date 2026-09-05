@@ -15,8 +15,10 @@ jobs:
 
     - uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.24.0'
         channel: 'stable'
+
+    - name: Create mock environment for CI
+      run: cp .env.example .env
 
     - name: Install dependencies
       run: flutter pub get
