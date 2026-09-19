@@ -24,7 +24,10 @@ jobs:
       run: flutter pub get
 
     - name: Analyze production code
-      run: flutter analyze --no-fatal-infos --no-fatal-warnings lib/
+      run: flutter analyze --no-fatal-infos lib/
+
+    - name: Run test suite
+      run: flutter test
 
     - name: Build Web
       run: flutter build web --release
