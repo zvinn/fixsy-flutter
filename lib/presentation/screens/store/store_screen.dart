@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_theme.dart';
-import '../../widgets/common/enhanced_widgets.dart';
 
 class StoreScreen extends StatefulWidget {
   const StoreScreen({super.key});

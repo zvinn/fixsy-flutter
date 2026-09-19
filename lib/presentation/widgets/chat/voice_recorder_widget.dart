@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_theme.dart';
-import '../../../../core/l10n/app_localizations.dart';
 
 class VoiceRecorderWidget extends StatefulWidget {
   final Function(String path, Duration duration) onStop;

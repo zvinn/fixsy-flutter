@@ -6,8 +6,6 @@ import '../../providers/chat_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../widgets/chat/voice_recorder_widget.dart';
 import '../../../data/models/message_model.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 
 class ChatScreen extends StatefulWidget {
   final String conversationId;
@@ -176,7 +174,7 @@ class _ChatScreenState extends State<ChatScreen> {
               },
             ),
           ),
-          _buildInputArea(chatProvider, currentUser.id, currentUser.displayName ?? 'User'),
+          _buildInputArea(chatProvider, currentUser.id, currentUser.displayName),
         ],
       ),
     );
@@ -234,6 +232,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         content: _messageController.text,
                       );
                       _messageController.clear();
+                      _scrollToBottom();
                     }
                   },
                 ),
@@ -253,6 +252,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         content: _messageController.text,
                       );
                       _messageController.clear();
+                      _scrollToBottom();
                     },
                     child: Container(
                       padding: const EdgeInsets.all(12),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../../widgets/common/enhanced_widgets.dart';
 import '../../../core/theme/app_theme.dart';
 
 class CommunityHubScreen extends StatelessWidget {

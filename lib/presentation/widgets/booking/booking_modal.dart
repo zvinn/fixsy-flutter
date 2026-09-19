@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:image_picker/image_picker.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/l10n/app_localizations.dart';
 import '../../providers/service_request_provider.dart';
@@ -9,7 +8,6 @@ import '../../../../data/services/coupon_service.dart';
 import '../../screens/service_request/widgets/service_selector_widget.dart';
 import '../../screens/service_request/widgets/image_upload_widget.dart';
 import 'payment_method_selector.dart';
-import 'dart:io';
 
 class BookingModal extends StatefulWidget {
   final String? initialServiceType;
@@ -34,7 +32,6 @@ class _BookingModalState extends State<BookingModal> {
   
   int _currentStep = 0;
   DateTime? _scheduledDate;
-  TimeOfDay? _scheduledTime;
   PaymentMethodType _selectedPaymentMethod = PaymentMethodType.cash;
   CouponModel? _appliedCoupon;
   bool _isValidatingCoupon = false;

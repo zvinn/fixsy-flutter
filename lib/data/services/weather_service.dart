@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import '../../core/utils/app_logger.dart';
 
 class WeatherAlert {
@@ -18,8 +16,6 @@ class WeatherAlert {
 
 class WeatherService {
   // Mock API for now
-  static const String _baseUrl = 'https://api.weatherapi.com/v1'; 
-  final String _apiKey = 'MOCK_KEY'; // Replace with env var
 
   Future<WeatherAlert?> checkWeatherAlerts(double lat, double lng) async {
     try {

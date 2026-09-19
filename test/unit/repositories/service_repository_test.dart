@@ -3,38 +3,32 @@ import 'package:fixsy_flutter/data/models/service_model.dart';
 
 void main() {
   group('Service Model', () {
+    final now = DateTime.now();
+    final nowStr = now.toIso8601String();
+
     group('fromJson', () {
       test('should create Service from valid JSON', () {
         final json = {
           'id': 'service123',
-          'name': 'سباكة',
-          'nameEn': 'Plumbing',
-          'description': 'خدمات السباكة المنزلية',
-          'icon': 'plumbing',
-          'basePrice': 100.0,
-          'isActive': true,
+          'name': 'Plumbing',
+          'nameAr': 'سباكة',
           'category': 'home',
+          'description': 'General plumbing services',
+          'descriptionAr': 'خدمات السباكة العامة',
+          'price': 100.0,
+          'imageUrl': 'https://example.com/icon.png',
+          'isActive': true,
+          'createdAt': nowStr,
+          'updatedAt': nowStr,
         };
 
         final service = Service.fromJson(json);
 
         expect(service.id, equals('service123'));
-        expect(service.name, equals('سباكة'));
-        expect(service.basePrice, equals(100.0));
+        expect(service.name, equals('Plumbing'));
+        expect(service.nameAr, equals('سباكة'));
+        expect(service.price, equals(100.0));
         expect(service.isActive, isTrue);
-      });
-
-      test('should handle missing optional fields', () {
-        final json = {
-          'id': 'service123',
-          'name': 'سباكة',
-          'basePrice': 100.0,
-        };
-
-        final service = Service.fromJson(json);
-
-        expect(service.id, equals('service123'));
-        expect(service.name, equals('سباكة'));
       });
     });
 
@@ -42,20 +36,22 @@ void main() {
       test('should convert Service to JSON correctly', () {
         final service = Service(
           id: 'service123',
-          name: 'كهرباء',
-          nameEn: 'Electrical',
-          description: 'خدمات الكهرباء',
-          icon: 'electrical',
-          basePrice: 120.0,
-          isActive: true,
+          name: 'Electrical',
+          nameAr: 'كهرباء',
           category: 'home',
+          description: 'Electrical installations and repairs',
+          descriptionAr: 'تركيبات وإصلاحات الكهرباء',
+          price: 120.0,
+          isActive: true,
+          createdAt: now,
+          updatedAt: now,
         );
 
         final json = service.toJson();
 
         expect(json['id'], equals('service123'));
-        expect(json['name'], equals('كهرباء'));
-        expect(json['basePrice'], equals(120.0));
+        expect(json['name'], equals('Electrical'));
+        expect(json['price'], equals(120.0));
         expect(json['isActive'], isTrue);
       });
     });
@@ -63,7 +59,7 @@ void main() {
     group('Service Types', () {
       test('should have valid service categories', () {
         final categories = ['home', 'commercial', 'industrial'];
-        
+
         for (final category in categories) {
           expect(category, isA<String>());
           expect(category.isNotEmpty, isTrue);
@@ -74,9 +70,9 @@ void main() {
         final serviceNames = [
           'سباكة',
           'كهرباء',
-          'نجارة',
           'تكييف',
-          'دهان',
+          'نجارة',
+          'نقاشة',
         ];
 
         for (final name in serviceNames) {
@@ -87,14 +83,20 @@ void main() {
     });
 
     group('Price Validation', () {
-      test('basePrice should be non-negative', () {
+      test('price should be non-negative', () {
         final service = Service(
           id: 'test',
           name: 'Test',
-          basePrice: 150.0,
+          nameAr: 'اختبار',
+          category: 'home',
+          description: 'Test service',
+          descriptionAr: 'خدمة اختبار',
+          price: 150.0,
+          createdAt: now,
+          updatedAt: now,
         );
 
-        expect(service.basePrice, greaterThanOrEqualTo(0));
+        expect(service.price, greaterThanOrEqualTo(0));
       });
 
       test('should calculate price with multiplier', () {
@@ -108,11 +110,13 @@ void main() {
   });
 
   group('Service Repository', () {
+    final now = DateTime.now();
+
     test('should filter active services', () {
       final services = [
-        Service(id: '1', name: 'Active', basePrice: 100, isActive: true),
-        Service(id: '2', name: 'Inactive', basePrice: 100, isActive: false),
-        Service(id: '3', name: 'Active2', basePrice: 100, isActive: true),
+        Service(id: '1', name: 'Active', nameAr: 'نشط', category: 'home', description: '', descriptionAr: '', price: 100, isActive: true, createdAt: now, updatedAt: now),
+        Service(id: '2', name: 'Inactive', nameAr: 'غير نشط', category: 'home', description: '', descriptionAr: '', price: 100, isActive: false, createdAt: now, updatedAt: now),
+        Service(id: '3', name: 'Active2', nameAr: 'نشط 2', category: 'home', description: '', descriptionAr: '', price: 100, isActive: true, createdAt: now, updatedAt: now),
       ];
 
       final activeServices = services.where((s) => s.isActive).toList();
@@ -123,9 +127,9 @@ void main() {
 
     test('should filter by category', () {
       final services = [
-        Service(id: '1', name: 'Home1', basePrice: 100, category: 'home'),
-        Service(id: '2', name: 'Com1', basePrice: 100, category: 'commercial'),
-        Service(id: '3', name: 'Home2', basePrice: 100, category: 'home'),
+        Service(id: '1', name: 'Home1', nameAr: 'منزل 1', category: 'home', description: '', descriptionAr: '', price: 100, createdAt: now, updatedAt: now),
+        Service(id: '2', name: 'Com1', nameAr: 'تجاري 1', category: 'commercial', description: '', descriptionAr: '', price: 100, createdAt: now, updatedAt: now),
+        Service(id: '3', name: 'Home2', nameAr: 'منزل 2', category: 'home', description: '', descriptionAr: '', price: 100, createdAt: now, updatedAt: now),
       ];
 
       final homeServices = services.where((s) => s.category == 'home').toList();
@@ -135,16 +139,16 @@ void main() {
 
     test('should sort by price', () {
       final services = [
-        Service(id: '1', name: 'Expensive', basePrice: 200),
-        Service(id: '2', name: 'Cheap', basePrice: 50),
-        Service(id: '3', name: 'Medium', basePrice: 100),
+        Service(id: '1', name: 'Expensive', nameAr: 'مرتفع', category: 'home', description: '', descriptionAr: '', price: 200, createdAt: now, updatedAt: now),
+        Service(id: '2', name: 'Cheap', nameAr: 'منخفض', category: 'home', description: '', descriptionAr: '', price: 50, createdAt: now, updatedAt: now),
+        Service(id: '3', name: 'Medium', nameAr: 'متوسط', category: 'home', description: '', descriptionAr: '', price: 100, createdAt: now, updatedAt: now),
       ];
 
-      services.sort((a, b) => a.basePrice.compareTo(b.basePrice));
+      services.sort((a, b) => a.price.compareTo(b.price));
 
-      expect(services[0].basePrice, equals(50));
-      expect(services[1].basePrice, equals(100));
-      expect(services[2].basePrice, equals(200));
+      expect(services[0].price, equals(50));
+      expect(services[1].price, equals(100));
+      expect(services[2].price, equals(200));
     });
   });
 }

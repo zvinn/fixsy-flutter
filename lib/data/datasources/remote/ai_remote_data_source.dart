@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import '../../../core/config/env_config.dart';
 import '../../../domain/entities/ai_diagnosis.dart';
 
 abstract class AiRemoteDataSource {

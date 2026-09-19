@@ -29,7 +29,7 @@ void main() {
       );
       expect(
         SecurityUtils.sanitizeInput('<img onerror="alert(1)">'),
-        contains('alert'), // Tag removed, content may remain
+        isEmpty, // Tag completely stripped for security
       );
     });
 

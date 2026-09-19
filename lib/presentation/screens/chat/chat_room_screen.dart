@@ -39,7 +39,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
       await chatProvider.getOrCreateConversation(
         bookingId: widget.booking.id,
         userId: user.id,
-        userName: user.displayName ?? 'عميل',
+        userName: user.displayName,
         technicianId: widget.booking.technicianId,
         technicianName: widget.booking.technicianName ?? 'فني',
       );
@@ -179,7 +179,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                             final success = await chatProvider.sendImageMessage(
                               conversationId: widget.booking.id,
                               senderId: user.id,
-                              senderName: user.displayName ?? 'عميل',
+                              senderName: user.displayName,
                             );
 
                             if (success) {
