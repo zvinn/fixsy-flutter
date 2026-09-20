@@ -234,7 +234,7 @@ class _StoriesWidgetState extends State<StoriesWidget> {
                 gradient: LinearGradient(
                   colors: [
                     AppTheme.primaryColor,
-                    AppTheme.primaryColor.withOpacity(0.6),
+                    AppTheme.primaryColor.withValues(alpha: 0.6),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -253,7 +253,7 @@ class _StoriesWidgetState extends State<StoriesWidget> {
                           fit: BoxFit.cover,
                         )
                       : Container(
-                          color: AppTheme.primaryColor.withOpacity(0.2),
+                          color: AppTheme.primaryColor.withValues(alpha: 0.2),
                           child: Center(
                             child: Text(
                               story.techName[0],
@@ -478,7 +478,7 @@ class _StoryViewerScreenState extends State<StoryViewerScreen>
                   children: [
                     CircleAvatar(
                       radius: 18,
-                      backgroundColor: AppTheme.primaryColor.withOpacity(0.2),
+                      backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.2),
                       child: Text(
                         widget.stories[_currentIndex].techName[0],
                         style: TextStyle(

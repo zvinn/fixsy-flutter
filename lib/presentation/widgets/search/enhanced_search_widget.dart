@@ -187,7 +187,7 @@ class _EnhancedSearchWidgetState extends State<EnhancedSearchWidget> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: isDark ? Colors.white.withOpacity(0.05) : Colors.white,
+            color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: _focusNode.hasFocus
@@ -198,7 +198,7 @@ class _EnhancedSearchWidgetState extends State<EnhancedSearchWidget> {
             boxShadow: _focusNode.hasFocus
                 ? [
                     BoxShadow(
-                      color: AppTheme.primaryColor.withOpacity(0.2),
+                      color: AppTheme.primaryColor.withValues(alpha: 0.2),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     ),
@@ -288,7 +288,7 @@ class _EnhancedSearchWidgetState extends State<EnhancedSearchWidget> {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -335,7 +335,7 @@ class _EnhancedSearchWidgetState extends State<EnhancedSearchWidget> {
       margin: const EdgeInsets.only(top: 16),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? Colors.white.withOpacity(0.05) : Colors.white,
+        color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isDark ? Colors.white12 : Colors.grey.shade200,
@@ -498,7 +498,7 @@ class _EnhancedSearchWidgetState extends State<EnhancedSearchWidget> {
             ),
             value: _verifiedOnly,
             onChanged: (value) => setState(() => _verifiedOnly = value),
-            activeColor: AppTheme.primaryColor,
+            activeTrackColor: AppTheme.primaryColor,
             contentPadding: EdgeInsets.zero,
           ),
 
