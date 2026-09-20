@@ -1,0 +1,10 @@
+{
+  "java.import.gradle.enabled": false,
+  "gradle.nestedProjects": [
+    "android"
+  ],
+  "gradle.bundled": false,
+  "gradle.autoDetect": "off",
+  "java.import.gradle.wrapper.enabled": true,
+  "java.import.gradle.version": "8.14"
+}

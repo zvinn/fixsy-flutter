@@ -180,6 +180,118 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  Future<void> _handleAppleSignIn() async {
+    setState(() => _isLoading = true);
+
+    try {
+      await context.read<AuthProvider>().signInWithApple();
+      
+      if (mounted) {
+        Fluttertoast.showToast(
+          msg: "تم تسجيل الدخول بواسطة Apple بنجاح! 🍏",
+          backgroundColor: Colors.green,
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        Fluttertoast.showToast(
+          msg: "خطأ في تسجيل الدخول بواسطة Apple: ${e.toString()}",
+          backgroundColor: Colors.red,
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  Future<void> _handleDemoLogin(String role) async {
+    setState(() => _isLoading = true);
+
+    try {
+      await context.read<AuthProvider>().signInDemo(role);
+      
+      if (mounted) {
+        final roleName = role == 'client' ? 'العميل' : (role == 'tech' ? 'الفني' : 'المدير');
+        Fluttertoast.showToast(
+          msg: "تم الدخول كـ $roleName التجريبي بنجاح! 🚀",
+          backgroundColor: Colors.green,
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        Fluttertoast.showToast(
+          msg: e.toString(),
+          backgroundColor: Colors.red,
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  void _showForgotPasswordDialog() {
+    final resetEmailController = TextEditingController(text: _emailController.text.trim());
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('إعادة تعيين كلمة المرور', textAlign: TextAlign.right),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Text(
+              'أدخل بريدك الإلكتروني وسنرسل لك رابطاً لإعادة تعيين كلمة المرور:',
+              textAlign: TextAlign.right,
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: resetEmailController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: const InputDecoration(
+                labelText: 'البريد الإلكتروني',
+                hintText: 'example@email.com',
+                prefixIcon: Icon(Icons.email_outlined),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('إلغاء'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final email = resetEmailController.text.trim();
+              if (email.isEmpty || !email.contains('@')) {
+                Fluttertoast.showToast(msg: 'يرجى إدخال بريد إلكتروني صالح');
+                return;
+              }
+              Navigator.pop(ctx);
+              try {
+                await context.read<AuthProvider>().resetPassword(email);
+                Fluttertoast.showToast(
+                  msg: 'تم إرسال رابط إعادة التعيين إلى بريدك الإلكتروني ✉️',
+                  backgroundColor: Colors.green,
+                );
+              } catch (e) {
+                Fluttertoast.showToast(
+                  msg: e.toString(),
+                  backgroundColor: Colors.red,
+                );
+              }
+            },
+            child: const Text('إرسال الرابط'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -262,17 +374,26 @@ class _LoginScreenState extends State<LoginScreen> {
                       
                       const SizedBox(height: 20), // Increased from 16
 
-                      // Remember Me Checkbox
+                      // Remember Me Checkbox & Forgot Password
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Checkbox(
-                            value: _rememberMe,
-                            onChanged: (value) {
-                              setState(() => _rememberMe = value ?? false);
-                            },
-                            activeColor: AppTheme.primaryColor,
+                          Row(
+                            children: [
+                              Checkbox(
+                                value: _rememberMe,
+                                onChanged: (value) {
+                                  setState(() => _rememberMe = value ?? false);
+                                },
+                                activeColor: AppTheme.primaryColor,
+                              ),
+                              const Text('تذكرني'),
+                            ],
                           ),
-                          const Text('تذكرني'),
+                          TextButton(
+                            onPressed: _showForgotPasswordDialog,
+                            child: const Text('نسيت كلمة المرور؟'),
+                          ),
                         ],
                       ).animate().fadeIn(delay: 600.ms),
                       
@@ -305,32 +426,115 @@ class _LoginScreenState extends State<LoginScreen> {
                       
                       const SizedBox(height: 16),
 
-                      // Google Sign-In
-                      if (!kIsWeb) ...[
-                        Row(
-                          children: [
-                            const Expanded(child: Divider()),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
-                              child: Text(
-                                'أو',
-                                style: TextStyle(color: Theme.of(context).disabledColor),
-                              ),
+                      // Social Sign-In (Google & Apple)
+                      Row(
+                        children: [
+                          const Expanded(child: Divider()),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Text(
+                              'أو تسجيل الدخول عبر',
+                              style: TextStyle(color: Theme.of(context).disabledColor),
                             ),
-                            const Expanded(child: Divider()),
-                          ],
-                        ).animate().fadeIn(delay: 800.ms),
-                        
-                        const SizedBox(height: 16),
+                          ),
+                          const Expanded(child: Divider()),
+                        ],
+                      ).animate().fadeIn(delay: 800.ms),
+                      
+                      const SizedBox(height: 16),
 
-                        OutlinedButton.icon(
-                          onPressed: _isLoading ? null : _handleGoogleSignIn,
-                          icon: const Icon(Icons.account_circle, size: 24),
-                          label: const Text('تسجيل الدخول بواسطة Google'),
-                        ).animate().fadeIn(delay: 900.ms).scale(),
-                        
-                        const SizedBox(height: 24),
-                      ],
+                      Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton.icon(
+                              onPressed: _isLoading ? null : _handleGoogleSignIn,
+                              icon: const Icon(Icons.g_mobiledata, size: 28, color: Colors.red),
+                              label: const Text('Google'),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: OutlinedButton.icon(
+                              onPressed: _isLoading ? null : _handleAppleSignIn,
+                              icon: const Icon(Icons.apple, size: 24),
+                              label: const Text('Apple'),
+                            ),
+                          ),
+                        ],
+                      ).animate().fadeIn(delay: 900.ms).scale(),
+                      
+                      const SizedBox(height: 20),
+
+                      // Quick Demo Access (مطابق لمشروع Fixy Web App)
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: AppTheme.primaryColor.withValues(alpha: 0.05),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: AppTheme.primaryColor.withValues(alpha: 0.15),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.flash_on, size: 18, color: Colors.amber),
+                                const SizedBox(width: 6),
+                                Text(
+                                  'دخول تجريبي سريع (Demo Accounts)',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppTheme.primaryColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: OutlinedButton(
+                                    style: OutlinedButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(vertical: 8),
+                                      textStyle: const TextStyle(fontSize: 12),
+                                    ),
+                                    onPressed: _isLoading ? null : () => _handleDemoLogin('client'),
+                                    child: const Text('عميل'),
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                Expanded(
+                                  child: OutlinedButton(
+                                    style: OutlinedButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(vertical: 8),
+                                      textStyle: const TextStyle(fontSize: 12),
+                                    ),
+                                    onPressed: _isLoading ? null : () => _handleDemoLogin('tech'),
+                                    child: const Text('فني'),
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                Expanded(
+                                  child: OutlinedButton(
+                                    style: OutlinedButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(vertical: 8),
+                                      textStyle: const TextStyle(fontSize: 12),
+                                    ),
+                                    onPressed: _isLoading ? null : () => _handleDemoLogin('admin'),
+                                    child: const Text('مدير'),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ).animate().fadeIn(delay: 950.ms),
+
+                      const SizedBox(height: 24),
 
                       // Register Link
                       TextButton(

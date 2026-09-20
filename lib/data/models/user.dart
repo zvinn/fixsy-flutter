@@ -6,6 +6,11 @@ class User {
   final String role; // 'client', 'technician', 'admin'
   final DateTime createdAt;
   final String? phone;
+  String? get phoneNumber => phone;
+
+  bool get isAdmin => role == 'admin';
+  bool get isTechnician => role == 'technician' || role == 'tech';
+  bool get isClient => role == 'client' || role == 'customer';
 
   User({
     required this.id,
@@ -14,8 +19,9 @@ class User {
     this.photoURL,
     required this.role,
     required this.createdAt,
-    this.phone,
-  });
+    String? phone,
+    String? phoneNumber,
+  }) : phone = phone ?? phoneNumber;
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
@@ -25,7 +31,7 @@ class User {
       photoURL: json['photoURL'] as String?,
       role: json['role'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
-      phone: json['phone'] as String?,
+      phone: (json['phone'] ?? json['phoneNumber']) as String?,
     );
   }
 

@@ -43,8 +43,8 @@ class _MainLayoutState extends State<MainLayout> {
   @override
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
-    final isTechnician = authProvider.currentUser?.role == 'technician' || 
-                        authProvider.currentUser?.role == 'admin';
+    final isTechnician = authProvider.currentUser?.isTechnician == true || 
+                        authProvider.currentUser?.isAdmin == true;
 
     final List<Widget> clientPages = [
       const HomeScreen(),
@@ -56,7 +56,7 @@ class _MainLayoutState extends State<MainLayout> {
     final List<Widget> technicianPages = [
       const TechDashboardScreen(),
       const JobMarketScreen(),
-      const Center(child: Text('My Jobs')), // Placeholder
+      const BookingsScreen(),
       const ProfileScreen(),
     ];
 

@@ -210,4 +210,84 @@ class AuthService {
   Future<void> resetPassword(String email) async {
     await _firebaseAuth.sendPasswordResetEmail(email: email);
   }
+
+  // Sign in with Apple
+  Future<User?> signInWithApple() async {
+    try {
+      final appleProvider = firebase_auth.AppleAuthProvider();
+      appleProvider.addScope('email');
+      appleProvider.addScope('name');
+      final userCredential = await _firebaseAuth.signInWithProvider(appleProvider);
+
+      if (userCredential.user != null) {
+        try {
+          final existingUser = await getUserData(userCredential.user!.uid);
+          if (existingUser != null) {
+            return existingUser;
+          }
+
+          final newUser = User(
+            id: userCredential.user!.uid,
+            email: userCredential.user!.email ?? '',
+            displayName: userCredential.user!.displayName ?? 'مستخدم Apple',
+            photoURL: userCredential.user!.photoURL,
+            role: userCredential.user!.email == 'mhamed.saad.ibrahim@gmail.com' ? 'admin' : 'customer',
+            createdAt: DateTime.now(),
+          );
+
+          await _firestore.collection('users').doc(newUser.id).set(newUser.toJson());
+          return newUser;
+        } catch (e) {
+          return User(
+            id: userCredential.user!.uid,
+            email: userCredential.user!.email ?? '',
+            displayName: userCredential.user!.displayName ?? 'مستخدم Apple',
+            photoURL: userCredential.user!.photoURL,
+            role: 'customer',
+            createdAt: DateTime.now(),
+          );
+        }
+      }
+      return null;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // Demo user credentials matching Fixy Web App
+  static final Map<String, User> demoUsers = {
+    'client': User(
+      id: 'demo-client-001',
+      email: 'client.demo@fixsy.com',
+      displayName: 'أحمد علي (عميل تجريبي)',
+      photoURL: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150',
+      role: 'client',
+      createdAt: DateTime(2026, 1, 1),
+      phone: '0512345678',
+    ),
+    'technician': User(
+      id: 'demo-tech-001',
+      email: 'tech.demo@fixsy.com',
+      displayName: 'م. خالد حسن (فني تجريبي)',
+      photoURL: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=150',
+      role: 'technician',
+      createdAt: DateTime(2026, 1, 1),
+      phone: '0587654321',
+    ),
+    'admin': User(
+      id: 'demo-admin-001',
+      email: 'admin.demo@fixsy.com',
+      displayName: 'محمد إبراهيم (مدير تجريبي)',
+      photoURL: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
+      role: 'admin',
+      createdAt: DateTime(2026, 1, 1),
+      phone: '0599999999',
+    ),
+  };
+
+  Future<User> signInDemo(String role) async {
+    final normalizedRole = (role == 'tech') ? 'technician' : ((role == 'customer') ? 'client' : role);
+    final user = demoUsers[normalizedRole] ?? demoUsers['client']!;
+    return user;
+  }
 }

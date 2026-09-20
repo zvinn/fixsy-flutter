@@ -22,6 +22,11 @@ class AuthProvider extends ChangeNotifier {
 
   void _init() {
     _authService.authStateChanges.listen((user) {
+      if (_currentUser != null && _currentUser!.id.startsWith('demo-')) {
+        _isLoading = false;
+        notifyListeners();
+        return;
+      }
       _currentUser = user;
       _isLoading = false;
       notifyListeners();
@@ -113,6 +118,50 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> signInWithApple() async {
+    try {
+      _isLoading = true;
+      notifyListeners();
+      
+      AppLogger.info('Apple sign in attempt');
+      final user = await _authService.signInWithApple();
+      _currentUser = user;
+      AppLogger.info('Apple sign in successful', data: {'userId': user?.id});
+      
+      if (user != null) {
+        await AnalyticsService.logLogin(method: 'apple');
+      }
+    } on FirebaseException catch (e) {
+      AppLogger.error('Apple sign in error', error: e);
+      throw AppErrorHandler.handleAuthError(e);
+    } catch (e, stackTrace) {
+      AppLogger.error('Apple sign in unexpected error', error: e, stackTrace: stackTrace);
+      throw UnknownException('حدث خطأ في تسجيل الدخول بواسطة Apple');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> signInDemo(String role) async {
+    try {
+      _isLoading = true;
+      notifyListeners();
+      
+      AppLogger.info('Demo sign in attempt for role: $role');
+      final user = await _authService.signInDemo(role);
+      _currentUser = user;
+      AppLogger.info('Demo sign in successful', data: {'userId': user.id, 'role': user.role});
+      await AnalyticsService.logLogin(method: 'demo_$role');
+    } catch (e, stackTrace) {
+      AppLogger.error('Demo sign in error', error: e, stackTrace: stackTrace);
+      throw UnknownException('حدث خطأ في الدخول التجريبي');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
   Future<void> signOut() async {
     try {
       AppLogger.info('Sign out attempt');
@@ -127,6 +176,15 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> resetPassword(String email) async {
-    await _authService.resetPassword(email);
+    try {
+      await _authService.resetPassword(email);
+      AppLogger.info('Password reset email sent');
+    } on FirebaseException catch (e) {
+      AppLogger.error('Password reset error', error: e);
+      throw AppErrorHandler.handleAuthError(e);
+    } catch (e) {
+      AppLogger.error('Unexpected password reset error', error: e);
+      throw UnknownException('حدث خطأ أثناء إرسال رابط إعادة تعيين كلمة المرور');
+    }
   }
 }
