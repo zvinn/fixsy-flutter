@@ -7,6 +7,7 @@ import '../../providers/auth_provider.dart';
 import '../../../../data/services/coupon_service.dart';
 import '../../screens/service_request/widgets/service_selector_widget.dart';
 import '../../screens/service_request/widgets/image_upload_widget.dart';
+import '../../screens/service_request/widgets/ai_diagnosis_widget.dart';
 import 'payment_method_selector.dart';
 
 class BookingModal extends StatefulWidget {
@@ -269,11 +270,52 @@ class _BookingModalState extends State<BookingModal> {
               const SizedBox(height: 16),
               
               ImageUploadWidget(
-                // We'd need to bind this properly, simplified for now
-                images: [], 
-                onImagesChanged: (files) {}, 
+                images: provider.images,
+                onImagesChanged: (files) => provider.setImages(files),
               ),
+              const SizedBox(height: 16),
               
+              // AI Diagnosis Action & Card
+              OutlinedButton.icon(
+                onPressed: provider.isAnalyzing
+                    ? null
+                    : () async {
+                        try {
+                          await provider.analyzeWithAI();
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(e.toString().replaceAll('Exception: ', '')),
+                                backgroundColor: AppTheme.errorColor,
+                              ),
+                            );
+                          }
+                        }
+                      },
+                icon: provider.isAnalyzing
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.auto_awesome, color: AppTheme.primaryColor),
+                label: Text(
+                  provider.isAnalyzing 
+                      ? 'جاري الفحص بالذكاء الاصطناعي...' 
+                      : '⚡ فحص العطل وتقدير التكلفة بالذكاء الاصطناعي',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                  side: const BorderSide(color: AppTheme.primaryColor, width: 1.5),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+              ),
+              if (provider.aiDiagnosis != null) ...[
+                const SizedBox(height: 16),
+                AiDiagnosisWidget(diagnosis: provider.aiDiagnosis!),
+              ],
               const SizedBox(height: 16),
               
               TextFormField(

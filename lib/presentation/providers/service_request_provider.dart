@@ -69,19 +69,27 @@ class ServiceRequestProvider extends ChangeNotifier {
     notifyListeners();
   }
   
+  void setImages(List<XFile> images) {
+    _images = List.from(images);
+    notifyListeners();
+  }
+
   /// Analyze problem with AI
   Future<void> analyzeWithAI() async {
-    if (_description.isEmpty) {
-      throw Exception('الرجاء إدخال وصف المشكلة أولاً');
+    if (_description.trim().isEmpty && _images.isEmpty) {
+      throw Exception('الرجاء إدخال وصف المشكلة أو إرفاق صور العطل أولاً');
     }
     
     _isAnalyzing = true;
     notifyListeners();
     
     try {
+      final effectiveDescription = _description.trim().isEmpty 
+          ? 'تحليل عطل الصيانة من الصور المرفقة' 
+          : _description;
       _aiDiagnosis = await _aiService.analyzeProblem(
         images: _images,
-        description: _description,
+        description: effectiveDescription,
       );
       
       // Auto-set service type from AI suggestion
