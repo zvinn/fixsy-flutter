@@ -7,6 +7,7 @@ import '../../../core/utils/responsive_utils.dart';
 import '../ratings/add_rating_screen.dart';
 import '../chat/chat_room_screen.dart';
 import '../../widgets/common/skeleton_loaders.dart';
+import '../../../core/theme/app_theme.dart';
 
 class BookingsScreen extends StatefulWidget {
   const BookingsScreen({super.key});
@@ -222,10 +223,46 @@ class _BookingsScreenState extends State<BookingsScreen> {
               
               if (booking.technicianName != null) ...[
                 const SizedBox(height: 8),
-                _buildInfoRow(
-                  Icons.person,
-                  'الفني',
-                  booking.technicianName!,
+                InkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: () {
+                    Navigator.pushNamed(context, '/technician-profile', arguments: {
+                      'techId': booking.technicianId ?? 'tech_01',
+                      'techName': booking.technicianName!,
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Row(
+                      children: [
+                        Icon(Icons.person, size: 18, color: AppTheme.primaryColor),
+                        const SizedBox(width: 8),
+                        Text(
+                          'الفني: ${booking.technicianName!}',
+                          style: const TextStyle(
+                            color: AppTheme.primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Spacer(),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: const Text(
+                            'عرض الملف ←',
+                            style: TextStyle(
+                              color: AppTheme.primaryColor,
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
 
@@ -306,9 +343,7 @@ class _BookingsScreenState extends State<BookingsScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (_) => AddRatingScreen(
-                            technicianId: booking.technicianId ?? '',
-                            technicianName: booking.technicianName ?? 'الفني',
-                            bookingId: booking.id,
+                            booking: booking,
                           ),
                         ),
                       );

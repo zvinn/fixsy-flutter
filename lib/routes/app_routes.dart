@@ -29,6 +29,7 @@ import '../presentation/screens/gamification/loyalty_screen.dart';
 import '../presentation/screens/technician/verification_screen.dart';
 import '../presentation/screens/store/store_screen.dart';
 import '../presentation/screens/contracts/contracts_screen.dart';
+import '../presentation/screens/technician/technician_profile_screen.dart';
 
 /// App Routes Configuration
 /// Centralized routing for the entire application
@@ -64,6 +65,7 @@ class AppRoutes {
   static const String techOnboarding = '/tech-onboarding';
   static const String store = '/store';
   static const String contracts = '/contracts';
+  static const String techProfile = '/technician-profile';
 
   // Route generator
   static Route<dynamic> generateRoute(RouteSettings routeSettings) {
@@ -174,6 +176,21 @@ class AppRoutes {
 
       case contracts:
         return MaterialPageRoute(builder: (_) => const ContractsScreen());
+
+      case techProfile:
+        final args = routeSettings.arguments as Map<String, dynamic>? ?? {};
+        return MaterialPageRoute(
+          builder: (_) => TechnicianProfileScreen(
+            techId: args['techId'] ?? 'tech_01',
+            techName: args['techName'] ?? 'م. أحمد حسني',
+            specialty: args['specialty'] ?? 'خبير السباكة وتأسيس الشبكات',
+            area: args['area'] ?? 'القاهرة - المعادي وحلوان',
+            rating: (args['rating'] as num?)?.toDouble() ?? 4.9,
+            completedJobs: (args['completedJobs'] as num?)?.toInt() ?? 214,
+            phone: args['phone'] ?? '+201012345678',
+            isVerified: args['isVerified'] ?? true,
+          ),
+        );
       
       default:
         return MaterialPageRoute(
