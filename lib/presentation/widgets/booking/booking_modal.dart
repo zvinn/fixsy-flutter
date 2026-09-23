@@ -9,6 +9,7 @@ import '../../screens/service_request/widgets/service_selector_widget.dart';
 import '../../screens/service_request/widgets/image_upload_widget.dart';
 import '../../screens/service_request/widgets/ai_diagnosis_widget.dart';
 import 'payment_method_selector.dart';
+import '../scheduling/slot_scheduling_widget.dart';
 
 class BookingModal extends StatefulWidget {
   final String? initialServiceType;
@@ -33,6 +34,7 @@ class _BookingModalState extends State<BookingModal> {
   
   int _currentStep = 0;
   DateTime? _scheduledDate;
+  SchedulingData? _schedulingData;
   PaymentMethodType _selectedPaymentMethod = PaymentMethodType.cash;
   CouponModel? _appliedCoupon;
   bool _isValidatingCoupon = false;
@@ -337,29 +339,17 @@ class _BookingModalState extends State<BookingModal> {
               
               const SizedBox(height: 16),
               
-              // Date Picker
-              InkWell(
-                onTap: () async {
-                  final date = await showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime.now(),
-                    lastDate: DateTime.now().add(const Duration(days: 30)),
-                  );
-                  if (date != null) setState(() => _scheduledDate = date);
+              const SizedBox(height: 16),
+              
+              // Advanced Slot & Recurrence Scheduling
+              SlotSchedulingWidget(
+                initialData: _schedulingData,
+                onSchedulingChanged: (data) {
+                  setState(() {
+                    _schedulingData = data;
+                    _scheduledDate = data.scheduledDate;
+                  });
                 },
-                child: InputDecorator(
-                  decoration: InputDecoration(
-                    labelText: context.t('scheduleDate'),
-                    prefixIcon: const Icon(Icons.calendar_today),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                  ),
-                  child: Text(
-                    _scheduledDate != null 
-                        ? '${_scheduledDate!.day}/${_scheduledDate!.month}/${_scheduledDate!.year}' 
-                        : context.t('selectDate'),
-                  ),
-                ),
               ),
             ],
           ),
@@ -436,8 +426,27 @@ class _BookingModalState extends State<BookingModal> {
               _summaryRow(context.t('inspectionPrice'), '50 ${context.t('currency')}'),
               if (_appliedCoupon != null)
                 _summaryRow(context.t('discount'), '-${_appliedCoupon!.discountAmount} ${context.t('currency')}', isDiscount: true),
+              if (_schedulingData != null) ...[
+                const Divider(height: 16),
+                _summaryRow(
+                  'نوع الموعد والحجز',
+                  _schedulingData!.bookingType == BookingType.now
+                      ? 'فوري (خلال 30-60 دقيقة ⚡)'
+                      : '${_schedulingData!.scheduledDate.day}/${_schedulingData!.scheduledDate.month} (${_schedulingData!.timeSlot})',
+                ),
+                if (_schedulingData!.recurringType != RecurringType.none)
+                  _summaryRow(
+                    'تكرار دوري',
+                    _schedulingData!.recurringType == RecurringType.weekly
+                        ? 'أسبوعياً (-10% صيانة دورية)'
+                        : _schedulingData!.recurringType == RecurringType.monthly
+                            ? 'شهرياً (-10% صيانة دورية)'
+                            : 'سنوياً',
+                    isDiscount: true,
+                  ),
+              ],
               const Divider(height: 24),
-              _summaryRow(context.t('total'), '${_calculateTotal()} ${context.t('currency')}', isTotal: true),
+              _summaryRow(context.t('total'), '${_calculateTotal().toStringAsFixed(1)} ${context.t('currency')}', isTotal: true),
             ],
           ),
         ),
@@ -467,6 +476,9 @@ class _BookingModalState extends State<BookingModal> {
 
   double _calculateTotal() {
     double base = 50.0;
+    if (_schedulingData?.recurringType != null && _schedulingData!.recurringType != RecurringType.none) {
+      base = base * 0.9; // 10% discount on recurring maintenance
+    }
     if (_appliedCoupon != null) {
       return _couponService.calculateDiscount(base, _appliedCoupon!);
     }

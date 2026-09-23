@@ -11,6 +11,10 @@ class AppLocalizations {
   static AppLocalizations of(BuildContext context) {
     return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
   }
+
+  static AppLocalizations? maybeOf(BuildContext context) {
+    return Localizations.of<AppLocalizations>(context, AppLocalizations);
+  }
   
   static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
   
@@ -71,7 +75,18 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
 
 /// Extension for easy access
 extension LocalizationExtension on BuildContext {
-  AppLocalizations get l10n => AppLocalizations.of(this);
-  String t(String key, {Map<String, String>? params}) => l10n.translate(key, params: params);
-  bool get isRTL => l10n.isRTL;
+  AppLocalizations? get l10n => AppLocalizations.maybeOf(this);
+  String t(String key, {Map<String, String>? params}) {
+    if (l10n != null) {
+      return l10n!.translate(key, params: params);
+    }
+    String text = translationsAr[key] ?? key;
+    if (params != null) {
+      params.forEach((paramKey, value) {
+        text = text.replaceAll('{$paramKey}', value);
+      });
+    }
+    return text;
+  }
+  bool get isRTL => l10n?.isRTL ?? true;
 }

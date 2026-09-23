@@ -41,12 +41,25 @@ class CouponModel {
 }
 
 class CouponService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore? _firestore;
   static const String _collection = 'coupons';
+
+  CouponService({FirebaseFirestore? firestore}) : _firestore = firestore;
+
+  FirebaseFirestore? get _db {
+    if (_firestore != null) return _firestore;
+    try {
+      return FirebaseFirestore.instance;
+    } catch (_) {
+      return null;
+    }
+  }
 
   Future<CouponModel?> validateCoupon(String code) async {
     try {
-      final querySnapshot = await _firestore
+      final db = _db;
+      if (db == null) return null;
+      final querySnapshot = await db
           .collection(_collection)
           .where('code', isEqualTo: code)
           .limit(1)
