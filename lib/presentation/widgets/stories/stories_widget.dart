@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../routes/app_routes.dart';
 
 /// Model for a Story
 class Story {
@@ -10,24 +11,32 @@ class Story {
   final String techId;
   final String techName;
   final String techImg;
+  final String specialty;
   final String media;
   final String type; // 'image' or 'video'
   final DateTime timestamp;
+  final String caption;
+  final String serviceCategory;
+  final bool isVerified;
 
   Story({
     required this.id,
     required this.techId,
     required this.techName,
     required this.techImg,
+    this.specialty = 'فني معتمد',
     required this.media,
     required this.type,
     required this.timestamp,
+    this.caption = '',
+    this.serviceCategory = 'صيانة عامة',
+    this.isVerified = true,
   });
 
   bool get isExpired => DateTime.now().difference(timestamp).inHours >= 24;
 }
 
-/// Stories Widget - Instagram-like stories for technicians
+/// Stories Widget - Instagram-like daily stories for technicians
 class StoriesWidget extends StatefulWidget {
   final String? userRole;
   final String? userId;
@@ -55,36 +64,56 @@ class _StoriesWidgetState extends State<StoriesWidget> {
 
   Future<void> _loadStories() async {
     setState(() => _isLoading = true);
-    
+
     try {
-      // Sample stories for demonstration
       _stories = [
         Story(
           id: '1',
-          techId: 'tech1',
-          techName: 'محمد علي',
+          techId: 'tech_01',
+          techName: 'م. أحمد حسني',
           techImg: '',
-          media: 'https://picsum.photos/400/600?random=1',
+          specialty: 'خبير سباكة وتأسيس شبكات',
+          serviceCategory: 'سباكة',
+          caption: 'تم الانتهاء من فحص وتصليح تسريب مخفي في شبكة التغذية الرئيسية بالمعادي 🔧💧',
+          media: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800',
           type: 'image',
-          timestamp: DateTime.now().subtract(const Duration(hours: 2)),
+          timestamp: DateTime.now().subtract(const Duration(hours: 1)),
         ),
         Story(
           id: '2',
-          techId: 'tech2',
-          techName: 'أحمد حسن',
+          techId: 'tech_02',
+          techName: 'م. محمود سامي',
           techImg: '',
-          media: 'https://picsum.photos/400/600?random=2',
+          specialty: 'فني تكييف وتبريد معتمد',
+          serviceCategory: 'تكييف',
+          caption: 'تنظيف وغسيل دوري للوحدات الخارجية وشحن فريون أصلي مع ضمان صيف كامل ❄️⚡',
+          media: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=800',
           type: 'image',
-          timestamp: DateTime.now().subtract(const Duration(hours: 5)),
+          timestamp: DateTime.now().subtract(const Duration(hours: 3)),
         ),
         Story(
           id: '3',
-          techId: 'tech3',
-          techName: 'علي محمود',
+          techId: 'tech_03',
+          techName: 'م. علي الجوهري',
           techImg: '',
-          media: 'https://picsum.photos/400/600?random=3',
+          specialty: 'أعمال الكهرباء واللوحات الذكية',
+          serviceCategory: 'كهرباء',
+          caption: 'تركيب لوحة قواطع ذكية وحماية ضد تذبذب التيار الكهربائي للمنزل 💡🛡️',
+          media: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800',
           type: 'image',
-          timestamp: DateTime.now().subtract(const Duration(hours: 8)),
+          timestamp: DateTime.now().subtract(const Duration(hours: 6)),
+        ),
+        Story(
+          id: '4',
+          techId: 'tech_04',
+          techName: 'طارق عبد العزيز',
+          techImg: '',
+          specialty: 'نجارة وديكورات خشبية',
+          serviceCategory: 'نجارة',
+          caption: 'تجديد وصيانة أبواب وشبابيك عازلة للصوت والحرارة بأحدث المفصلات الهيدروليكية 🚪✨',
+          media: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=800',
+          type: 'image',
+          timestamp: DateTime.now().subtract(const Duration(hours: 9)),
         ),
       ];
     } catch (e) {
@@ -96,37 +125,158 @@ class _StoriesWidgetState extends State<StoriesWidget> {
     }
   }
 
-  Future<void> _addStory() async {
-    if (widget.userRole != 'tech') return;
+  void _showAddStoryModal() {
+    final captionController = TextEditingController();
+    String selectedCategory = 'سباكة';
 
-    try {
-      final XFile? image = await _picker.pickImage(
-        source: ImageSource.gallery,
-        maxWidth: 1080,
-        maxHeight: 1920,
-        imageQuality: 85,
-      );
-
-      if (image != null) {
-        // TODO: Upload to Firebase Storage and add to Firestore
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('تم إضافة القصة بنجاح!'),
-            backgroundColor: Colors.green,
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setModalState) => Container(
+          padding: EdgeInsets.only(
+            top: 20,
+            left: 20,
+            right: 20,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 20,
           ),
-        );
-      }
-    } catch (e) {
-      debugPrint('Error adding story: $e');
-    }
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Row(
+                  children: [
+                    Icon(Icons.camera_alt, color: AppTheme.primaryColor),
+                    SizedBox(width: 8),
+                    Text(
+                      'نشر قصة يومية جديدة (Story)',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'شارك عملاءك بصور من أعمالك اليومية، تختفي القصة تلقائياً بعد 24 ساعة.',
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                ),
+                const SizedBox(height: 16),
+
+                // Category chips
+                const Text('نوع الخدمة:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  children: ['سباكة', 'تكييف', 'كهرباء', 'نجارة', 'نقاشة'].map((cat) {
+                    final isSelected = selectedCategory == cat;
+                    return ChoiceChip(
+                      label: Text(cat),
+                      selected: isSelected,
+                      onSelected: (val) {
+                        if (val) setModalState(() => selectedCategory = cat);
+                      },
+                      selectedColor: AppTheme.primaryColor,
+                      labelStyle: TextStyle(
+                        color: isSelected ? Colors.white : Colors.black87,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 16),
+
+                // Caption
+                TextField(
+                  controller: captionController,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                    labelText: 'اكتب وصفاً مختصراً للعمل المنجز...',
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // Publish Button
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      final caption = captionController.text.trim();
+                      if (caption.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('الرجاء كتابة وصف للقصة')),
+                        );
+                        return;
+                      }
+
+                      Navigator.pop(ctx);
+                      setState(() {
+                        _stories.insert(
+                          0,
+                          Story(
+                            id: DateTime.now().millisecondsSinceEpoch.toString(),
+                            techId: widget.userId ?? 'my_tech_id',
+                            techName: 'أنا (الفني)',
+                            techImg: '',
+                            specialty: 'فني $selectedCategory معتمد',
+                            serviceCategory: selectedCategory,
+                            caption: caption,
+                            media: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800',
+                            type: 'image',
+                            timestamp: DateTime.now(),
+                          ),
+                        );
+                      });
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          backgroundColor: AppTheme.successColor,
+                          content: Text('تم نشر قصتك بنجاح وستظهر لجميع العملاء! 🎉'),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.send_rounded, size: 18),
+                    label: const Text('نشر القصة الآن'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.primaryColor,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   void _viewStory(Story story) {
+    final techStories = _stories.where((s) => s.techId == story.techId).toList();
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => StoryViewerScreen(
-          stories: _stories.where((s) => s.techId == story.techId).toList(),
+          stories: techStories.isNotEmpty ? techStories : [story],
           initialIndex: 0,
         ),
       ),
@@ -136,10 +286,10 @@ class _StoriesWidgetState extends State<StoriesWidget> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     if (_isLoading) {
       return SizedBox(
-        height: 100,
+        height: 106,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -156,18 +306,17 @@ class _StoriesWidgetState extends State<StoriesWidget> {
     }
 
     return SizedBox(
-      height: 100,
+      height: 106,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemCount: groupedStories.length + (widget.userRole == 'tech' ? 1 : 0),
+        itemCount: groupedStories.length + 1, // First item is always the Add/My Story item
         itemBuilder: (context, index) {
-          // Add story button for technicians
-          if (widget.userRole == 'tech' && index == 0) {
+          if (index == 0) {
             return _buildAddStoryButton(isDark);
           }
 
-          final adjustedIndex = widget.userRole == 'tech' ? index - 1 : index;
+          final adjustedIndex = index - 1;
           final techId = groupedStories.keys.elementAt(adjustedIndex);
           final stories = groupedStories[techId]!;
           final latestStory = stories.first;
@@ -181,64 +330,90 @@ class _StoriesWidgetState extends State<StoriesWidget> {
   Widget _buildAddStoryButton(bool isDark) {
     return Padding(
       padding: const EdgeInsets.only(left: 12),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          GestureDetector(
-            onTap: _addStory,
-            child: Container(
-              width: 68,
-              height: 68,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: isDark ? Colors.white10 : Colors.grey.shade200,
-                border: Border.all(
-                  color: AppTheme.primaryColor,
-                  width: 2,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: _showAddStoryModal,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Stack(
+              children: [
+                Container(
+                  width: 68,
+                  height: 68,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: isDark ? Colors.white10 : Colors.grey.shade100,
+                    border: Border.all(
+                      color: AppTheme.primaryColor.withValues(alpha: 0.5),
+                      width: 1.5,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                  child: const Center(
+                    child: Icon(Icons.person, color: AppTheme.primaryColor, size: 36),
+                  ),
                 ),
-              ),
-              child: Icon(
-                Icons.add,
-                color: AppTheme.primaryColor,
-                size: 32,
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: const BoxDecoration(
+                      color: AppTheme.primaryColor,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.add, color: Colors.white, size: 14),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Text(
+              'أضف قصتك',
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white70 : Colors.black87,
               ),
             ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'إضافة قصة',
-            style: TextStyle(
-              fontSize: 11,
-              color: isDark ? Colors.white54 : Colors.black54,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     ).animate().fadeIn(duration: 300.ms);
   }
 
   Widget _buildStoryItem(Story story, bool isDark, int storyCount) {
     return Padding(
-      padding: const EdgeInsets.only(left: 12),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          GestureDetector(
-            onTap: () => _viewStory(story),
-            child: Container(
+      padding: const EdgeInsets.only(left: 14),
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => _viewStory(story),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
               width: 68,
               height: 68,
-              padding: const EdgeInsets.all(3),
+              padding: const EdgeInsets.all(2.5),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                gradient: LinearGradient(
+                gradient: const LinearGradient(
                   colors: [
-                    AppTheme.primaryColor,
-                    AppTheme.primaryColor.withValues(alpha: 0.6),
+                    Color(0xFF2563EB),
+                    Color(0xFF38BDF8),
+                    Color(0xFFF59E0B),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF2563EB).withValues(alpha: 0.25),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
               ),
               child: Container(
                 decoration: BoxDecoration(
@@ -253,11 +428,11 @@ class _StoriesWidgetState extends State<StoriesWidget> {
                           fit: BoxFit.cover,
                         )
                       : Container(
-                          color: AppTheme.primaryColor.withValues(alpha: 0.2),
+                          color: AppTheme.primaryColor.withValues(alpha: 0.15),
                           child: Center(
                             child: Text(
                               story.techName[0],
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: AppTheme.primaryColor,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20,
@@ -268,29 +443,30 @@ class _StoriesWidgetState extends State<StoriesWidget> {
                 ),
               ),
             ),
-          ),
-          const SizedBox(height: 4),
-          SizedBox(
-            width: 70,
-            child: Text(
-              story.techName,
-              style: TextStyle(
-                fontSize: 11,
-                color: isDark ? Colors.white70 : Colors.black87,
+            const SizedBox(height: 6),
+            SizedBox(
+              width: 72,
+              child: Text(
+                story.techName,
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: isDark ? Colors.white70 : Colors.black87,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
               ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     ).animate().fadeIn(duration: 300.ms).slideX(begin: 0.1, end: 0);
   }
 
   Widget _buildSkeletonItem(bool isDark) {
     return Padding(
-      padding: const EdgeInsets.only(left: 12),
+      padding: const EdgeInsets.only(left: 14),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -299,15 +475,15 @@ class _StoriesWidgetState extends State<StoriesWidget> {
             height: 68,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: isDark ? Colors.white10 : Colors.grey.shade300,
+              color: isDark ? Colors.white10 : Colors.grey.shade200,
             ),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 6),
           Container(
             width: 50,
-            height: 12,
+            height: 10,
             decoration: BoxDecoration(
-              color: isDark ? Colors.white10 : Colors.grey.shade300,
+              color: isDark ? Colors.white10 : Colors.grey.shade200,
               borderRadius: BorderRadius.circular(4),
             ),
           ),
@@ -337,6 +513,8 @@ class _StoryViewerScreenState extends State<StoryViewerScreen>
   late PageController _pageController;
   late AnimationController _progressController;
   int _currentIndex = 0;
+  bool _isPaused = false;
+  String? _selectedReaction;
 
   @override
   void initState() {
@@ -361,11 +539,25 @@ class _StoryViewerScreenState extends State<StoryViewerScreen>
     super.dispose();
   }
 
+  void _pauseStory() {
+    if (!_isPaused) {
+      _progressController.stop();
+      setState(() => _isPaused = true);
+    }
+  }
+
+  void _resumeStory() {
+    if (_isPaused) {
+      _progressController.forward();
+      setState(() => _isPaused = false);
+    }
+  }
+
   void _nextStory() {
     if (_currentIndex < widget.stories.length - 1) {
       setState(() => _currentIndex++);
       _pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 250),
         curve: Curves.easeInOut,
       );
       _progressController.reset();
@@ -379,7 +571,7 @@ class _StoryViewerScreenState extends State<StoryViewerScreen>
     if (_currentIndex > 0) {
       setState(() => _currentIndex--);
       _pageController.previousPage(
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 250),
         curve: Curves.easeInOut,
       );
       _progressController.reset();
@@ -389,46 +581,74 @@ class _StoryViewerScreenState extends State<StoryViewerScreen>
 
   @override
   Widget build(BuildContext context) {
+    final story = widget.stories[_currentIndex];
+
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: Colors.black,
         body: GestureDetector(
+          onLongPressStart: (_) => _pauseStory(),
+          onLongPressEnd: (_) => _resumeStory(),
           onTapUp: (details) {
             final screenWidth = MediaQuery.of(context).size.width;
-            if (details.localPosition.dx < screenWidth / 3) {
+            if (details.localPosition.dx > screenWidth * 0.65) {
               _previousStory();
-            } else {
+            } else if (details.localPosition.dx < screenWidth * 0.35) {
               _nextStory();
             }
           },
           child: Stack(
             children: [
-              // Story content
+              // Story Media
               PageView.builder(
                 controller: _pageController,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: widget.stories.length,
                 itemBuilder: (context, index) {
-                  final story = widget.stories[index];
+                  final s = widget.stories[index];
                   return CachedNetworkImage(
-                    imageUrl: story.media,
-                    fit: BoxFit.contain,
+                    imageUrl: s.media,
+                    fit: BoxFit.cover,
                     placeholder: (context, url) => const Center(
                       child: CircularProgressIndicator(color: Colors.white),
                     ),
-                    errorWidget: (context, url, error) => const Center(
-                      child: Icon(Icons.error, color: Colors.white),
+                    errorWidget: (context, url, error) => Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.broken_image, color: Colors.white70, size: 48),
+                          const SizedBox(height: 8),
+                          Text(s.serviceCategory, style: const TextStyle(color: Colors.white70)),
+                        ],
+                      ),
                     ),
                   );
                 },
               ),
 
-              // Progress bars
+              // Gradient Overlay for header and footer readability
+              Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.black87,
+                      Colors.transparent,
+                      Colors.transparent,
+                      Colors.black87,
+                    ],
+                    stops: [0.0, 0.2, 0.7, 1.0],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
+              ),
+
+              // Top Progress Bars
               Positioned(
                 top: MediaQuery.of(context).padding.top + 8,
-                left: 8,
-                right: 8,
+                left: 12,
+                right: 12,
                 child: Row(
                   children: List.generate(widget.stories.length, (index) {
                     return Expanded(
@@ -469,49 +689,191 @@ class _StoryViewerScreenState extends State<StoryViewerScreen>
                 ),
               ),
 
-              // Header with user info
+              // Header with Tech Info
               Positioned(
                 top: MediaQuery.of(context).padding.top + 20,
                 left: 16,
                 right: 16,
                 child: Row(
                   children: [
-                    CircleAvatar(
-                      radius: 18,
-                      backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.2),
-                      child: Text(
-                        widget.stories[_currentIndex].techName[0],
-                        style: TextStyle(
-                          color: AppTheme.primaryColor,
-                          fontWeight: FontWeight.bold,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          AppRoutes.techProfile,
+                          arguments: {
+                            'techId': story.techId,
+                            'techName': story.techName,
+                            'specialty': story.specialty,
+                          },
+                        );
+                      },
+                      child: CircleAvatar(
+                        radius: 19,
+                        backgroundColor: AppTheme.primaryColor,
+                        child: Text(
+                          story.techName[0],
+                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 10),
                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.stories[_currentIndex].techName,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            AppRoutes.techProfile,
+                            arguments: {
+                              'techId': story.techId,
+                              'techName': story.techName,
+                              'specialty': story.specialty,
+                            },
+                          );
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  story.techName,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                if (story.isVerified) ...[
+                                  const SizedBox(width: 4),
+                                  const Icon(Icons.verified, color: Colors.blue, size: 14),
+                                ],
+                              ],
                             ),
-                          ),
-                          Text(
-                            _formatTime(widget.stories[_currentIndex].timestamp),
-                            style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 12,
+                            Text(
+                              '${story.specialty} • ${_formatTime(story.timestamp)}',
+                              style: const TextStyle(color: Colors.white70, fontSize: 11),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                     IconButton(
                       onPressed: () => Navigator.pop(context),
                       icon: const Icon(Icons.close, color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Reaction Float Animation
+              if (_selectedReaction != null)
+                Center(
+                  child: Text(
+                    _selectedReaction!,
+                    style: const TextStyle(fontSize: 72),
+                  ).animate().scale(duration: 400.ms, curve: Curves.easeOutBack).fadeOut(delay: 500.ms),
+                ),
+
+              // Caption & Bottom Action Bar
+              Positioned(
+                bottom: MediaQuery.of(context).padding.bottom + 16,
+                left: 16,
+                right: 16,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Caption
+                    if (story.caption.isNotEmpty)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withValues(alpha: 0.65),
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+                        ),
+                        child: Text(
+                          story.caption,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 13,
+                            height: 1.4,
+                          ),
+                        ),
+                      ),
+                    const SizedBox(height: 12),
+
+                    // Quick Reactions Row
+                    Row(
+                      children: ['👏', '🔥', '👍', '❤️', '🛠️'].map((emoji) {
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() => _selectedReaction = emoji);
+                              Future.delayed(const Duration(milliseconds: 1000), () {
+                                if (mounted) setState(() => _selectedReaction = null);
+                              });
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.2),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Text(emoji, style: const TextStyle(fontSize: 16)),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 12),
+
+                    // Direct Action Buttons
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              Navigator.pushNamed(context, AppRoutes.newRequest);
+                            },
+                            icon: const Icon(Icons.handyman, size: 18),
+                            label: const Text('طلب هذا الفني الآن'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppTheme.primaryColor,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          flex: 2,
+                          child: OutlinedButton.icon(
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                context,
+                                AppRoutes.chat,
+                                arguments: {
+                                  'conversationId': 'story_${story.techId}',
+                                  'otherUserName': story.techName,
+                                  'otherUserId': story.techId,
+                                },
+                              );
+                            },
+                            icon: const Icon(Icons.chat_bubble_outline, size: 18),
+                            label: const Text('محادثة'),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              side: const BorderSide(color: Colors.white70),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
