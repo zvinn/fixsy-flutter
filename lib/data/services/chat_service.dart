@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import '../models/message_model.dart';
 import '../models/conversation_model.dart';
+import '../../core/utils/app_logger.dart';
 
 /// Chat Service
 /// Handles all chat-related operations with Firestore Realtime
@@ -179,7 +180,7 @@ class ChatService {
         'unreadCount': unreadCount,
       });
     } catch (e) {
-      print('Error updating conversation: $e');
+      AppLogger.error('Error updating conversation: $e');
     }
   }
 
@@ -264,7 +265,7 @@ class ChatService {
         'unreadCount.$userId': 0,
       });
     } catch (e) {
-      print('Error marking messages as read: $e');
+      AppLogger.error('Error marking messages as read: $e');
     }
   }
 
@@ -338,7 +339,7 @@ class ChatService {
 
       await messageRef.set(message.toJson());
     } catch (e) {
-      print('Error sending system message: $e');
+      AppLogger.error('Error sending system message: $e');
     }
   }
 }

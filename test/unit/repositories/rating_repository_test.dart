@@ -86,7 +86,7 @@ void main() {
       });
 
       test('should handle empty ratings list', () {
-        final List<double> ratings = [];
+        final ratings = <double>[];
         final average = ratings.isEmpty ? 0.0 : ratings.reduce((a, b) => a + b) / ratings.length;
 
         expect(average, equals(0.0));

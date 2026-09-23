@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:provider/provider.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../data/models/transaction_model.dart';
+import '../../providers/wallet_provider.dart';
+import '../../providers/auth_provider.dart';
 
 class WalletScreen extends StatefulWidget {
   const WalletScreen({super.key});
@@ -11,85 +15,140 @@ class WalletScreen extends StatefulWidget {
 }
 
 class _WalletScreenState extends State<WalletScreen> {
-  double _balance = 1250.0;
+  // Local fallback state if WalletProvider is not in tree (e.g. simple widget test)
+  double _localBalance = 1250.0;
   int _selectedFilterIndex = 0; // 0: All, 1: Inflow (topUp/earning/reward), 2: Outflow (withdrawal/payment)
-
-  late List<Transaction> _transactions;
+  late List<TransactionModel> _localTransactions;
 
   @override
   void initState() {
     super.initState();
-    _transactions = [
-      Transaction(
+    _localTransactions = [
+      TransactionModel(
         id: '1',
+        userId: 'demo',
         description: 'شحن رصيد - فودافون كاش',
         amount: 500.0,
         type: TransactionType.topUp,
         date: DateTime.now().subtract(const Duration(hours: 4)),
       ),
-      Transaction(
+      TransactionModel(
         id: '2',
+        userId: 'demo',
         description: 'خدمة سباكة - كود حجز #8291',
         amount: -350.0,
         type: TransactionType.payment,
         date: DateTime.now().subtract(const Duration(days: 1)),
       ),
-      Transaction(
+      TransactionModel(
         id: '3',
+        userId: 'demo',
         description: 'مكافأة ترحيبية - كود FIXSY50',
         amount: 50.0,
         type: TransactionType.reward,
         date: DateTime.now().subtract(const Duration(days: 2)),
       ),
-      Transaction(
+      TransactionModel(
         id: '4',
+        userId: 'demo',
         description: 'سحب إلى الحساب البنكي',
         amount: -500.0,
         type: TransactionType.withdrawal,
         date: DateTime.now().subtract(const Duration(days: 4)),
       ),
-      Transaction(
+      TransactionModel(
         id: '5',
+        userId: 'demo',
         description: 'خدمة صيانة تكييف - علي حسن',
         amount: 450.0,
         type: TransactionType.earning,
         date: DateTime.now().subtract(const Duration(days: 6)),
       ),
     ];
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initProviderUser();
+    });
   }
 
-  List<Transaction> get _filteredTransactions {
-    if (_selectedFilterIndex == 1) {
-      return _transactions
-          .where((t) =>
-              t.type == TransactionType.earning ||
-              t.type == TransactionType.topUp ||
-              t.type == TransactionType.reward)
-          .toList();
-    } else if (_selectedFilterIndex == 2) {
-      return _transactions
-          .where((t) =>
-              t.type == TransactionType.withdrawal ||
-              t.type == TransactionType.payment)
-          .toList();
+  void _initProviderUser() {
+    try {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final walletProvider = Provider.of<WalletProvider>(context, listen: false);
+      final user = authProvider.currentUser;
+      final userId = user?.email.isNotEmpty == true ? user!.email : user?.id;
+      if (userId != null) {
+        walletProvider.initUser(userId);
+      }
+    } catch (_) {
+      // Ignored if providers not mounted
     }
-    return _transactions;
   }
 
-  double get _totalInflow {
-    return _transactions
+  WalletProvider? _getWalletProvider(BuildContext context) {
+    try {
+      return Provider.of<WalletProvider>(context);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  double _getBalance(WalletProvider? provider) {
+    if (provider != null) return provider.balance;
+    return _localBalance;
+  }
+
+  List<TransactionModel> _getFilteredTransactions(WalletProvider? provider) {
+    if (provider != null) {
+      return provider.getFilteredTransactions(_selectedFilterIndex);
+    }
+    if (_selectedFilterIndex == 1) {
+      return _localTransactions.where((t) => t.amount > 0).toList();
+    } else if (_selectedFilterIndex == 2) {
+      return _localTransactions.where((t) => t.amount < 0).toList();
+    }
+    return _localTransactions;
+  }
+
+  double _getTotalInflow(WalletProvider? provider) {
+    if (provider != null) return provider.totalInflow;
+    return _localTransactions
         .where((t) => t.amount > 0)
         .fold(0.0, (acc, t) => acc + t.amount);
   }
 
-  double get _totalOutflow {
-    return _transactions
+  double _getTotalOutflow(WalletProvider? provider) {
+    if (provider != null) return provider.totalOutflow;
+    return _localTransactions
         .where((t) => t.amount < 0)
         .fold(0.0, (acc, t) => acc + t.amount.abs());
   }
 
+  List<FlSpot> _getChartSpots(WalletProvider? provider) {
+    if (provider != null) {
+      return provider.getChartSpots();
+    }
+    return const [
+      FlSpot(0, 400),
+      FlSpot(1, 650),
+      FlSpot(2, 500),
+      FlSpot(3, 850),
+      FlSpot(4, 950),
+      FlSpot(5, 1250),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
+    final walletProvider = _getWalletProvider(context);
+    final currentBalance = _getBalance(walletProvider);
+    final totalInflow = _getTotalInflow(walletProvider);
+    final totalOutflow = _getTotalOutflow(walletProvider);
+    final filteredList = _getFilteredTransactions(walletProvider);
+    final totalTransactionsCount = walletProvider != null
+        ? walletProvider.transactions.length
+        : _localTransactions.length;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('المحفظة الرقمية'),
@@ -112,34 +171,34 @@ class _WalletScreenState extends State<WalletScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Balance Card
-            _buildBalanceCard().animate().fadeIn(duration: 400.ms).slideY(begin: 0.1, end: 0),
+            _buildBalanceCard(currentBalance).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1, end: 0),
             const SizedBox(height: 16),
 
             // Quick Stats
-            _buildQuickStats().animate().fadeIn(delay: 100.ms),
+            _buildQuickStats(totalInflow, totalOutflow).animate().fadeIn(delay: 100.ms),
             const SizedBox(height: 20),
 
             // Action Buttons
-            _buildActionButtons().animate().fadeIn(delay: 200.ms),
+            _buildActionButtons(currentBalance).animate().fadeIn(delay: 200.ms),
             const SizedBox(height: 24),
 
             // Analytics Chart
-            _buildChartSection().animate().fadeIn(delay: 300.ms),
+            _buildChartSection(walletProvider).animate().fadeIn(delay: 300.ms),
             const SizedBox(height: 24),
 
             // Transactions Header & Filters
-            _buildTransactionsHeader(),
+            _buildTransactionsHeader(filteredList.length, totalTransactionsCount),
             const SizedBox(height: 12),
 
             // Transaction List
-            _buildTransactionsList(),
+            _buildTransactionsList(filteredList),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildBalanceCard() {
+  Widget _buildBalanceCard(double balance) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(22),
@@ -203,7 +262,7 @@ class _WalletScreenState extends State<WalletScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            '${_balance.toStringAsFixed(2)} ج.م',
+            '${balance.toStringAsFixed(2)} ج.م',
             style: const TextStyle(
               color: Colors.white,
               fontSize: 34,
@@ -221,7 +280,7 @@ class _WalletScreenState extends State<WalletScreen> {
     );
   }
 
-  Widget _buildQuickStats() {
+  Widget _buildQuickStats(double inflow, double outflow) {
     return Row(
       children: [
         Expanded(
@@ -260,7 +319,7 @@ class _WalletScreenState extends State<WalletScreen> {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        '+${_totalInflow.toStringAsFixed(0)} ج.م',
+                        '+${inflow.toStringAsFixed(0)} ج.م',
                         style: const TextStyle(
                           color: AppTheme.successColor,
                           fontWeight: FontWeight.bold,
@@ -311,7 +370,7 @@ class _WalletScreenState extends State<WalletScreen> {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        '-${_totalOutflow.toStringAsFixed(0)} ج.م',
+                        '-${outflow.toStringAsFixed(0)} ج.م',
                         style: const TextStyle(
                           color: AppTheme.errorColor,
                           fontWeight: FontWeight.bold,
@@ -329,7 +388,7 @@ class _WalletScreenState extends State<WalletScreen> {
     );
   }
 
-  Widget _buildActionButtons() {
+  Widget _buildActionButtons(double balance) {
     return Row(
       children: [
         // Top Up Button
@@ -351,7 +410,7 @@ class _WalletScreenState extends State<WalletScreen> {
         // Withdraw Button
         Expanded(
           child: OutlinedButton.icon(
-            onPressed: _showWithdrawDialog,
+            onPressed: () => _showWithdrawDialog(balance),
             icon: const Icon(Icons.outbox, size: 18),
             label: const Text('سحب الأموال'),
             style: OutlinedButton.styleFrom(
@@ -382,7 +441,8 @@ class _WalletScreenState extends State<WalletScreen> {
     );
   }
 
-  Widget _buildChartSection() {
+  Widget _buildChartSection(WalletProvider? provider) {
+    final spots = _getChartSpots(provider);
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -466,14 +526,7 @@ class _WalletScreenState extends State<WalletScreen> {
                 borderData: FlBorderData(show: false),
                 lineBarsData: [
                   LineChartBarData(
-                    spots: const [
-                      FlSpot(0, 400),
-                      FlSpot(1, 650),
-                      FlSpot(2, 500),
-                      FlSpot(3, 850),
-                      FlSpot(4, 950),
-                      FlSpot(5, 1250),
-                    ],
+                    spots: spots,
                     isCurved: true,
                     curveSmoothness: 0.35,
                     color: AppTheme.primaryColor,
@@ -501,7 +554,7 @@ class _WalletScreenState extends State<WalletScreen> {
     );
   }
 
-  Widget _buildTransactionsHeader() {
+  Widget _buildTransactionsHeader(int filteredCount, int totalCount) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -509,11 +562,11 @@ class _WalletScreenState extends State<WalletScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'سجل المعاملات (${_filteredTransactions.length})',
+              'سجل المعاملات ($filteredCount)',
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             Text(
-              'الإجمالي: ${_transactions.length}',
+              'الإجمالي: $totalCount',
               style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
             ),
           ],
@@ -558,8 +611,7 @@ class _WalletScreenState extends State<WalletScreen> {
     );
   }
 
-  Widget _buildTransactionsList() {
-    final list = _filteredTransactions;
+  Widget _buildTransactionsList(List<TransactionModel> list) {
     if (list.isEmpty) {
       return Container(
         width: double.infinity,
@@ -593,7 +645,7 @@ class _WalletScreenState extends State<WalletScreen> {
     );
   }
 
-  Widget _buildTransactionCard(Transaction txn) {
+  Widget _buildTransactionCard(TransactionModel txn) {
     final isPositive = txn.amount > 0;
     final color = isPositive ? AppTheme.successColor : AppTheme.errorColor;
 
@@ -687,8 +739,8 @@ class _WalletScreenState extends State<WalletScreen> {
   }
 
   void _showTopUpModal() {
-    double selectedAmount = 250.0;
-    String selectedMethod = 'instapay';
+    var selectedAmount = 250.0;
+    var selectedMethod = 'instapay';
     final customAmountController = TextEditingController();
 
     showModalBottomSheet(
@@ -872,9 +924,12 @@ class _WalletScreenState extends State<WalletScreen> {
                 ],
               ),
             ),
+            // ignore: deprecated_member_use
             Radio<String>(
               value: value,
+              // ignore: deprecated_member_use
               groupValue: groupValue,
+              // ignore: deprecated_member_use
               onChanged: (_) => onTap(),
               activeColor: AppTheme.primaryColor,
             ),
@@ -885,31 +940,26 @@ class _WalletScreenState extends State<WalletScreen> {
   }
 
   void _executeTopUp(double amount, String method) {
-    String methodLabel;
-    switch (method) {
-      case 'instapay':
-        methodLabel = 'انستاباي';
-        break;
-      case 'wallet':
-        methodLabel = 'فودافون كاش';
-        break;
-      default:
-        methodLabel = 'البطاقة البنكية';
+    final walletProvider = _getWalletProvider(context);
+    if (walletProvider != null) {
+      walletProvider.topUp(amount: amount, method: method);
+    } else {
+      final methodLabel = method == 'instapay' ? 'انستاباي' : (method == 'wallet' ? 'فودافون كاش' : 'البطاقة البنكية');
+      setState(() {
+        _localBalance += amount;
+        _localTransactions.insert(
+          0,
+          TransactionModel(
+            id: DateTime.now().millisecondsSinceEpoch.toString(),
+            userId: 'demo',
+            description: 'شحن رصيد - $methodLabel',
+            amount: amount,
+            type: TransactionType.topUp,
+            date: DateTime.now(),
+          ),
+        );
+      });
     }
-
-    setState(() {
-      _balance += amount;
-      _transactions.insert(
-        0,
-        Transaction(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          description: 'شحن رصيد - $methodLabel',
-          amount: amount,
-          type: TransactionType.topUp,
-          date: DateTime.now(),
-        ),
-      );
-    });
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -925,9 +975,9 @@ class _WalletScreenState extends State<WalletScreen> {
     );
   }
 
-  void _showWithdrawDialog() {
+  void _showWithdrawDialog(double availableBalance) {
     final controller = TextEditingController();
-    String destinationType = 'wallet';
+    var destinationType = 'wallet';
 
     showDialog(
       context: context,
@@ -941,7 +991,7 @@ class _WalletScreenState extends State<WalletScreen> {
             children: [
               Center(
                 child: Text(
-                  'الرصيد المتاح: ${_balance.toStringAsFixed(0)} ج.م',
+                  'الرصيد المتاح: ${availableBalance.toStringAsFixed(0)} ج.م',
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -964,7 +1014,7 @@ class _WalletScreenState extends State<WalletScreen> {
                 alignment: Alignment.centerLeft,
                 child: TextButton(
                   onPressed: () {
-                    controller.text = _balance.toStringAsFixed(0);
+                    controller.text = availableBalance.toStringAsFixed(0);
                   },
                   child: const Text('سحب الرصيد كاملاً', style: TextStyle(fontSize: 12)),
                 ),
@@ -1001,7 +1051,7 @@ class _WalletScreenState extends State<WalletScreen> {
                   );
                   return;
                 }
-                if (amount > _balance) {
+                if (amount > availableBalance) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('المبلغ المطلوب أكبر من الرصيد المتاح!')),
                   );
@@ -1009,21 +1059,27 @@ class _WalletScreenState extends State<WalletScreen> {
                 }
 
                 Navigator.pop(ctx);
-                setState(() {
-                  _balance -= amount;
-                  _transactions.insert(
-                    0,
-                    Transaction(
-                      id: DateTime.now().millisecondsSinceEpoch.toString(),
-                      description: destinationType == 'bank'
-                          ? 'طلب سحب إلى الحساب البنكي'
-                          : 'طلب سحب إلى محفظة الهاتف',
-                      amount: -amount,
-                      type: TransactionType.withdrawal,
-                      date: DateTime.now(),
-                    ),
-                  );
-                });
+                final walletProvider = _getWalletProvider(context);
+                if (walletProvider != null) {
+                  walletProvider.requestWithdrawal(amount: amount, destinationType: destinationType);
+                } else {
+                  setState(() {
+                    _localBalance -= amount;
+                    _localTransactions.insert(
+                      0,
+                      TransactionModel(
+                        id: DateTime.now().millisecondsSinceEpoch.toString(),
+                        userId: 'demo',
+                        description: destinationType == 'bank'
+                            ? 'طلب سحب إلى الحساب البنكي'
+                            : 'طلب سحب إلى محفظة الهاتف',
+                        amount: -amount,
+                        type: TransactionType.withdrawal,
+                        date: DateTime.now(),
+                      ),
+                    );
+                  });
+                }
 
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -1082,47 +1138,71 @@ class _WalletScreenState extends State<WalletScreen> {
             child: const Text('إلغاء'),
           ),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               final code = voucherController.text.trim().toUpperCase();
               if (code.isEmpty) return;
 
-              double bonus = 0.0;
-              if (code == 'FIXSY50') {
-                bonus = 50.0;
-              } else if (code == 'WELCOME2026') {
-                bonus = 100.0;
-              } else if (code == 'BONUS20') {
-                bonus = 20.0;
-              }
-
-              if (bonus > 0) {
-                Navigator.pop(ctx);
-                setState(() {
-                  _balance += bonus;
-                  _transactions.insert(
-                    0,
-                    Transaction(
-                      id: DateTime.now().millisecondsSinceEpoch.toString(),
-                      description: 'كوبون هدية - $code',
-                      amount: bonus,
-                      type: TransactionType.reward,
-                      date: DateTime.now(),
+              final walletProvider = _getWalletProvider(context);
+              if (walletProvider != null) {
+                final navigator = Navigator.of(ctx);
+                final messenger = ScaffoldMessenger.of(context);
+                final txn = await walletProvider.redeemVoucher(code);
+                if (txn != null) {
+                  navigator.pop();
+                  messenger.showSnackBar(
+                    SnackBar(
+                      backgroundColor: AppTheme.successColor,
+                      content: Text('مبروك! تم إضافة ${txn.amount.toStringAsFixed(0)} ج.م إلى محفظتك بنجاح 🎉'),
                     ),
                   );
-                });
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    backgroundColor: AppTheme.successColor,
-                    content: Text('مبروك! تم إضافة $bonus ج.م إلى محفظتك بنجاح 🎉'),
-                  ),
-                );
+                } else {
+                  messenger.showSnackBar(
+                    const SnackBar(
+                      backgroundColor: AppTheme.errorColor,
+                      content: Text('الكود المدخل غير صالح أو منتهي الصلاحية'),
+                    ),
+                  );
+                }
               } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    backgroundColor: AppTheme.errorColor,
-                    content: Text('الكود المدخل غير صالح أو منتهي الصلاحية'),
-                  ),
-                );
+                var bonus = 0.0;
+                if (code == 'FIXSY50') {
+                  bonus = 50.0;
+                } else if (code == 'WELCOME2026') {
+                  bonus = 100.0;
+                } else if (code == 'BONUS20') {
+                  bonus = 20.0;
+                }
+
+                if (bonus > 0) {
+                  Navigator.pop(ctx);
+                  setState(() {
+                    _localBalance += bonus;
+                    _localTransactions.insert(
+                      0,
+                      TransactionModel(
+                        id: DateTime.now().millisecondsSinceEpoch.toString(),
+                        userId: 'demo',
+                        description: 'كوبون هدية - $code',
+                        amount: bonus,
+                        type: TransactionType.reward,
+                        date: DateTime.now(),
+                      ),
+                    );
+                  });
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: AppTheme.successColor,
+                      content: Text('مبروك! تم إضافة $bonus ج.م إلى محفظتك بنجاح 🎉'),
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      backgroundColor: AppTheme.errorColor,
+                      content: Text('الكود المدخل غير صالح أو منتهي الصلاحية'),
+                    ),
+                  );
+                }
               }
             },
             style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primaryColor),
@@ -1132,23 +1212,4 @@ class _WalletScreenState extends State<WalletScreen> {
       ),
     );
   }
-}
-
-// Models
-enum TransactionType { earning, withdrawal, payment, topUp, reward }
-
-class Transaction {
-  final String id;
-  final String description;
-  final double amount;
-  final TransactionType type;
-  final DateTime date;
-
-  Transaction({
-    required this.id,
-    required this.description,
-    required this.amount,
-    required this.type,
-    required this.date,
-  });
 }

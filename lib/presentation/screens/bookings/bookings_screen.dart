@@ -227,7 +227,7 @@ class _BookingsScreenState extends State<BookingsScreen> {
                   borderRadius: BorderRadius.circular(8),
                   onTap: () {
                     Navigator.pushNamed(context, '/technician-profile', arguments: {
-                      'techId': booking.technicianId ?? 'tech_01',
+                      'techId': booking.technicianId,
                       'techName': booking.technicianName!,
                     });
                   },
@@ -235,7 +235,7 @@ class _BookingsScreenState extends State<BookingsScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 4),
                     child: Row(
                       children: [
-                        Icon(Icons.person, size: 18, color: AppTheme.primaryColor),
+                        const Icon(Icons.person, size: 18, color: AppTheme.primaryColor),
                         const SizedBox(width: 8),
                         Text(
                           'الفني: ${booking.technicianName!}',
@@ -319,7 +319,7 @@ class _BookingsScreenState extends State<BookingsScreen> {
                           Navigator.pushNamed(context, '/chat', arguments: {
                             'conversationId': booking.id,
                             'otherUserName': booking.technicianName ?? 'الفني',
-                            'otherUserId': booking.technicianId ?? '',
+                            'otherUserId': booking.technicianId,
                           });
                         },
                         icon: const Icon(Icons.chat_bubble_outline, size: 18),
@@ -671,10 +671,11 @@ class _BookingsScreenState extends State<BookingsScreen> {
       ),
     );
 
-    if (confirmed == true) {
-      try {
-        final authProvider = context.read<AuthProvider>();
-        await context.read<BookingsProvider>().cancelBooking(
+    if (!mounted || confirmed != true) return;
+
+    try {
+      final authProvider = context.read<AuthProvider>();
+      await context.read<BookingsProvider>().cancelBooking(
           bookingId: booking.id,
           userId: authProvider.currentUser!.id,
         );
@@ -697,6 +698,5 @@ class _BookingsScreenState extends State<BookingsScreen> {
           ),
         );
       }
-    }
   }
 }

@@ -1,15 +1,4 @@
 class ServiceRequest {
-  final String id;
-  final String userId;
-  final String category;
-  final String description;
-  final String status; // 'pending', 'assigned', 'in_progress', 'completed', 'cancelled'
-  final DateTime createdAt;
-  final DateTime? scheduledFor;
-  final String? technicianId;
-  final List<String>? imageUrls;
-  final double? estimatedPrice;
-  final String? aiDiagnosis;
 
   ServiceRequest({
     required this.id,
@@ -42,6 +31,17 @@ class ServiceRequest {
       aiDiagnosis: json['aiDiagnosis'] as String?,
     );
   }
+  final String id;
+  final String userId;
+  final String category;
+  final String description;
+  final String status; // 'pending', 'assigned', 'in_progress', 'completed', 'cancelled'
+  final DateTime createdAt;
+  final DateTime? scheduledFor;
+  final String? technicianId;
+  final List<String>? imageUrls;
+  final double? estimatedPrice;
+  final String? aiDiagnosis;
 
   Map<String, dynamic> toJson() {
     return {

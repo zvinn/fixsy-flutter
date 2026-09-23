@@ -6,7 +6,7 @@ class SecurityUtils {
   static String sanitizeInput(String input) {
     if (input.isEmpty) return input;
 
-    String sanitized = input;
+    var sanitized = input;
 
     // Remove HTML tags
     sanitized = sanitized.replaceAll(RegExp(r'<[^>]*>'), '');
@@ -93,7 +93,7 @@ class SecurityUtils {
   /// Generate safe filename
   static String generateSafeFilename(String filename) {
     // Remove path separators
-    String safe = filename.replaceAll(RegExp(r'[/\\]'), '_');
+    var safe = filename.replaceAll(RegExp(r'[/\\]'), '_');
 
     // Remove special characters except dots and underscores
     safe = safe.replaceAll(RegExp(r'[^a-zA-Z0-9._-]'), '_');

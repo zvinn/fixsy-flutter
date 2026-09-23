@@ -10,12 +10,12 @@ import '../../../core/theme/app_theme.dart';
 /// Add Rating Screen
 /// Multi-criteria rating & feedback for completed service bookings
 class AddRatingScreen extends StatefulWidget {
-  final Booking booking;
-
   const AddRatingScreen({
-    super.key,
     required this.booking,
+    super.key,
   });
+
+  final Booking booking;
 
   @override
   State<AddRatingScreen> createState() => _AddRatingScreenState();
@@ -89,12 +89,12 @@ class _AddRatingScreenState extends State<AddRatingScreen> {
 
     final success = await ratingProvider.addRating(
       bookingId: widget.booking.id,
-      technicianId: widget.booking.technicianId ?? '',
+      technicianId: widget.booking.technicianId,
       userId: user.id,
       rating: _overallRating,
       comment: commentBuffer.toString(),
-      userName: user.displayName ?? 'عميل Fixsy',
-      technicianName: widget.booking.technicianName ?? 'الفني',
+      userName: user.displayName,
+      technicianName: widget.booking.technicianName,
     );
 
     setState(() => _isSubmitting = false);

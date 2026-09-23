@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:fixsy_flutter/presentation/screens/home/home_screen.dart';
 
 void main() {
   group('HomeScreen Widget Tests', () {
@@ -48,7 +47,7 @@ void main() {
   group('Service Card Widget Tests', () {
     testWidgets('should display service name', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: _MockServiceCard(name: 'سباكة'),
           ),
@@ -60,7 +59,7 @@ void main() {
 
     testWidgets('should display service icon', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: _MockServiceCard(name: 'كهرباء', icon: Icons.electrical_services),
           ),
@@ -71,7 +70,7 @@ void main() {
     });
 
     testWidgets('should be tappable', (tester) async {
-      bool tapped = false;
+      var tapped = false;
       
       await tester.pumpWidget(
         MaterialApp(
@@ -106,7 +105,7 @@ void main() {
     });
 
     testWidgets('ElevatedButton should be clickable', (tester) async {
-      bool clicked = false;
+      var clicked = false;
       
       await tester.pumpWidget(
         MaterialApp(
@@ -124,14 +123,14 @@ void main() {
     });
 
     testWidgets('Disabled button should not be clickable', (tester) async {
-      bool clicked = false;
+      const clicked = false;
       
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: ElevatedButton(
               onPressed: null,
-              child: const Text('Disabled'),
+              child: Text('Disabled'),
             ),
           ),
         ),
@@ -221,13 +220,13 @@ class _MockAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class _MockServiceCard extends StatelessWidget {
-  final String name;
-  final IconData icon;
 
   const _MockServiceCard({
     required this.name,
     this.icon = Icons.build,
   });
+  final String name;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {

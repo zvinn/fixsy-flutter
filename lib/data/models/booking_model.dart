@@ -1,25 +1,5 @@
 /// Booking Model
 class Booking {
-  final String id;
-  final String userId;
-  final String serviceId;
-  final String technicianId;
-  final String status; // pending, accepted, in_progress, completed, cancelled
-  final DateTime scheduledDate;
-  final String address;
-  final String? notes;
-  final double totalPrice;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  
-  // Additional fields for display
-  final String? userName;
-  final String? serviceName;
-  final String? technicianName;
-  
-  // Rating fields
-  final bool isRated;
-  final String? ratingId;
 
   Booking({
     required this.id,
@@ -29,10 +9,7 @@ class Booking {
     required this.status,
     required this.scheduledDate,
     required this.address,
-    this.notes,
-    required this.totalPrice,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.totalPrice, required this.createdAt, required this.updatedAt, this.notes,
     this.userName,
     this.serviceName,
     this.technicianName,
@@ -61,6 +38,26 @@ class Booking {
       ratingId: json['ratingId'] as String?,
     );
   }
+  final String id;
+  final String userId;
+  final String serviceId;
+  final String technicianId;
+  final String status; // pending, accepted, in_progress, completed, cancelled
+  final DateTime scheduledDate;
+  final String address;
+  final String? notes;
+  final double totalPrice;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  
+  // Additional fields for display
+  final String? userName;
+  final String? serviceName;
+  final String? technicianName;
+  
+  // Rating fields
+  final bool isRated;
+  final String? ratingId;
 
   /// Convert to Firestore document
   Map<String, dynamic> toJson() {

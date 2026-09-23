@@ -46,14 +46,14 @@ class _MainLayoutState extends State<MainLayout> {
     final isTechnician = authProvider.currentUser?.isTechnician == true || 
                         authProvider.currentUser?.isAdmin == true;
 
-    final List<Widget> clientPages = [
+    final clientPages = <Widget>[
       const HomeScreen(),
       const BookingsScreen(),
       const CommunityHubScreen(),
       const ProfileScreen(),
     ];
 
-    final List<Widget> technicianPages = [
+    final technicianPages = <Widget>[
       const TechDashboardScreen(),
       const JobMarketScreen(),
       const BookingsScreen(),

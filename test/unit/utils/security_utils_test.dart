@@ -74,7 +74,7 @@ void main() {
         true,
       );
       expect(
-        SecurityUtils.containsSqlInjection("UNION SELECT"),
+        SecurityUtils.containsSqlInjection('UNION SELECT'),
         true,
       );
     });
@@ -191,7 +191,7 @@ void main() {
     });
 
     test('allows requests within limit', () {
-      for (int i = 0; i < 5; i++) {
+      for (var i = 0; i < 5; i++) {
         expect(
           SecurityUtils.isRateLimited('test_key', maxAttempts: 5),
           false,
@@ -200,7 +200,7 @@ void main() {
     });
 
     test('blocks requests over limit', () {
-      for (int i = 0; i < 5; i++) {
+      for (var i = 0; i < 5; i++) {
         SecurityUtils.isRateLimited('test_key', maxAttempts: 5);
       }
       expect(
@@ -210,7 +210,7 @@ void main() {
     });
 
     test('clears rate limit', () {
-      for (int i = 0; i < 5; i++) {
+      for (var i = 0; i < 5; i++) {
         SecurityUtils.isRateLimited('test_key', maxAttempts: 5);
       }
       SecurityUtils.clearRateLimit('test_key');

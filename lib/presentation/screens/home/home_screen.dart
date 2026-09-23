@@ -7,7 +7,6 @@ import '../../widgets/stories/stories_widget.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/l10n/app_localizations.dart';
 import '../../../data/services/weather_service.dart';
-import '../../widgets/ai/voice_assistant_sheet.dart';
 import '../../widgets/ai/fixsy_ai_assistant_modal.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -90,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       const SizedBox(height: 4),
                       Text(
                         context.t('howCanWeHelp'),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 14,
                           color: AppTheme.textSecondaryColor,
                         ),
@@ -355,8 +354,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 const SizedBox(height: 32),
 
                 // NEW: Featured Section (Store & Contracts)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
                   child: Text(
                     'اكتشف المزيد',
                     style: TextStyle(

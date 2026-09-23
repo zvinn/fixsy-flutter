@@ -9,12 +9,11 @@ import '../../widgets/message_bubble.dart';
 /// Chat Room Screen
 /// Real-time chat between user and technician
 class ChatRoomScreen extends StatefulWidget {
-  final Booking booking;
 
   const ChatRoomScreen({
-    Key? key,
-    required this.booking,
-  }) : super(key: key);
+    required this.booking, super.key,
+  });
+  final Booking booking;
 
   @override
   State<ChatRoomScreen> createState() => _ChatRoomScreenState();

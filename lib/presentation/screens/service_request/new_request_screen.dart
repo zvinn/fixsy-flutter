@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import '../../widgets/booking/booking_modal.dart';
 
 class NewRequestScreen extends StatelessWidget {
-  final String? initialServiceType;
-  final String? initialDescription;
 
   const NewRequestScreen({
     super.key, 
     this.initialServiceType,
     this.initialDescription,
   });
+  final String? initialServiceType;
+  final String? initialDescription;
 
   @override
   Widget build(BuildContext context) {

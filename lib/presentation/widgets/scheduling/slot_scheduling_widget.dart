@@ -6,19 +6,18 @@ enum BookingType { now, scheduled }
 enum RecurringType { none, weekly, monthly, yearly }
 
 class SchedulingData {
-  final BookingType bookingType;
-  final DateTime scheduledDate;
-  final String timeSlot;
-  final TimeOfDay? customTime;
-  final RecurringType recurringType;
 
   const SchedulingData({
     required this.bookingType,
     required this.scheduledDate,
     required this.timeSlot,
-    this.customTime,
-    required this.recurringType,
+    required this.recurringType, this.customTime,
   });
+  final BookingType bookingType;
+  final DateTime scheduledDate;
+  final String timeSlot;
+  final TimeOfDay? customTime;
+  final RecurringType recurringType;
 
   String get formattedSummary {
     if (bookingType == BookingType.now) {
@@ -40,14 +39,13 @@ class SchedulingData {
 }
 
 class SlotSchedulingWidget extends StatefulWidget {
-  final SchedulingData? initialData;
-  final ValueChanged<SchedulingData> onSchedulingChanged;
 
   const SlotSchedulingWidget({
-    super.key,
+    required this.onSchedulingChanged, super.key,
     this.initialData,
-    required this.onSchedulingChanged,
   });
+  final SchedulingData? initialData;
+  final ValueChanged<SchedulingData> onSchedulingChanged;
 
   @override
   State<SlotSchedulingWidget> createState() => _SlotSchedulingWidgetState();
@@ -350,7 +348,7 @@ class _SlotSchedulingWidgetState extends State<SlotSchedulingWidget> {
                     _selectedDate.month == date.month &&
                     _selectedDate.day == date.day;
 
-                String topLabel = _getArabicWeekday(date.weekday);
+                var topLabel = _getArabicWeekday(date.weekday);
                 if (index == 0) topLabel = 'اليوم';
                 if (index == 1) topLabel = 'غداً';
 

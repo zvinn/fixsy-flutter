@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:provider/provider.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/utils/ui_helpers.dart';
+import '../../../data/models/admin_model.dart';
+import '../../providers/admin_provider.dart';
 
-/// AdminPanel Screen - Dashboard for platform management
+/// AdminPanelScreen - Comprehensive platform control center
 class AdminPanelScreen extends StatefulWidget {
   const AdminPanelScreen({super.key});
 
@@ -14,67 +18,11 @@ class AdminPanelScreen extends StatefulWidget {
 class _AdminPanelScreenState extends State<AdminPanelScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  bool _isLoading = true;
-
-  // Sample statistics
-  final Map<String, dynamic> _stats = {
-    'totalUsers': 1250,
-    'totalTechnicians': 85,
-    'totalBookings': 3420,
-    'activeBookings': 42,
-    'revenue': 125000,
-    'pendingApprovals': 8,
-  };
-
-  final List<Map<String, dynamic>> _recentBookings = [
-    {
-      'id': 'B001',
-      'client': 'أحمد محمد',
-      'technician': 'محمد علي',
-      'service': 'تكييف',
-      'status': 'completed',
-      'date': '19/01/2026',
-    },
-    {
-      'id': 'B002',
-      'client': 'سارة أحمد',
-      'technician': 'علي حسن',
-      'service': 'سباكة',
-      'status': 'in_progress',
-      'date': '19/01/2026',
-    },
-    {
-      'id': 'B003',
-      'client': 'محمد سعيد',
-      'technician': 'عمر خالد',
-      'service': 'كهرباء',
-      'status': 'pending',
-      'date': '18/01/2026',
-    },
-  ];
-
-  final List<Map<String, dynamic>> _pendingTechnicians = [
-    {
-      'id': 'T001',
-      'name': 'كريم محمود',
-      'specialty': 'تكييف',
-      'experience': '5 سنوات',
-      'rating': 4.8,
-    },
-    {
-      'id': 'T002',
-      'name': 'أيمن سمير',
-      'specialty': 'سباكة',
-      'experience': '3 سنوات',
-      'rating': 4.5,
-    },
-  ];
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
-    _loadData();
+    _tabController = TabController(length: 5, vsync: this);
   }
 
   @override
@@ -83,32 +31,302 @@ class _AdminPanelScreenState extends State<AdminPanelScreen>
     super.dispose();
   }
 
-  Future<void> _loadData() async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    if (mounted) {
-      setState(() => _isLoading = false);
-    }
+  void _showBroadcastDialog() {
+    final titleController = TextEditingController();
+    final bodyController = TextEditingController();
+    var target = 'all';
+
+    showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setDialogState) {
+          final isDark = Theme.of(context).brightness == Brightness.dark;
+          return AlertDialog(
+            backgroundColor: isDark ? AppTheme.darkCardColor : Colors.white,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            title: const Row(
+              children: [
+                Icon(Icons.campaign, color: AppTheme.primaryColor),
+                SizedBox(width: 8),
+                Text('إرسال إشعار عام للمنصة'),
+              ],
+            ),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('الفئة المستهدفة:'),
+                  const SizedBox(height: 8),
+                  DropdownButtonFormField<String>(
+                    initialValue: target,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.grey.shade100,
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                    ),
+                    items: const [
+                      DropdownMenuItem(value: 'all', child: Text('جميع المستخدمين 👥')),
+                      DropdownMenuItem(value: 'techs', child: Text('الفنيين فقط 🛠️')),
+                      DropdownMenuItem(value: 'clients', child: Text('العملاء فقط 🏠')),
+                    ],
+                    onChanged: (val) {
+                      if (val != null) {
+                        setDialogState(() => target = val);
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 14),
+                  TextField(
+                    controller: titleController,
+                    decoration: InputDecoration(
+                      labelText: 'عنوان الإشعار',
+                      filled: true,
+                      fillColor: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.grey.shade100,
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  TextField(
+                    controller: bodyController,
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      labelText: 'نص الرسالة أو الإعلان',
+                      filled: true,
+                      fillColor: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.grey.shade100,
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text('إلغاء'),
+              ),
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.primaryColor,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                ),
+                onPressed: () async {
+                  if (titleController.text.trim().isEmpty || bodyController.text.trim().isEmpty) {
+                    UiHelpers.showErrorToast('يرجى ملء جميع الحقول');
+                    return;
+                  }
+                  final provider = Provider.of<AdminProvider>(context, listen: false);
+                  final success = await provider.sendBroadcast(
+                    title: titleController.text.trim(),
+                    body: bodyController.text.trim(),
+                    targetGroup: target,
+                  );
+                  if (ctx.mounted) Navigator.pop(ctx);
+                  if (success) {
+                    UiHelpers.showSuccessToast('تم إرسال الإشعار بنجاح لجميع المشتركين!');
+                  }
+                },
+                icon: const Icon(Icons.send, size: 18),
+                label: const Text('إرسال الآن'),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  void _showAddCouponDialog() {
+    final codeController = TextEditingController();
+    final discountController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+        return AlertDialog(
+          backgroundColor: isDark ? AppTheme.darkCardColor : Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: const Text('إضافة كوبون خصم جديد'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: codeController,
+                textCapitalization: TextCapitalization.characters,
+                decoration: InputDecoration(
+                  labelText: 'كود الكوبون (مثال: FIXSY30)',
+                  prefixIcon: const Icon(Icons.tag),
+                  filled: true,
+                  fillColor: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.grey.shade100,
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: discountController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: 'نسبة الخصم % (مثال: 25)',
+                  prefixIcon: const Icon(Icons.percent),
+                  filled: true,
+                  fillColor: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.grey.shade100,
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('إلغاء'),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.primaryColor,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () async {
+                final code = codeController.text.trim();
+                final discount = double.tryParse(discountController.text.trim()) ?? 0;
+                if (code.isEmpty || discount <= 0) {
+                  UiHelpers.showErrorToast('يرجى إدخال كود ونسبة خصم صحيحة');
+                  return;
+                }
+                final provider = Provider.of<AdminProvider>(context, listen: false);
+                final ok = await provider.addCoupon(code, discount);
+                if (ctx.mounted) Navigator.pop(ctx);
+                if (ok) {
+                  UiHelpers.showSuccessToast('تم إنشاء الكوبون $code بنجاح!');
+                }
+              },
+              child: const Text('حفظ الكوبون'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showSmartRejectDialog(AdminTechnician tech) {
+    var selectedReason = 'صورة بطاقة الرقم القومي غير واضحة';
+    final customController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setModalState) {
+          final isDark = Theme.of(context).brightness == Brightness.dark;
+          return AlertDialog(
+            backgroundColor: isDark ? AppTheme.darkCardColor : Colors.white,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            title: Text('رفض طلب الفني: ${tech.name}'),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('حدد سبب الرفض لتوجيهه لإعادة التقديم:', style: TextStyle(fontSize: 13)),
+                  const SizedBox(height: 12),
+                  ...[
+                    'صورة بطاقة الرقم القومي غير واضحة',
+                    'الرقم القومي غير مطابق للاسم المكتوب',
+                    'شهادات الخبرة أو رخصة مزاولة المهنة مفقودة',
+                    'سبب آخر...',
+                  ].map((r) {
+                    final isSelected = selectedReason == r;
+                    return InkWell(
+                      borderRadius: BorderRadius.circular(8),
+                      onTap: () => setModalState(() => selectedReason = r),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+                        child: Row(
+                          children: [
+                            Icon(
+                              isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
+                              color: isSelected ? AppTheme.primaryColor : Colors.grey,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(child: Text(r, style: const TextStyle(fontSize: 13))),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+                  if (selectedReason == 'سبب آخر...') ...[
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: customController,
+                      decoration: InputDecoration(
+                        hintText: 'اكتب سبب الرفض بالتفصيل...',
+                        filled: true,
+                        fillColor: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.grey.shade100,
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text('إلغاء'),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                ),
+                onPressed: () async {
+                  final reason = selectedReason == 'سبب آخر...'
+                      ? customController.text.trim()
+                      : selectedReason;
+                  if (reason.isEmpty) {
+                    UiHelpers.showErrorToast('يرجى تحديد سبب الرفض');
+                    return;
+                  }
+                  final provider = Provider.of<AdminProvider>(context, listen: false);
+                  final ok = await provider.rejectTech(tech.id, reason);
+                  if (ctx.mounted) Navigator.pop(ctx);
+                  if (ok) {
+                    UiHelpers.showSuccessToast('تم إرسال إشعار الرفض والسبب للفني');
+                  }
+                },
+                child: const Text('تأكيد الرفض'),
+              ),
+            ],
+          );
+        },
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+    final admin = Provider.of<AdminProvider>(context);
+
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: isDark ? AppTheme.darkBackground : AppTheme.lightBackground,
         appBar: AppBar(
-          title: const Text('لوحة التحكم'),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
+          title: const Text('لوحة التحكم والإدارة'),
+          backgroundColor: isDark ? AppTheme.darkCardColor : Colors.white,
+          elevation: 1,
           actions: [
             IconButton(
-              onPressed: () {},
-              icon: Badge(
-                label: Text('${_stats['pendingApprovals']}'),
-                child: const Icon(Icons.notifications_outlined),
-              ),
+              tooltip: 'إرسال إشعار عام',
+              icon: const Icon(Icons.campaign_outlined, color: AppTheme.primaryColor),
+              onPressed: _showBroadcastDialog,
+            ),
+            IconButton(
+              tooltip: 'تحديث البيانات',
+              icon: const Icon(Icons.refresh),
+              onPressed: () => admin.loadAllData(),
             ),
           ],
           bottom: TabBar(
@@ -117,107 +335,132 @@ class _AdminPanelScreenState extends State<AdminPanelScreen>
             indicatorColor: AppTheme.primaryColor,
             labelColor: AppTheme.primaryColor,
             unselectedLabelColor: isDark ? Colors.white60 : Colors.black54,
-            tabs: const [
-              Tab(text: 'نظرة عامة'),
-              Tab(text: 'الطلبات'),
-              Tab(text: 'الفنيين'),
-              Tab(text: 'المستخدمين'),
+            tabs: [
+              const Tab(icon: Icon(Icons.analytics_outlined, size: 20), text: 'نظرة عامة'),
+              Tab(
+                icon: Badge(
+                  isLabelVisible: admin.pendingCount > 0,
+                  label: Text('${admin.pendingCount}'),
+                  child: const Icon(Icons.verified_user_outlined, size: 20),
+                ),
+                text: 'التوثيق',
+              ),
+              Tab(
+                icon: Badge(
+                  isLabelVisible: admin.debtors.isNotEmpty,
+                  label: Text('${admin.debtors.length}'),
+                  backgroundColor: Colors.red,
+                  child: const Icon(Icons.money_off_csred_outlined, size: 20),
+                ),
+                text: 'المديونيات',
+              ),
+              const Tab(icon: Icon(Icons.confirmation_number_outlined, size: 20), text: 'الكوبونات'),
+              Tab(
+                icon: Badge(
+                  isLabelVisible: admin.disputes.isNotEmpty,
+                  label: Text('${admin.disputes.length}'),
+                  backgroundColor: Colors.orange,
+                  child: const Icon(Icons.report_problem_outlined, size: 20),
+                ),
+                text: 'النزاعات',
+              ),
             ],
           ),
         ),
-        body: _isLoading
+        body: admin.isLoading
             ? const Center(child: CircularProgressIndicator())
             : TabBarView(
                 controller: _tabController,
                 children: [
-                  _buildOverviewTab(isDark),
-                  _buildBookingsTab(isDark),
-                  _buildTechniciansTab(isDark),
-                  _buildUsersTab(isDark),
+                  _buildOverviewTab(admin, isDark),
+                  _buildVerificationTab(admin, isDark),
+                  _buildDebtorsTab(admin, isDark),
+                  _buildCouponsTab(admin, isDark),
+                  _buildDisputesTab(admin, isDark),
                 ],
               ),
       ),
     );
   }
 
-  Widget _buildOverviewTab(bool isDark) {
+  // -------------------------------------------------------------
+  // TAB 1: OVERVIEW & ANALYTICS
+  // -------------------------------------------------------------
+  Widget _buildOverviewTab(AdminProvider admin, bool isDark) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Stats Cards
           GridView.count(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             crossAxisCount: 2,
             mainAxisSpacing: 12,
             crossAxisSpacing: 12,
-            childAspectRatio: 1.5,
+            childAspectRatio: 1.4,
             children: [
               _StatCard(
-                icon: Icons.people,
-                label: 'المستخدمين',
-                value: '${_stats['totalUsers']}',
+                icon: Icons.people_outline,
+                label: 'المستخدمين النشطين',
+                value: '${admin.stats.totalUsers}',
                 color: Colors.blue,
                 isDark: isDark,
               ),
               _StatCard(
-                icon: Icons.engineering,
-                label: 'الفنيين',
-                value: '${_stats['totalTechnicians']}',
+                icon: Icons.engineering_outlined,
+                label: 'الفنيين المعتمدين',
+                value: '${admin.stats.totalTechnicians}',
                 color: Colors.orange,
                 isDark: isDark,
               ),
               _StatCard(
-                icon: Icons.receipt_long,
-                label: 'إجمالي الطلبات',
-                value: '${_stats['totalBookings']}',
+                icon: Icons.receipt_long_outlined,
+                label: 'إجمالي الحجوزات',
+                value: '${admin.stats.totalBookings}',
                 color: Colors.green,
                 isDark: isDark,
               ),
               _StatCard(
-                icon: Icons.attach_money,
-                label: 'الإيرادات',
-                value: '${_stats['revenue']} ج.م',
+                icon: Icons.account_balance_wallet_outlined,
+                label: 'إجمالي الإيرادات',
+                value: '${admin.stats.revenue.toInt()} ج.م',
                 color: Colors.purple,
                 isDark: isDark,
               ),
             ],
-          ).animate().fadeIn(duration: 400.ms),
-          
+          ).animate().fadeIn(duration: 300.ms),
+
           const SizedBox(height: 24),
-          
-          // Chart
+
+          // Chart Section
           Text(
-            'إحصائيات الأسبوع',
+            'حركة الطلبات والإيرادات الأسبوعية',
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
               color: isDark ? Colors.white : Colors.black87,
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           Container(
-            height: 200,
+            height: 180,
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: isDark ? Colors.white.withOpacity(0.05) : Colors.white,
+              color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white,
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: isDark ? Colors.white12 : Colors.grey.shade200,
-              ),
+              border: Border.all(color: isDark ? Colors.white12 : Colors.grey.shade200),
             ),
             child: BarChart(
               BarChartData(
                 barGroups: [
                   _makeBarGroup(0, 20, 15),
-                  _makeBarGroup(1, 25, 18),
-                  _makeBarGroup(2, 30, 22),
-                  _makeBarGroup(3, 28, 20),
-                  _makeBarGroup(4, 35, 25),
-                  _makeBarGroup(5, 40, 30),
-                  _makeBarGroup(6, 32, 24),
+                  _makeBarGroup(1, 28, 18),
+                  _makeBarGroup(2, 32, 22),
+                  _makeBarGroup(3, 25, 20),
+                  _makeBarGroup(4, 38, 26),
+                  _makeBarGroup(5, 45, 32),
+                  _makeBarGroup(6, 30, 24),
                 ],
                 titlesData: FlTitlesData(
                   show: true,
@@ -226,13 +469,17 @@ class _AdminPanelScreenState extends State<AdminPanelScreen>
                       showTitles: true,
                       getTitlesWidget: (value, meta) {
                         const days = ['س', 'أ', 'إ', 'ث', 'أ', 'خ', 'ج'];
-                        return Text(
-                          days[value.toInt()],
-                          style: TextStyle(
-                            color: isDark ? Colors.white54 : Colors.black54,
-                            fontSize: 12,
-                          ),
-                        );
+                        final val = value.toInt();
+                        if (val >= 0 && val < days.length) {
+                          return Text(
+                            days[val],
+                            style: TextStyle(
+                              color: isDark ? Colors.white54 : Colors.black54,
+                              fontSize: 12,
+                            ),
+                          );
+                        }
+                        return const SizedBox.shrink();
                       },
                     ),
                   ),
@@ -244,32 +491,58 @@ class _AdminPanelScreenState extends State<AdminPanelScreen>
                 gridData: const FlGridData(show: false),
               ),
             ),
-          ).animate().fadeIn(delay: 200.ms, duration: 400.ms),
-          
+          ),
+
           const SizedBox(height: 24),
-          
-          // Pending Approvals
-          if (_pendingTechnicians.isNotEmpty) ...[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'طلبات انضمام الفنيين',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.black87,
+
+          // Quick Summary Cards
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: Colors.amber.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.amber.withValues(alpha: 0.3)),
+                  ),
+                  child: Column(
+                    children: [
+                      const Icon(Icons.pending_actions, color: Colors.amber, size: 28),
+                      const SizedBox(height: 6),
+                      Text(
+                        '${admin.pendingCount} طلب توثيق',
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                      ),
+                      const Text('بانتظار المراجعة', style: TextStyle(fontSize: 11, color: Colors.grey)),
+                    ],
                   ),
                 ),
-                TextButton(
-                  onPressed: () => _tabController.animateTo(2),
-                  child: const Text('عرض الكل'),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
+                  ),
+                  child: Column(
+                    children: [
+                      const Icon(Icons.money_off, color: Colors.red, size: 28),
+                      const SizedBox(height: 6),
+                      Text(
+                        '${admin.totalDebt.toInt()} ج.م ديون',
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                      ),
+                      const Text('مستحقة للمنصة', style: TextStyle(fontSize: 11, color: Colors.grey)),
+                    ],
+                  ),
                 ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            ..._pendingTechnicians.map((tech) => _buildPendingTechCard(tech, isDark)),
-          ],
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -282,7 +555,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen>
         BarChartRodData(
           toY: y1,
           color: AppTheme.primaryColor,
-          width: 12,
+          width: 10,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(4),
             topRight: Radius.circular(4),
@@ -290,8 +563,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen>
         ),
         BarChartRodData(
           toY: y2,
-          color: AppTheme.primaryColor.withOpacity(0.4),
-          width: 12,
+          color: AppTheme.primaryColor.withValues(alpha: 0.3),
+          width: 10,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(4),
             topRight: Radius.circular(4),
@@ -301,267 +574,532 @@ class _AdminPanelScreenState extends State<AdminPanelScreen>
     );
   }
 
-  Widget _buildPendingTechCard(Map<String, dynamic> tech, bool isDark) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: isDark ? Colors.white.withOpacity(0.05) : Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: isDark ? Colors.white12 : Colors.grey.shade200,
-        ),
-      ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 24,
-            backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
-            child: Text(
-              (tech['name'] as String)[0],
+  // -------------------------------------------------------------
+  // TAB 2: VERIFICATION
+  // -------------------------------------------------------------
+  Widget _buildVerificationTab(AdminProvider admin, bool isDark) {
+    if (admin.pendingTechs.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.check_circle_outline, size: 64, color: Colors.green),
+            const SizedBox(height: 12),
+            Text(
+              'لا توجد طلبات توثيق معلقة!',
               style: TextStyle(
-                color: AppTheme.primaryColor,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
-                fontSize: 18,
+                color: isDark ? Colors.white : Colors.black87,
               ),
             ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  tech['name'],
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.black87,
-                  ),
-                ),
-                Text(
-                  '${tech['specialty']} • ${tech['experience']}',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: isDark ? Colors.white54 : Colors.black54,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Row(
-            children: [
-              IconButton(
-                onPressed: () => _approveTehnician(tech),
-                icon: const Icon(Icons.check_circle, color: Colors.green),
-              ),
-              IconButton(
-                onPressed: () => _rejectTechnician(tech),
-                icon: const Icon(Icons.cancel, color: Colors.red),
+            const SizedBox(height: 4),
+            const Text('جميع الفنيين المسجلين تم تدقيق بياناتهم', style: TextStyle(color: Colors.grey)),
+          ],
+        ),
+      );
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: admin.pendingTechs.length,
+      itemBuilder: (context, index) {
+        final tech = admin.pendingTechs[index];
+        return Container(
+          margin: const EdgeInsets.only(bottom: 14),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: isDark ? AppTheme.darkCardColor : Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: isDark ? Colors.white12 : Colors.grey.shade200),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.04),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
               ),
             ],
           ),
-        ],
-      ),
-    ).animate().fadeIn(duration: 300.ms);
-  }
-
-  Widget _buildBookingsTab(bool isDark) {
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: _recentBookings.length,
-      itemBuilder: (context, index) {
-        final booking = _recentBookings[index];
-        return _buildBookingCard(booking, isDark, index);
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 24,
+                    backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.1),
+                    child: Text(
+                      tech.name.isNotEmpty ? tech.name[0] : 'ف',
+                      style: const TextStyle(
+                        color: AppTheme.primaryColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          tech.name,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                            color: isDark ? Colors.white : Colors.black87,
+                          ),
+                        ),
+                        Text(
+                          '${tech.specialty} • ${tech.experience}',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: isDark ? Colors.white70 : Colors.black54,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.amber.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: const Text(
+                      'معلق',
+                      style: TextStyle(
+                        color: Colors.amber,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.grey.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.badge_outlined, size: 18, color: Colors.grey),
+                    const SizedBox(width: 8),
+                    Text(
+                      'الرقم القومي: ${tech.nationalId.isNotEmpty ? tech.nationalId : "مرفق بالصورة"}',
+                      style: const TextStyle(fontSize: 13),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 14),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      ),
+                      onPressed: () async {
+                        final ok = await admin.approveTech(tech.id);
+                        if (ok) {
+                          UiHelpers.showSuccessToast('تم قبول وتوثيق حساب ${tech.name} بنجاح!');
+                        }
+                      },
+                      icon: const Icon(Icons.check, size: 16),
+                      label: const Text('قبول وتوثيق'),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.red,
+                        side: const BorderSide(color: Colors.red),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      ),
+                      onPressed: () => _showSmartRejectDialog(tech),
+                      icon: const Icon(Icons.close, size: 16),
+                      label: const Text('رفض ذكي'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
       },
     );
   }
 
-  Widget _buildBookingCard(Map<String, dynamic> booking, bool isDark, int index) {
-    Color statusColor;
-    String statusText;
-    
-    switch (booking['status']) {
-      case 'completed':
-        statusColor = Colors.green;
-        statusText = 'مكتمل';
-        break;
-      case 'in_progress':
-        statusColor = Colors.blue;
-        statusText = 'جاري';
-        break;
-      default:
-        statusColor = Colors.orange;
-        statusText = 'معلق';
+  // -------------------------------------------------------------
+  // TAB 3: DEBTORS
+  // -------------------------------------------------------------
+  Widget _buildDebtorsTab(AdminProvider admin, bool isDark) {
+    if (admin.debtors.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.sentiment_very_satisfied, size: 64, color: Colors.green),
+            const SizedBox(height: 12),
+            Text(
+              'لا توجد أي مديونيات متأخرة!',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white : Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 4),
+            const Text('جميع الفنيين مسددين لمستحقات المنصة بالكامل', style: TextStyle(color: Colors.grey)),
+          ],
+        ),
+      );
     }
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+    return ListView(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: isDark ? Colors.white.withOpacity(0.05) : Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: isDark ? Colors.white12 : Colors.grey.shade200,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        // Debt Summary Banner
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFFE53935), Color(0xFFC62828)],
+            ),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.red.withValues(alpha: 0.3),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Row(
             children: [
-              Text(
-                '#${booking['id']}',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.primaryColor,
+              const Icon(Icons.warning_amber_rounded, color: Colors.white, size: 36),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'إجمالي المديونيات المستحقة',
+                      style: TextStyle(color: Colors.white70, fontSize: 13),
+                    ),
+                    Text(
+                      '${admin.totalDebt.toInt()} ج.م',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                decoration: BoxDecoration(
-                  color: statusColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(20),
+              Text(
+                '${admin.debtors.length} فنيين',
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 16),
+
+        ...admin.debtors.map((debtor) {
+          final isOverLimit = debtor.debt >= 500;
+          return Container(
+            margin: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: isDark ? AppTheme.darkCardColor : Colors.white,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: isOverLimit ? Colors.red.withValues(alpha: 0.5) : (isDark ? Colors.white12 : Colors.grey.shade200),
+                width: isOverLimit ? 1.5 : 1,
+              ),
+            ),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  backgroundColor: Colors.red.withValues(alpha: 0.1),
+                  child: const Icon(Icons.person, color: Colors.red),
                 ),
-                child: Text(
-                  statusText,
-                  style: TextStyle(
-                    color: statusColor,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        debtor.name,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: isDark ? Colors.white : Colors.black87,
+                        ),
+                      ),
+                      Text(
+                        '${debtor.specialty} • ${debtor.unpaidOrdersCount} طلبات غير مسددة',
+                        style: const TextStyle(fontSize: 12, color: Colors.grey),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ],
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      '${debtor.debt.toInt()} ج.م',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: Colors.red,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        minimumSize: Size.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        foregroundColor: Colors.green,
+                      ),
+                      onPressed: () async {
+                        final ok = await admin.settleDebt(debtor.id);
+                        if (ok) {
+                          UiHelpers.showSuccessToast('تم تسوية مديونية ${debtor.name} بنجاح');
+                        }
+                      },
+                      child: const Text('تسوية الحساب', style: TextStyle(fontSize: 12)),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        }),
+      ],
+    );
+  }
+
+  // -------------------------------------------------------------
+  // TAB 4: COUPONS
+  // -------------------------------------------------------------
+  Widget _buildCouponsTab(AdminProvider admin, bool isDark) {
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        // Add Coupon Button
+        ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppTheme.primaryColor,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Icon(Icons.person, size: 16, color: isDark ? Colors.white54 : Colors.black54),
-              const SizedBox(width: 6),
-              Text(
-                'العميل: ${booking['client']}',
-                style: TextStyle(color: isDark ? Colors.white70 : Colors.black87),
+          onPressed: _showAddCouponDialog,
+          icon: const Icon(Icons.add),
+          label: const Text('إضافة كود خصم جديد', style: TextStyle(fontWeight: FontWeight.bold)),
+        ),
+
+        const SizedBox(height: 16),
+
+        if (admin.coupons.isEmpty)
+          const Center(
+            child: Padding(
+              padding: EdgeInsets.all(32),
+              child: Text('لا توجد كوبونات مسجلة حالياً', style: TextStyle(color: Colors.grey)),
+            ),
+          )
+        else
+          ...admin.coupons.map((coupon) {
+            return Container(
+              margin: const EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: isDark ? AppTheme.darkCardColor : Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: isDark ? Colors.white12 : Colors.grey.shade200),
               ),
-            ],
-          ),
-          const SizedBox(height: 6),
-          Row(
-            children: [
-              Icon(Icons.engineering, size: 16, color: isDark ? Colors.white54 : Colors.black54),
-              const SizedBox(width: 6),
-              Text(
-                'الفني: ${booking['technician']}',
-                style: TextStyle(color: isDark ? Colors.white70 : Colors.black87),
-              ),
-            ],
-          ),
-          const SizedBox(height: 6),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
+              child: Row(
                 children: [
-                  Icon(Icons.build, size: 16, color: isDark ? Colors.white54 : Colors.black54),
-                  const SizedBox(width: 6),
-                  Text(
-                    booking['service'],
-                    style: TextStyle(color: isDark ? Colors.white70 : Colors.black87),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      coupon.code,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.primaryColor,
+                        fontFamily: 'monospace',
+                        letterSpacing: 1.5,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'خصم ${coupon.discount.toInt()}%',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: isDark ? Colors.white : Colors.black87,
+                          ),
+                        ),
+                        Text(
+                          coupon.isActive ? 'مفعل وشغال ✅' : 'معطل وموقوف ⏸️',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: coupon.isActive ? Colors.green : Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Switch(
+                    value: coupon.isActive,
+                    activeThumbColor: AppTheme.primaryColor,
+                    onChanged: (val) {
+                      admin.toggleCoupon(coupon.id, coupon.isActive);
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.delete_outline, color: Colors.red, size: 20),
+                    onPressed: () async {
+                      final ok = await admin.deleteCoupon(coupon.id);
+                      if (ok) {
+                        UiHelpers.showSuccessToast('تم حذف الكوبون بنجاح');
+                      }
+                    },
                   ),
                 ],
               ),
+            );
+          }),
+      ],
+    );
+  }
+
+  // -------------------------------------------------------------
+  // TAB 5: DISPUTES
+  // -------------------------------------------------------------
+  Widget _buildDisputesTab(AdminProvider admin, bool isDark) {
+    if (admin.disputes.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.verified_outlined, size: 64, color: Colors.green),
+            const SizedBox(height: 12),
+            Text(
+              'لا توجد أي نزاعات أو شكاوى!',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white : Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 4),
+            const Text('جميع الطلبات تسير بسلاسة بين العملاء والفنيين', style: TextStyle(color: Colors.grey)),
+          ],
+        ),
+      );
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: admin.disputes.length,
+      itemBuilder: (context, index) {
+        final dispute = admin.disputes[index];
+        return Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: isDark ? AppTheme.darkCardColor : Colors.white,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      dispute.reqId,
+                      style: const TextStyle(
+                        color: Colors.orange,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    dispute.date,
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
               Text(
-                booking['date'],
+                'الشاكي: ${dispute.clientEmail}',
+                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                dispute.reason,
                 style: TextStyle(
-                  fontSize: 12,
-                  color: isDark ? Colors.white38 : Colors.black38,
+                  fontSize: 13,
+                  color: isDark ? Colors.white70 : Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  ),
+                  onPressed: () async {
+                    final ok = await admin.resolveDispute(dispute.id);
+                    if (ok) {
+                      UiHelpers.showSuccessToast('تم حل النزاع وإغلاق الشكوى بنجاح');
+                    }
+                  },
+                  icon: const Icon(Icons.check, size: 16),
+                  label: const Text('حل النزاع وإغلاقه'),
                 ),
               ),
             ],
           ),
-        ],
-      ),
-    ).animate().fadeIn(delay: (index * 100).ms);
-  }
-
-  Widget _buildTechniciansTab(bool isDark) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.engineering,
-            size: 64,
-            color: isDark ? Colors.white24 : Colors.black12,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'إدارة الفنيين',
-            style: TextStyle(
-              fontSize: 18,
-              color: isDark ? Colors.white54 : Colors.black54,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildUsersTab(bool isDark) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.people,
-            size: 64,
-            color: isDark ? Colors.white24 : Colors.black12,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'إدارة المستخدمين',
-            style: TextStyle(
-              fontSize: 18,
-              color: isDark ? Colors.white54 : Colors.black54,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _approveTehnician(Map<String, dynamic> tech) {
-    setState(() {
-      _pendingTechnicians.remove(tech);
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('تم قبول ${tech['name']}'),
-        backgroundColor: Colors.green,
-      ),
-    );
-  }
-
-  void _rejectTechnician(Map<String, dynamic> tech) {
-    setState(() {
-      _pendingTechnicians.remove(tech);
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('تم رفض ${tech['name']}'),
-        backgroundColor: Colors.red,
-      ),
+        );
+      },
     );
   }
 }
 
 class _StatCard extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-  final Color color;
-  final bool isDark;
-
   const _StatCard({
     required this.icon,
     required this.label,
@@ -570,12 +1108,18 @@ class _StatCard extends StatelessWidget {
     required this.isDark,
   });
 
+  final IconData icon;
+  final String label;
+  final String value;
+  final Color color;
+  final bool isDark;
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: isDark ? Colors.white.withOpacity(0.05) : Colors.white,
+        color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isDark ? Colors.white12 : Colors.grey.shade200,
@@ -585,25 +1129,9 @@ class _StatCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(icon, color: color, size: 20),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                value,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: isDark ? Colors.white : Colors.black87,
-                ),
-              ),
               Text(
                 label,
                 style: TextStyle(
@@ -611,7 +1139,23 @@ class _StatCard extends StatelessWidget {
                   color: isDark ? Colors.white54 : Colors.black54,
                 ),
               ),
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(icon, color: color, size: 18),
+              ),
             ],
+          ),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: isDark ? Colors.white : Colors.black87,
+            ),
           ),
         ],
       ),

@@ -9,6 +9,7 @@ import '../presentation/screens/service_request/new_request_screen.dart';
 import '../presentation/screens/settings/settings_screen.dart';
 import '../presentation/screens/addresses/addresses_screen.dart';
 import '../presentation/screens/addresses/add_address_screen.dart';
+import '../data/models/address_model.dart';
 import '../presentation/screens/wallet/wallet_screen.dart';
 import '../presentation/screens/help/help_screen.dart';
 import '../presentation/screens/tips/tips_screen.dart';
@@ -112,7 +113,8 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const AddressesScreen());
 
       case addAddress:
-        return MaterialPageRoute(builder: (_) => const AddAddressScreen());
+        final address = routeSettings.arguments as AddressModel?;
+        return MaterialPageRoute(builder: (_) => AddAddressScreen(addressToEdit: address));
       
       case wallet:
         return MaterialPageRoute(builder: (_) => const WalletScreen());

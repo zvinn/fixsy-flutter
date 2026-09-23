@@ -8,14 +8,14 @@ import 'package:intl/intl.dart';
 /// Technician Ratings Screen
 /// Shows all ratings for a specific technician
 class TechnicianRatingsScreen extends StatefulWidget {
-  final String technicianId;
-  final String technicianName;
-
   const TechnicianRatingsScreen({
-    Key? key,
     required this.technicianId,
     required this.technicianName,
-  }) : super(key: key);
+    super.key,
+  });
+
+  final String technicianId;
+  final String technicianName;
 
   @override
   State<TechnicianRatingsScreen> createState() => _TechnicianRatingsScreenState();
@@ -102,7 +102,7 @@ class _TechnicianRatingsScreenState extends State<TechnicianRatingsScreen> {
                     gradient: LinearGradient(
                       colors: [
                         Theme.of(context).primaryColor,
-                        Theme.of(context).primaryColor.withOpacity(0.7),
+                        Theme.of(context).primaryColor.withValues(alpha: 0.7),
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -110,7 +110,7 @@ class _TechnicianRatingsScreenState extends State<TechnicianRatingsScreen> {
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
+                        color: Colors.black.withValues(alpha: 0.1),
                         blurRadius: 10,
                         offset: const Offset(0, 5),
                       ),
@@ -171,7 +171,7 @@ class _TechnicianRatingsScreenState extends State<TechnicianRatingsScreen> {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: 0.05),
                         blurRadius: 5,
                         offset: const Offset(0, 2),
                       ),
@@ -233,9 +233,9 @@ class _TechnicianRatingsScreenState extends State<TechnicianRatingsScreen> {
 
 /// Rating Card Widget
 class _RatingCard extends StatelessWidget {
-  final Rating rating;
-
   const _RatingCard({required this.rating});
+
+  final Rating rating;
 
   @override
   Widget build(BuildContext context) {
@@ -256,7 +256,7 @@ class _RatingCard extends StatelessWidget {
               children: [
                 // User Avatar
                 CircleAvatar(
-                  backgroundColor: Theme.of(context).primaryColor.withOpacity(0.2),
+                  backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.2),
                   child: Text(
                     rating.userName?.substring(0, 1).toUpperCase() ?? 'ع',
                     style: TextStyle(

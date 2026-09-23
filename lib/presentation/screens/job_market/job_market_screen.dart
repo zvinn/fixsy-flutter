@@ -1,113 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:provider/provider.dart';
 import '../../../core/theme/app_theme.dart';
-
-enum BidStatus { pending, accepted, rejected, counterOffered }
-
-/// Job Bid Model for negotiations and proposals
-class JobBid {
-  final String id;
-  final String jobId;
-  final String technicianId;
-  final String technicianName;
-  final double technicianRating;
-  final String? technicianAvatar;
-  final double proposedPrice;
-  final String arrivalTime;
-  final String notes;
-  final DateTime createdAt;
-  final BidStatus status;
-  final double? counterPrice;
-  final String? counterNotes;
-
-  const JobBid({
-    required this.id,
-    required this.jobId,
-    required this.technicianId,
-    required this.technicianName,
-    this.technicianRating = 4.9,
-    this.technicianAvatar,
-    required this.proposedPrice,
-    required this.arrivalTime,
-    required this.notes,
-    required this.createdAt,
-    this.status = BidStatus.pending,
-    this.counterPrice,
-    this.counterNotes,
-  });
-
-  JobBid copyWith({
-    BidStatus? status,
-    double? counterPrice,
-    String? counterNotes,
-  }) {
-    return JobBid(
-      id: id,
-      jobId: jobId,
-      technicianId: technicianId,
-      technicianName: technicianName,
-      technicianRating: technicianRating,
-      technicianAvatar: technicianAvatar,
-      proposedPrice: proposedPrice,
-      arrivalTime: arrivalTime,
-      notes: notes,
-      createdAt: createdAt,
-      status: status ?? this.status,
-      counterPrice: counterPrice ?? this.counterPrice,
-      counterNotes: counterNotes ?? this.counterNotes,
-    );
-  }
-}
-
-/// Job Model
-class Job {
-  final String id;
-  final String title;
-  final String description;
-  final String serviceType;
-  final String location;
-  final double distance;
-  final double price;
-  final DateTime createdAt;
-  final String clientName;
-  final String? clientPhoto;
-  final bool isUrgent;
-  final List<JobBid> bids;
-
-  const Job({
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.serviceType,
-    required this.location,
-    required this.distance,
-    required this.price,
-    required this.createdAt,
-    required this.clientName,
-    this.clientPhoto,
-    this.isUrgent = false,
-    this.bids = const [],
-  });
-
-  Job copyWith({
-    List<JobBid>? bids,
-  }) {
-    return Job(
-      id: id,
-      title: title,
-      description: description,
-      serviceType: serviceType,
-      location: location,
-      distance: distance,
-      price: price,
-      createdAt: createdAt,
-      clientName: clientName,
-      clientPhoto: clientPhoto,
-      isUrgent: isUrgent,
-      bids: bids ?? this.bids,
-    );
-  }
-}
+import '../../../data/models/market_job_model.dart';
+import '../../providers/job_market_provider.dart';
 
 /// Job Market Screen - Shows available jobs for technicians with bidding & negotiation
 class JobMarketScreen extends StatefulWidget {
@@ -271,6 +167,16 @@ class _JobMarketScreenState extends State<JobMarketScreen> with SingleTickerProv
   }
 
   void _submitBid(Job job, double price, String arrivalTime, String notes) {
+    try {
+      final provider = Provider.of<JobMarketProvider?>(context, listen: false);
+      provider?.submitBid(
+        jobId: job.id,
+        proposedPrice: price,
+        arrivalTime: arrivalTime,
+        notes: notes,
+      );
+    } catch (_) {}
+
     final newBid = JobBid(
       id: 'bid_${DateTime.now().millisecondsSinceEpoch}',
       jobId: job.id,
@@ -302,6 +208,11 @@ class _JobMarketScreenState extends State<JobMarketScreen> with SingleTickerProv
   }
 
   void _acceptBid(Job job, JobBid bid) {
+    try {
+      final provider = Provider.of<JobMarketProvider?>(context, listen: false);
+      provider?.acceptBid(jobId: job.id, bidId: bid.id);
+    } catch (_) {}
+
     setState(() {
       final jobIndex = _allJobs.indexWhere((j) => j.id == job.id);
       if (jobIndex != -1) {
@@ -325,6 +236,16 @@ class _JobMarketScreenState extends State<JobMarketScreen> with SingleTickerProv
   }
 
   void _counterOffer(Job job, JobBid bid, double counterPrice, String counterNotes) {
+    try {
+      final provider = Provider.of<JobMarketProvider?>(context, listen: false);
+      provider?.counterOffer(
+        jobId: job.id,
+        bidId: bid.id,
+        counterPrice: counterPrice,
+        counterNotes: counterNotes,
+      );
+    } catch (_) {}
+
     setState(() {
       final jobIndex = _allJobs.indexWhere((j) => j.id == job.id);
       if (jobIndex != -1) {
@@ -387,7 +308,7 @@ class _JobMarketScreenState extends State<JobMarketScreen> with SingleTickerProv
   void _showSubmitBidModal(Job job) {
     final priceController = TextEditingController(text: job.price.toInt().toString());
     final notesController = TextEditingController();
-    String selectedArrival = 'خلال 30 دقيقة ⚡';
+    var selectedArrival = 'خلال 30 دقيقة ⚡';
 
     showModalBottomSheet(
       context: context,
@@ -706,7 +627,7 @@ class _JobMarketScreenState extends State<JobMarketScreen> with SingleTickerProv
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -719,7 +640,7 @@ class _JobMarketScreenState extends State<JobMarketScreen> with SingleTickerProv
             children: [
               CircleAvatar(
                 radius: 18,
-                backgroundColor: AppTheme.primaryColor.withOpacity(0.12),
+                backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.12),
                 child: Text(
                   bid.technicianName[0],
                   style: const TextStyle(fontWeight: FontWeight.bold, color: AppTheme.primaryColor),
@@ -910,14 +831,233 @@ class _JobMarketScreenState extends State<JobMarketScreen> with SingleTickerProv
     );
   }
 
+  void _showPostJobModal(BuildContext context, JobMarketProvider? provider) {
+    final titleController = TextEditingController();
+    final descController = TextEditingController();
+    final priceController = TextEditingController();
+    final locationController = TextEditingController(text: 'المعادي، القاهرة');
+    var selectedCategory = 'سباكة';
+    var isUrgent = false;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setModalState) => Container(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+            top: 20,
+            left: 20,
+            right: 20,
+          ),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'طرح طلب صيانة جديد للمناقصة 🛠️',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'سيتم عرض طلبك على أفضل الفنيين المعتمدين لتلقي عروض الأسعار التنافسية',
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: titleController,
+                  decoration: InputDecoration(
+                    labelText: 'عنوان الطلب (مثال: صيانة سخان غاز)',
+                    prefixIcon: const Icon(Icons.title_rounded),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                DropdownButtonFormField<String>(
+                  initialValue: selectedCategory,
+                  decoration: InputDecoration(
+                    labelText: 'قسم الصيانة',
+                    prefixIcon: const Icon(Icons.category_outlined),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                  items: const [
+                    DropdownMenuItem(value: 'سباكة', child: Text('سباكة')),
+                    DropdownMenuItem(value: 'كهرباء', child: Text('كهرباء')),
+                    DropdownMenuItem(value: 'نجارة', child: Text('نجارة')),
+                    DropdownMenuItem(value: 'تكييف', child: Text('تكييف وتبريد')),
+                    DropdownMenuItem(value: 'دهان', child: Text('نقاشة ودهانات')),
+                  ],
+                  onChanged: (val) {
+                    if (val != null) {
+                      setModalState(() => selectedCategory = val);
+                    }
+                  },
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: descController,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                    labelText: 'وصف المشكلة بالتفصيل',
+                    hintText: 'اشرح العطل أو ما تحتاج إلى إصلاحه بدقة...',
+                    prefixIcon: const Icon(Icons.description_outlined),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: priceController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          labelText: 'الميزانية المتوقعة (ج.م)',
+                          prefixIcon: const Icon(Icons.monetization_on_outlined),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: TextField(
+                        controller: locationController,
+                        decoration: InputDecoration(
+                          labelText: 'المنطقة / الحي',
+                          prefixIcon: const Icon(Icons.location_on_outlined),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('طلب صيانة عاجل ⚡', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                  subtitle: const Text('أولوية قصوى لوصول الفني بأسرع وقت', style: TextStyle(fontSize: 12)),
+                  value: isUrgent,
+                  activeThumbColor: Colors.red,
+                  onChanged: (val) => setModalState(() => isUrgent = val),
+                ),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      final title = titleController.text.trim();
+                      final desc = descController.text.trim();
+                      final loc = locationController.text.trim();
+                      final price = double.tryParse(priceController.text) ?? 200.0;
+
+                      if (title.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('يرجى إدخال عنوان الطلب')),
+                        );
+                        return;
+                      }
+
+                      if (provider != null) {
+                        provider.postJob(
+                          title: title,
+                          description: desc.isNotEmpty ? desc : title,
+                          serviceType: selectedCategory,
+                          location: loc.isNotEmpty ? loc : 'القاهرة',
+                          price: price,
+                          isUrgent: isUrgent,
+                        );
+                      }
+
+                      final newJob = MarketJob(
+                        id: 'job_${DateTime.now().millisecondsSinceEpoch}',
+                        title: title,
+                        description: desc.isNotEmpty ? desc : title,
+                        serviceType: selectedCategory,
+                        location: loc.isNotEmpty ? loc : 'القاهرة',
+                        distance: 1.2,
+                        price: price,
+                        createdAt: DateTime.now(),
+                        clientName: 'أنت (العميل)',
+                        isUrgent: isUrgent,
+                        bids: const [],
+                      );
+
+                      setState(() {
+                        _allJobs.insert(0, newJob);
+                        _updateTabLists();
+                      });
+
+                      Navigator.pop(ctx);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('تم طرح طلب الصيانة بنجاح في سوق المناقصات! 🚀'),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.rocket_launch_rounded),
+                    label: const Text('طرح الطلب للمناقصة الآن 🚀', style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.primaryColor,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final provider = Provider.of<JobMarketProvider?>(context);
+
+    final allJobsList = provider != null && provider.allJobs.isNotEmpty
+        ? _getFilteredJobs(provider.allJobs)
+        : _getFilteredJobs(_allJobs);
+    final nearbyJobsList = provider != null && provider.nearbyJobs.isNotEmpty
+        ? _getFilteredJobs(provider.nearbyJobs)
+        : _getFilteredJobs(_nearbyJobs);
+    final urgentJobsList = provider != null && provider.urgentJobs.isNotEmpty
+        ? _getFilteredJobs(provider.urgentJobs)
+        : _getFilteredJobs(_urgentJobs);
 
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: isDark ? AppTheme.darkBackground : AppTheme.lightBackground,
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () => _showPostJobModal(context, provider),
+          backgroundColor: AppTheme.primaryColor,
+          icon: const Icon(Icons.add_task_rounded, color: Colors.white),
+          label: const Text(
+            'طلب صيانة جديد',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        ),
         appBar: AppBar(
           title: const Text('سوق العمل والمناقصات'),
           backgroundColor: Colors.transparent,
@@ -955,7 +1095,7 @@ class _JobMarketScreenState extends State<JobMarketScreen> with SingleTickerProv
                       onSelected: (selected) {
                         setState(() => _selectedFilter = filter);
                       },
-                      selectedColor: AppTheme.primaryColor.withOpacity(0.2),
+                      selectedColor: AppTheme.primaryColor.withValues(alpha: 0.2),
                       checkmarkColor: AppTheme.primaryColor,
                       labelStyle: TextStyle(
                         color: isSelected
@@ -976,9 +1116,9 @@ class _JobMarketScreenState extends State<JobMarketScreen> with SingleTickerProv
                   : TabBarView(
                       controller: _tabController,
                       children: [
-                        _buildJobList(_getFilteredJobs(_allJobs), isDark),
-                        _buildJobList(_getFilteredJobs(_nearbyJobs), isDark),
-                        _buildJobList(_getFilteredJobs(_urgentJobs), isDark),
+                        _buildJobList(allJobsList, isDark),
+                        _buildJobList(nearbyJobsList, isDark),
+                        _buildJobList(urgentJobsList, isDark),
                       ],
                     ),
             ),
@@ -1032,12 +1172,6 @@ class _JobMarketScreenState extends State<JobMarketScreen> with SingleTickerProv
 }
 
 class _JobCard extends StatelessWidget {
-  final Job job;
-  final bool isDark;
-  final VoidCallback onSubmitBid;
-  final VoidCallback onViewBids;
-  final VoidCallback onAcceptDirect;
-
   const _JobCard({
     required this.job,
     required this.isDark,
@@ -1046,16 +1180,22 @@ class _JobCard extends StatelessWidget {
     required this.onAcceptDirect,
   });
 
+  final Job job;
+  final bool isDark;
+  final VoidCallback onSubmitBid;
+  final VoidCallback onViewBids;
+  final VoidCallback onAcceptDirect;
+
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: isDark ? Colors.white.withOpacity(0.05) : Colors.white,
+        color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: job.isUrgent
-              ? Colors.red.withOpacity(0.5)
+              ? Colors.red.withValues(alpha: 0.5)
               : (isDark ? Colors.white12 : Colors.grey.shade200),
           width: job.isUrgent ? 2 : 1,
         ),
@@ -1063,7 +1203,7 @@ class _JobCard extends StatelessWidget {
             ? null
             : [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -1081,7 +1221,7 @@ class _JobCard extends StatelessWidget {
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: _getServiceColor(job.serviceType).withOpacity(0.1),
+                    color: _getServiceColor(job.serviceType).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
@@ -1110,7 +1250,7 @@ class _JobCard extends StatelessWidget {
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                               decoration: BoxDecoration(
-                                color: Colors.red.withOpacity(0.1),
+                                color: Colors.red.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: const Row(
@@ -1224,7 +1364,7 @@ class _JobCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: isDark ? Colors.white.withOpacity(0.03) : Colors.grey.shade50,
+              color: isDark ? Colors.white.withValues(alpha: 0.03) : Colors.grey.shade50,
               borderRadius: const BorderRadius.vertical(
                 bottom: Radius.circular(16),
               ),
@@ -1235,7 +1375,7 @@ class _JobCard extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       radius: 18,
-                      backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
+                      backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.1),
                       child: Text(
                         job.clientName[0],
                         style: const TextStyle(
@@ -1374,15 +1514,15 @@ class _JobCard extends StatelessWidget {
 }
 
 class _InfoChip extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final bool isDark;
-
   const _InfoChip({
     required this.icon,
     required this.label,
     required this.isDark,
   });
+
+  final IconData icon;
+  final String label;
+  final bool isDark;
 
   @override
   Widget build(BuildContext context) {

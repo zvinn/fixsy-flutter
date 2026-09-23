@@ -15,31 +15,31 @@ class _TechOnboardingScreenState extends State<TechOnboardingScreen> {
   int _currentPage = 0;
 
   final List<OnboardingStep> _steps = [
-    OnboardingStep(
+    const OnboardingStep(
       title: 'مرحباً بك في Fixsy',
       description: 'انضم لأكبر شبكة فنيين محترفين في مصر واحصل على طلبات عمل يومية',
       icon: Icons.handshake,
       color: AppTheme.primaryColor,
     ),
-    OnboardingStep(
+    const OnboardingStep(
       title: 'استلم الطلبات',
       description: 'سيصلك إشعار فوري عند وجود طلب جديد قريب منك. يمكنك قبول أو رفض الطلب',
       icon: Icons.notifications_active,
       color: Colors.orange,
     ),
-    OnboardingStep(
+    const OnboardingStep(
       title: 'تتبع موقعك',
       description: 'العميل سيتمكن من تتبع موقعك للوصول إليه. تأكد من تفعيل GPS',
       icon: Icons.location_on,
       color: Colors.blue,
     ),
-    OnboardingStep(
+    const OnboardingStep(
       title: 'احصل على تقييمك',
       description: 'بعد كل خدمة، سيقوم العميل بتقييمك. التقييم العالي يجلب المزيد من الطلبات',
       icon: Icons.star,
       color: Colors.amber,
     ),
-    OnboardingStep(
+    const OnboardingStep(
       title: 'اسحب أرباحك',
       description: 'يمكنك سحب أرباحك في أي وقت عبر المحفظة الإلكترونية أو التحويل البنكي',
       icon: Icons.account_balance_wallet,
@@ -177,13 +177,13 @@ class _TechOnboardingScreenState extends State<TechOnboardingScreen> {
 }
 
 class _OnboardingPage extends StatelessWidget {
-  final OnboardingStep step;
-  final bool isDark;
 
   const _OnboardingPage({
     required this.step,
     required this.isDark,
   });
+  final OnboardingStep step;
+  final bool isDark;
 
   @override
   Widget build(BuildContext context) {
@@ -237,10 +237,6 @@ class _OnboardingPage extends StatelessWidget {
 }
 
 class OnboardingStep {
-  final String title;
-  final String description;
-  final IconData icon;
-  final Color color;
 
   const OnboardingStep({
     required this.title,
@@ -248,4 +244,8 @@ class OnboardingStep {
     required this.icon,
     required this.color,
   });
+  final String title;
+  final String description;
+  final IconData icon;
+  final Color color;
 }

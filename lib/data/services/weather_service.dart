@@ -1,10 +1,6 @@
 import '../../core/utils/app_logger.dart';
 
 class WeatherAlert {
-  final String title;
-  final String description;
-  final String severity; // low, medium, high
-  final DateTime timestamp;
 
   WeatherAlert({
     required this.title,
@@ -12,6 +8,10 @@ class WeatherAlert {
     required this.severity,
     required this.timestamp,
   });
+  final String title;
+  final String description;
+  final String severity; // low, medium, high
+  final DateTime timestamp;
 }
 
 class WeatherService {

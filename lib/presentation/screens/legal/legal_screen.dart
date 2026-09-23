@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class LegalScreen extends StatelessWidget {
-  final String? initialPage;
 
   const LegalScreen({super.key, this.initialPage});
+  final String? initialPage;
 
   @override
   Widget build(BuildContext context) {

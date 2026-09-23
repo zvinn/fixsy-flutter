@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/models/notification_model.dart';
 import '../../data/services/notification_service.dart';
+import '../../core/utils/app_logger.dart';
 
 /// Notification Provider
 /// Manages notifications state
@@ -36,7 +37,7 @@ class NotificationProvider with ChangeNotifier {
         await _notificationService.saveFcmToken(userId, token);
       }
     } catch (e) {
-      print('Error saving FCM token: $e');
+      AppLogger.error('Error saving FCM token: $e');
     }
   }
 

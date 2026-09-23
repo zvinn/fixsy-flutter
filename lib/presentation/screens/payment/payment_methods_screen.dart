@@ -4,11 +4,6 @@ import '../../../core/theme/app_theme.dart';
 
 /// Payment Method Model
 class PaymentMethod {
-  final String id;
-  final String type; // 'card', 'wallet', 'cash'
-  final String? last4;
-  final String? brand;
-  final bool isDefault;
 
   const PaymentMethod({
     required this.id,
@@ -17,6 +12,11 @@ class PaymentMethod {
     this.brand,
     this.isDefault = false,
   });
+  final String id;
+  final String type; // 'card', 'wallet', 'cash'
+  final String? last4;
+  final String? brand;
+  final bool isDefault;
 }
 
 /// Payment Methods Screen
@@ -311,7 +311,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
         label: const Text('إضافة بطاقة جديدة'),
         style: OutlinedButton.styleFrom(
           padding: const EdgeInsets.all(16),
-          side: BorderSide(
+          side: const BorderSide(
             color: AppTheme.primaryColor,
           ),
           shape: RoundedRectangleBorder(
@@ -508,7 +508,7 @@ class _AddCardModalState extends State<AddCardModal> {
                 ),
                 value: _saveCard,
                 onChanged: (v) => setState(() => _saveCard = v),
-                activeColor: AppTheme.primaryColor,
+                activeThumbColor: AppTheme.primaryColor,
                 contentPadding: EdgeInsets.zero,
               ),
 

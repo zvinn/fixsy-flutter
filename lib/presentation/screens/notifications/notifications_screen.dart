@@ -433,7 +433,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                           ],
                         ),
                         if (notification.actionLabel != null)
-                          Text(
+                          const Text(
                             'عرض التفاصيل ←',
                             style: TextStyle(
                               color: AppTheme.primaryColor,
@@ -612,7 +612,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   void _markAllAsRead() {
     setState(() {
-      for (int i = 0; i < _notifications.length; i++) {
+      for (var i = 0; i < _notifications.length; i++) {
         _notifications[i] = _notifications[i].copyWith(isRead: true);
       }
     });
@@ -701,6 +701,13 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 enum NotificationType { chat, order, promo, tracking, payment }
 
 class NotificationItem {
+
+  NotificationItem({
+    required this.id,
+    required this.message, required this.type, required this.date, required this.isRead, this.title = 'تنبيه جديد',
+    this.actionRoute,
+    this.actionLabel,
+  });
   final String id;
   final String title;
   final String message;
@@ -709,17 +716,6 @@ class NotificationItem {
   final bool isRead;
   final String? actionRoute;
   final String? actionLabel;
-
-  NotificationItem({
-    required this.id,
-    this.title = 'تنبيه جديد',
-    required this.message,
-    required this.type,
-    required this.date,
-    required this.isRead,
-    this.actionRoute,
-    this.actionLabel,
-  });
 
   NotificationItem copyWith({
     String? id,

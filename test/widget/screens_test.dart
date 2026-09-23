@@ -86,7 +86,7 @@ void main() {
     });
 
     testWidgets('should toggle password visibility', (tester) async {
-      bool obscured = true;
+      var obscured = true;
       
       await tester.pumpWidget(
         MaterialApp(
@@ -168,12 +168,12 @@ void main() {
 
     testWidgets('should display technician info', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: ListTile(
-              leading: const CircleAvatar(child: Icon(Icons.person)),
-              title: const Text('محمد أحمد'),
-              subtitle: const Text('سباك محترف'),
+              leading: CircleAvatar(child: Icon(Icons.person)),
+              title: Text('محمد أحمد'),
+              subtitle: Text('سباك محترف'),
             ),
           ),
         ),

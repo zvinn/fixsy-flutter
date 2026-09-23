@@ -27,13 +27,13 @@ import 'presentation/screens/technician/tech_dashboard_screen.dart';
 enum AppFlavor { client, technician }
 
 class FixsyAppConfig {
-  final AppFlavor flavor;
-  final String appTitle;
 
   FixsyAppConfig({
     required this.flavor,
     required this.appTitle,
   });
+  final AppFlavor flavor;
+  final String appTitle;
 }
 
 class SharedAppRunner {
@@ -57,8 +57,8 @@ class SharedAppRunner {
 }
 
 class FixsyApp extends StatelessWidget {
+  const FixsyApp({required this.config, super.key});
   final FixsyAppConfig config;
-  const FixsyApp({super.key, required this.config});
 
   Future<bool> _checkOnboarding() async {
     final prefs = await SharedPreferences.getInstance();

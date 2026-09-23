@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_theme.dart';
 
 class VoiceRecorderWidget extends StatefulWidget {
-  final Function(String path, Duration duration) onStop;
 
-  const VoiceRecorderWidget({super.key, required this.onStop});
+  const VoiceRecorderWidget({required this.onStop, super.key});
+  final Function(String path, Duration duration) onStop;
 
   @override
   State<VoiceRecorderWidget> createState() => _VoiceRecorderWidgetState();

@@ -3,6 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../data/models/message_model.dart';
 import '../../data/models/conversation_model.dart';
 import '../../data/services/chat_service.dart';
+import '../../core/utils/app_logger.dart';
 
 /// Chat Provider
 /// Manages chat state and operations
@@ -10,7 +11,7 @@ class ChatProvider with ChangeNotifier {
   final ChatService _chatService = ChatService();
   final ImagePicker _imagePicker = ImagePicker();
 
-  List<Conversation> _conversations = [];
+  final List<Conversation> _conversations = [];
   List<Message> _currentMessages = [];
   Conversation? _currentConversation;
   bool _isLoading = false;
@@ -96,7 +97,7 @@ class ChatProvider with ChangeNotifier {
   }) async {
     try {
       // Pick image
-      final XFile? image = await _imagePicker.pickImage(
+      final image = await _imagePicker.pickImage(
         source: ImageSource.gallery,
         maxWidth: 1024,
         maxHeight: 1024,
@@ -141,7 +142,7 @@ class ChatProvider with ChangeNotifier {
     try {
       await _chatService.markMessagesAsRead(conversationId, userId);
     } catch (e) {
-      print('Error marking messages as read: $e');
+      AppLogger.error('Error marking messages as read: $e');
     }
   }
 

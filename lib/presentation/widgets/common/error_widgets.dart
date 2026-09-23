@@ -6,18 +6,16 @@ import '../../../core/theme/app_theme.dart';
 /// Error Retry Widget
 /// Beautiful error UI with retry functionality
 class ErrorRetryWidget extends StatelessWidget {
+
+  const ErrorRetryWidget({
+    required this.error, required this.onRetry, super.key,
+    this.customMessage,
+    this.showDetails = false,
+  });
   final dynamic error;
   final VoidCallback onRetry;
   final String? customMessage;
   final bool showDetails;
-
-  const ErrorRetryWidget({
-    Key? key,
-    required this.error,
-    required this.onRetry,
-    this.customMessage,
-    this.showDetails = false,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -171,14 +169,13 @@ class ErrorRetryWidget extends StatelessWidget {
 
 /// Compact Error Widget (for inline errors)
 class CompactErrorWidget extends StatelessWidget {
-  final dynamic error;
-  final VoidCallback? onRetry;
 
   const CompactErrorWidget({
-    Key? key,
-    required this.error,
+    required this.error, super.key,
     this.onRetry,
-  }) : super(key: key);
+  });
+  final dynamic error;
+  final VoidCallback? onRetry;
 
   @override
   Widget build(BuildContext context) {
@@ -197,7 +194,7 @@ class CompactErrorWidget extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(
+          const Icon(
             Icons.error_outline,
             color: AppTheme.errorColor,
           ),
@@ -205,7 +202,7 @@ class CompactErrorWidget extends StatelessWidget {
           Expanded(
             child: Text(
               errorMessage,
-              style: TextStyle(
+              style: const TextStyle(
                 color: AppTheme.errorColor,
                 fontSize: 14,
               ),

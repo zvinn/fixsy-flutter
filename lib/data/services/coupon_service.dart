@@ -2,19 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/utils/app_logger.dart';
 
 class CouponModel {
-  final String code;
-  final double discountAmount;
-  final double? discountPercentage;
-  final DateTime expiryDate;
-  final bool isActive;
-  final int maxUsage;
-  final int currentUsage;
 
   CouponModel({
     required this.code,
-    this.discountAmount = 0,
+    required this.expiryDate, this.discountAmount = 0,
     this.discountPercentage,
-    required this.expiryDate,
     this.isActive = true,
     this.maxUsage = 100,
     this.currentUsage = 0,
@@ -31,6 +23,13 @@ class CouponModel {
       currentUsage: data['currentUsage'] ?? 0,
     );
   }
+  final String code;
+  final double discountAmount;
+  final double? discountPercentage;
+  final DateTime expiryDate;
+  final bool isActive;
+  final int maxUsage;
+  final int currentUsage;
 
   bool get isValid {
     if (!isActive) return false;
@@ -41,10 +40,10 @@ class CouponModel {
 }
 
 class CouponService {
-  final FirebaseFirestore? _firestore;
-  static const String _collection = 'coupons';
 
   CouponService({FirebaseFirestore? firestore}) : _firestore = firestore;
+  final FirebaseFirestore? _firestore;
+  static const String _collection = 'coupons';
 
   FirebaseFirestore? get _db {
     if (_firestore != null) return _firestore;

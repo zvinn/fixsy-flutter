@@ -1,9 +1,4 @@
 class AiDiagnosis {
-  final String problem;
-  final String suggestedService;
-  final String solution;
-  final double estimatedPrice;
-  final String confidence;
 
   AiDiagnosis({
     required this.problem,
@@ -22,6 +17,11 @@ class AiDiagnosis {
       confidence: json['confidence'] ?? 'متوسط',
     );
   }
+  final String problem;
+  final String suggestedService;
+  final String solution;
+  final double estimatedPrice;
+  final String confidence;
 
   Map<String, dynamic> toJson() {
     return {

@@ -323,11 +323,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 }
 
 class _RoleCard extends StatelessWidget {
-  final String title;
-  final String value;
-  final String groupValue;
-  final Function(String) onChanged;
-  final IconData icon;
 
   const _RoleCard({
     required this.title,
@@ -336,6 +331,11 @@ class _RoleCard extends StatelessWidget {
     required this.onChanged,
     required this.icon,
   });
+  final String title;
+  final String value;
+  final String groupValue;
+  final Function(String) onChanged;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {

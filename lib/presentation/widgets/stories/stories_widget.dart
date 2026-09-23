@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:image_picker/image_picker.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../routes/app_routes.dart';
 
 /// Model for a Story
 class Story {
+
+  Story({
+    required this.id,
+    required this.techId,
+    required this.techName,
+    required this.techImg,
+    required this.media, required this.type, required this.timestamp, this.specialty = 'فني معتمد',
+    this.caption = '',
+    this.serviceCategory = 'صيانة عامة',
+    this.isVerified = true,
+  });
   final String id;
   final String techId;
   final String techName;
@@ -19,40 +29,25 @@ class Story {
   final String serviceCategory;
   final bool isVerified;
 
-  Story({
-    required this.id,
-    required this.techId,
-    required this.techName,
-    required this.techImg,
-    this.specialty = 'فني معتمد',
-    required this.media,
-    required this.type,
-    required this.timestamp,
-    this.caption = '',
-    this.serviceCategory = 'صيانة عامة',
-    this.isVerified = true,
-  });
-
   bool get isExpired => DateTime.now().difference(timestamp).inHours >= 24;
 }
 
 /// Stories Widget - Instagram-like daily stories for technicians
 class StoriesWidget extends StatefulWidget {
-  final String? userRole;
-  final String? userId;
 
   const StoriesWidget({
     super.key,
     this.userRole,
     this.userId,
   });
+  final String? userRole;
+  final String? userId;
 
   @override
   State<StoriesWidget> createState() => _StoriesWidgetState();
 }
 
 class _StoriesWidgetState extends State<StoriesWidget> {
-  final ImagePicker _picker = ImagePicker();
   List<Story> _stories = [];
   bool _isLoading = true;
 
@@ -127,7 +122,7 @@ class _StoriesWidgetState extends State<StoriesWidget> {
 
   void _showAddStoryModal() {
     final captionController = TextEditingController();
-    String selectedCategory = 'سباكة';
+    var selectedCategory = 'سباكة';
 
     showModalBottomSheet(
       context: context,
@@ -300,7 +295,7 @@ class _StoriesWidgetState extends State<StoriesWidget> {
     }
 
     // Group stories by technician
-    final Map<String, List<Story>> groupedStories = {};
+    final groupedStories = <String, List<Story>>{};
     for (final story in _stories.where((s) => !s.isExpired)) {
       groupedStories.putIfAbsent(story.techId, () => []).add(story);
     }
@@ -495,14 +490,12 @@ class _StoriesWidgetState extends State<StoriesWidget> {
 
 /// Full screen story viewer
 class StoryViewerScreen extends StatefulWidget {
-  final List<Story> stories;
-  final int initialIndex;
 
   const StoryViewerScreen({
-    super.key,
-    required this.stories,
-    required this.initialIndex,
+    required this.stories, required this.initialIndex, super.key,
   });
+  final List<Story> stories;
+  final int initialIndex;
 
   @override
   State<StoryViewerScreen> createState() => _StoryViewerScreenState();

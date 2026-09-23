@@ -134,14 +134,14 @@ class _VerificationScreenState extends State<VerificationScreen> {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.blue.withOpacity(0.3)),
       ),
-      child: Row(
+      child: const Row(
         children: [
-          const Icon(Icons.shield_outlined, color: Colors.blue, size: 32),
-          const SizedBox(width: 16),
+          Icon(Icons.shield_outlined, color: Colors.blue, size: 32),
+          SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text(
                   'لماذا نحتاج هذا؟',
                   style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),

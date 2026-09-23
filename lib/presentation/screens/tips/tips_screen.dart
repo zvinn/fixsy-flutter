@@ -81,8 +81,8 @@ class TipsScreen extends StatelessWidget {
                 children: [
                   Container(
                     padding: const EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFCD34D),
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFFCD34D),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
@@ -120,7 +120,7 @@ class TipsScreen extends StatelessWidget {
             const SizedBox(height: 20),
 
             // Tips List
-            ...tips.map((tip) => _buildTipCard(tip)).toList(),
+            ...tips.map((tip) => _buildTipCard(tip)),
 
             // CTA
             const SizedBox(height: 16),
@@ -223,12 +223,6 @@ class TipsScreen extends StatelessWidget {
 }
 
 class Tip {
-  final IconData icon;
-  final String title;
-  final String description;
-  final String category;
-  final Color color;
-  final Color bgColor;
 
   Tip({
     required this.icon,
@@ -238,4 +232,10 @@ class Tip {
     required this.color,
     required this.bgColor,
   });
+  final IconData icon;
+  final String title;
+  final String description;
+  final String category;
+  final Color color;
+  final Color bgColor;
 }

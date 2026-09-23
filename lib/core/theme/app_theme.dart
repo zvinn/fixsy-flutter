@@ -46,11 +46,10 @@ class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
-      colorScheme: ColorScheme.light(
+      colorScheme: const ColorScheme.light(
         primary: primaryColor,
         secondary: secondaryColor,
         surface: bgSecondaryLight,
-        background: bgPrimaryLight,
         error: errorColor,
         onPrimary: Colors.white,
         onSecondary: Colors.white,
@@ -166,11 +165,10 @@ class AppTheme {
   static ThemeData get darkTheme {
     return ThemeData(
       useMaterial3: true,
-      colorScheme: ColorScheme.dark(
+      colorScheme: const ColorScheme.dark(
         primary: primaryLight,
         secondary: secondaryColor,
         surface: bgSecondaryDark,
-        background: bgPrimaryDark,
         error: errorColor,
         onPrimary: Colors.white,
         onSecondary: Colors.white,

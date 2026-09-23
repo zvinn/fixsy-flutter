@@ -4,15 +4,6 @@ import '../../../core/theme/app_theme.dart';
 
 /// Badge model
 class ProfileBadge {
-  final String id;
-  final String title;
-  final String description;
-  final IconData icon;
-  final Color color;
-  final bool isUnlocked;
-  final DateTime? unlockedAt;
-  final int? progress;
-  final int? target;
 
   const ProfileBadge({
     required this.id,
@@ -25,6 +16,15 @@ class ProfileBadge {
     this.progress,
     this.target,
   });
+  final String id;
+  final String title;
+  final String description;
+  final IconData icon;
+  final Color color;
+  final bool isUnlocked;
+  final DateTime? unlockedAt;
+  final int? progress;
+  final int? target;
   
   double get progressPercent {
     if (isUnlocked) return 1.0;
@@ -106,16 +106,15 @@ class BadgesList {
 
 /// Profile Badges Widget
 class ProfileBadgesWidget extends StatelessWidget {
-  final List<ProfileBadge> badges;
-  final bool showAll;
-  final VoidCallback? onViewAll;
 
   const ProfileBadgesWidget({
-    super.key,
-    required this.badges,
+    required this.badges, super.key,
     this.showAll = false,
     this.onViewAll,
   });
+  final List<ProfileBadge> badges;
+  final bool showAll;
+  final VoidCallback? onViewAll;
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +139,7 @@ class ProfileBadgesWidget extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.military_tech,
                     color: AppTheme.primaryColor,
                   ),
@@ -162,7 +161,7 @@ class ProfileBadgesWidget extends StatelessWidget {
                     ),
                     child: Text(
                       '$unlockedCount/${badges.length}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: AppTheme.primaryColor,
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
@@ -198,13 +197,13 @@ class ProfileBadgesWidget extends StatelessWidget {
 }
 
 class _BadgeItem extends StatelessWidget {
-  final ProfileBadge badge;
-  final bool isDark;
 
   const _BadgeItem({
     required this.badge,
     required this.isDark,
   });
+  final ProfileBadge badge;
+  final bool isDark;
 
   @override
   Widget build(BuildContext context) {

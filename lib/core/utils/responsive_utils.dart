@@ -9,12 +9,6 @@ class ResponsiveBreakpoints {
 
 /// Utility class for responsive design
 class ResponsiveUtils {
-  final BuildContext context;
-  late final double screenWidth;
-  late final double screenHeight;
-  late final bool isMobile;
-  late final bool isTablet;
-  late final bool isDesktop;
 
   ResponsiveUtils(this.context) {
     final size = MediaQuery.of(context).size;
@@ -25,6 +19,12 @@ class ResponsiveUtils {
                screenWidth < ResponsiveBreakpoints.tablet;
     isDesktop = screenWidth >= ResponsiveBreakpoints.tablet;
   }
+  final BuildContext context;
+  late final double screenWidth;
+  late final double screenHeight;
+  late final bool isMobile;
+  late final bool isTablet;
+  late final bool isDesktop;
 
   /// Returns different values based on screen size
   T responsive<T>({

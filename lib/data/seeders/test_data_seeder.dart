@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../core/utils/app_logger.dart';
 
 /// Script to add test data to Firebase
 /// Run this once to populate your Firestore with sample services and bookings
@@ -6,12 +7,12 @@ class TestDataSeeder {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> seedData() async {
-    print('🌱 Starting to seed test data...');
+    AppLogger.info('🌱 Starting to seed test data...');
     
     await _seedServices();
-    print('✅ Services added successfully!');
+    AppLogger.info('✅ Services added successfully!');
     
-    print('🎉 Test data seeding completed!');
+    AppLogger.info('🎉 Test data seeding completed!');
   }
 
   Future<void> _seedServices() async {

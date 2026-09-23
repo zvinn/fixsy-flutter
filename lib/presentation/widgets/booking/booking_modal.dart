@@ -12,9 +12,6 @@ import 'payment_method_selector.dart';
 import '../scheduling/slot_scheduling_widget.dart';
 
 class BookingModal extends StatefulWidget {
-  final String? initialServiceType;
-  final String? initialDescription;
-  final VoidCallback? onSubmit;
 
   const BookingModal({
     super.key,
@@ -22,6 +19,9 @@ class BookingModal extends StatefulWidget {
     this.initialDescription,
     this.onSubmit,
   });
+  final String? initialServiceType;
+  final String? initialDescription;
+  final VoidCallback? onSubmit;
 
   @override
   State<BookingModal> createState() => _BookingModalState();
@@ -35,7 +35,6 @@ class _BookingModalState extends State<BookingModal> {
   final CouponService _couponService = CouponService();
   
   int _currentStep = 0;
-  DateTime? _scheduledDate;
   SchedulingData? _schedulingData;
   PaymentMethodType _selectedPaymentMethod = PaymentMethodType.cash;
   CouponModel? _appliedCoupon;
@@ -352,7 +351,6 @@ class _BookingModalState extends State<BookingModal> {
                 onSchedulingChanged: (data) {
                   setState(() {
                     _schedulingData = data;
-                    _scheduledDate = data.scheduledDate;
                   });
                 },
               ),
@@ -480,7 +478,7 @@ class _BookingModalState extends State<BookingModal> {
   }
 
   double _calculateTotal() {
-    double base = 50.0;
+    var base = 50.0;
     if (_schedulingData?.recurringType != null && _schedulingData!.recurringType != RecurringType.none) {
       base = base * 0.9; // 10% discount on recurring maintenance
     }

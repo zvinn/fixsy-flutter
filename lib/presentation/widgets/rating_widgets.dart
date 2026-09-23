@@ -3,22 +3,21 @@ import 'package:flutter/material.dart';
 /// Star Rating Input Widget
 /// Interactive star rating widget for user input
 class StarRatingInput extends StatefulWidget {
+
+  const StarRatingInput({
+    required this.onRatingChanged, super.key,
+    this.initialRating = 0,
+    this.size = 40.0,
+    this.activeColor = Colors.amber,
+    this.inactiveColor = Colors.grey,
+    this.allowHalfRating = false,
+  });
   final double initialRating;
   final ValueChanged<double> onRatingChanged;
   final double size;
   final Color activeColor;
   final Color inactiveColor;
   final bool allowHalfRating;
-
-  const StarRatingInput({
-    Key? key,
-    this.initialRating = 0,
-    required this.onRatingChanged,
-    this.size = 40.0,
-    this.activeColor = Colors.amber,
-    this.inactiveColor = Colors.grey,
-    this.allowHalfRating = false,
-  }) : super(key: key);
 
   @override
   State<StarRatingInput> createState() => _StarRatingInputState();
@@ -64,22 +63,21 @@ class _StarRatingInputState extends State<StarRatingInput> {
 /// Star Rating Display Widget
 /// Read-only star rating display
 class StarRatingDisplay extends StatelessWidget {
+
+  const StarRatingDisplay({
+    required this.rating, super.key,
+    this.size = 20.0,
+    this.activeColor = Colors.amber,
+    this.inactiveColor = Colors.grey,
+    this.showRatingValue = true,
+    this.totalRatings,
+  });
   final double rating;
   final double size;
   final Color activeColor;
   final Color inactiveColor;
   final bool showRatingValue;
   final int? totalRatings;
-
-  const StarRatingDisplay({
-    Key? key,
-    required this.rating,
-    this.size = 20.0,
-    this.activeColor = Colors.amber,
-    this.inactiveColor = Colors.grey,
-    this.showRatingValue = true,
-    this.totalRatings,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -124,21 +122,19 @@ class StarRatingDisplay extends StatelessWidget {
 /// Rating Summary Widget
 /// Shows rating distribution with bars
 class RatingDistributionWidget extends StatelessWidget {
+
+  const RatingDistributionWidget({
+    required this.distribution, required this.totalRatings, super.key,
+    this.barHeight = 8.0,
+  });
   final Map<int, int> distribution;
   final int totalRatings;
   final double barHeight;
 
-  const RatingDistributionWidget({
-    Key? key,
-    required this.distribution,
-    required this.totalRatings,
-    this.barHeight = 8.0,
-  }) : super(key: key);
-
   double _getPercentage(int stars) {
     if (totalRatings == 0) return 0;
     final count = distribution[stars] ?? 0;
-    return (count / totalRatings);
+    return count / totalRatings;
   }
 
   @override

@@ -6,9 +6,9 @@ import '../utils/app_logger.dart';
 /// Global Error Handler for Fixsy Flutter
 /// Catches and handles all app errors gracefully
 class AppErrorHandler {
-  static final AppErrorHandler _instance = AppErrorHandler._internal();
   factory AppErrorHandler() => _instance;
   AppErrorHandler._internal();
+  static final AppErrorHandler _instance = AppErrorHandler._internal();
 
   /// Initialize error handler
   static Future<void> initialize() async {

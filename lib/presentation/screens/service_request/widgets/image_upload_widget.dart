@@ -3,14 +3,12 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class ImageUploadWidget extends StatefulWidget {
-  final List<XFile> images;
-  final Function(List<XFile>) onImagesChanged;
 
   const ImageUploadWidget({
-    super.key,
-    required this.images,
-    required this.onImagesChanged,
+    required this.images, required this.onImagesChanged, super.key,
   });
+  final List<XFile> images;
+  final Function(List<XFile>) onImagesChanged;
 
   @override
   State<ImageUploadWidget> createState() => _ImageUploadWidgetState();
@@ -21,7 +19,7 @@ class _ImageUploadWidgetState extends State<ImageUploadWidget> {
 
   Future<void> _pickImages() async {
     try {
-      final List<XFile> pickedFiles = await _picker.pickMultiImage(
+      final pickedFiles = await _picker.pickMultiImage(
         imageQuality: 80,
       );
       
@@ -43,7 +41,7 @@ class _ImageUploadWidgetState extends State<ImageUploadWidget> {
 
   Future<void> _pickCamera() async {
     try {
-      final XFile? photo = await _picker.pickImage(
+      final photo = await _picker.pickImage(
         source: ImageSource.camera,
         imageQuality: 80,
       );

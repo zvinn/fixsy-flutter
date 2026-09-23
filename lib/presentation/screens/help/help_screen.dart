@@ -119,7 +119,7 @@ class _HelpScreenState extends State<HelpScreen> {
           children: [
             Container(
               padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
                 shape: BoxShape.circle,
               ),
@@ -295,8 +295,8 @@ class _HelpScreenState extends State<HelpScreen> {
 }
 
 class FAQ {
-  final String question;
-  final String answer;
 
   FAQ({required this.question, required this.answer});
+  final String question;
+  final String answer;
 }

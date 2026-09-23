@@ -21,6 +21,12 @@ import 'presentation/providers/chat_provider.dart';
 import 'presentation/providers/language_provider.dart';
 import 'presentation/providers/connectivity_provider.dart';
 import 'presentation/providers/loyalty_provider.dart';
+import 'presentation/providers/wallet_provider.dart';
+import 'presentation/providers/community_provider.dart';
+import 'presentation/providers/tech_dashboard_provider.dart';
+import 'presentation/providers/job_market_provider.dart';
+import 'presentation/providers/address_provider.dart';
+import 'presentation/providers/admin_provider.dart';
 import 'presentation/screens/auth/login_screen.dart';
 import 'presentation/layouts/main_layout.dart';
 import 'data/services/notification_service.dart' show firebaseMessagingBackgroundHandler;
@@ -94,6 +100,12 @@ class FixsyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ChatProvider()),
         ChangeNotifierProvider(create: (_) => ConnectivityProvider()),
         ChangeNotifierProvider(create: (_) => LoyaltyProvider()),
+        ChangeNotifierProvider(create: (_) => WalletProvider()),
+        ChangeNotifierProvider(create: (_) => CommunityProvider()),
+        ChangeNotifierProvider(create: (_) => TechDashboardProvider()),
+        ChangeNotifierProvider(create: (_) => JobMarketProvider()),
+        ChangeNotifierProvider(create: (_) => AddressProvider()),
+        ChangeNotifierProvider(create: (_) => AdminProvider()),
       ],
       child: Consumer<LanguageProvider>(
         builder: (context, languageProvider, _) {

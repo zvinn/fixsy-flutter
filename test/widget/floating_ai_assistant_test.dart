@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:provider/provider.dart';
 import 'package:fixsy_flutter/data/services/ai_service.dart';
 import 'package:fixsy_flutter/presentation/widgets/ai/fixsy_ai_assistant_modal.dart';
-import 'package:fixsy_flutter/presentation/providers/auth_provider.dart';
-import 'package:fixsy_flutter/presentation/providers/service_request_provider.dart';
-import 'package:fixsy_flutter/presentation/screens/home/home_screen.dart';
 
 void main() {
   group('AiDiagnosis & AiService Logic Tests', () {
@@ -172,7 +168,7 @@ void main() {
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
 
-      bool booked = false;
+      var booked = false;
 
       await tester.pumpWidget(
         MaterialApp(

@@ -8,16 +8,13 @@ import '../../widgets/chat/voice_recorder_widget.dart';
 import '../../../data/models/message_model.dart';
 
 class ChatScreen extends StatefulWidget {
+
+  const ChatScreen({
+    required this.conversationId, required this.otherUserName, required this.otherUserId, super.key,
+  });
   final String conversationId;
   final String otherUserName;
   final String otherUserId;
-
-  const ChatScreen({
-    super.key,
-    required this.conversationId,
-    required this.otherUserName,
-    required this.otherUserId,
-  });
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -283,10 +280,10 @@ class _ChatScreenState extends State<ChatScreen> {
 }
 
 class _MobileMessageBubble extends StatelessWidget {
-  final Message message;
-  final bool isMe;
 
   const _MobileMessageBubble({required this.message, required this.isMe});
+  final Message message;
+  final bool isMe;
 
   @override
   Widget build(BuildContext context) {

@@ -4,12 +4,6 @@ import '../../../core/theme/app_theme.dart';
 
 /// Search Filters Model
 class SearchFilters {
-  final String? serviceType;
-  final double? minRating;
-  final double? maxPrice;
-  final double? maxDistance;
-  final bool? verifiedOnly;
-  final String? sortBy;
 
   const SearchFilters({
     this.serviceType,
@@ -19,6 +13,12 @@ class SearchFilters {
     this.verifiedOnly,
     this.sortBy,
   });
+  final String? serviceType;
+  final double? minRating;
+  final double? maxPrice;
+  final double? maxDistance;
+  final bool? verifiedOnly;
+  final String? sortBy;
 
   SearchFilters copyWith({
     String? serviceType,
@@ -48,9 +48,6 @@ class SearchFilters {
 
 /// Enhanced Search Widget with Filters
 class EnhancedSearchWidget extends StatefulWidget {
-  final Function(String query, SearchFilters filters)? onSearch;
-  final List<String> serviceTypes;
-  final String? initialQuery;
 
   const EnhancedSearchWidget({
     super.key,
@@ -58,6 +55,9 @@ class EnhancedSearchWidget extends StatefulWidget {
     this.serviceTypes = const ['سباكة', 'كهرباء', 'نجارة', 'تكييف', 'دهان'],
     this.initialQuery,
   });
+  final Function(String query, SearchFilters filters)? onSearch;
+  final List<String> serviceTypes;
+  final String? initialQuery;
 
   @override
   State<EnhancedSearchWidget> createState() => _EnhancedSearchWidgetState();
@@ -408,11 +408,11 @@ class _EnhancedSearchWidgetState extends State<EnhancedSearchWidget> {
               ),
               Row(
                 children: [
-                  Icon(Icons.star, color: Colors.amber, size: 18),
+                  const Icon(Icons.star, color: Colors.amber, size: 18),
                   const SizedBox(width: 4),
                   Text(
                     _minRating.toStringAsFixed(1),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: AppTheme.primaryColor,
                     ),
@@ -443,7 +443,7 @@ class _EnhancedSearchWidgetState extends State<EnhancedSearchWidget> {
               ),
               Text(
                 '${_maxPrice.toInt()} ج.م',
-                style: TextStyle(
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: AppTheme.primaryColor,
                 ),
@@ -472,7 +472,7 @@ class _EnhancedSearchWidgetState extends State<EnhancedSearchWidget> {
               ),
               Text(
                 '${_maxDistance.toInt()} كم',
-                style: TextStyle(
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: AppTheme.primaryColor,
                 ),
@@ -547,10 +547,6 @@ class _EnhancedSearchWidgetState extends State<EnhancedSearchWidget> {
 }
 
 class _SortChip extends StatelessWidget {
-  final String label;
-  final String value;
-  final String selected;
-  final Function(String) onSelect;
 
   const _SortChip({
     required this.label,
@@ -558,6 +554,10 @@ class _SortChip extends StatelessWidget {
     required this.selected,
     required this.onSelect,
   });
+  final String label;
+  final String value;
+  final String selected;
+  final Function(String) onSelect;
 
   @override
   Widget build(BuildContext context) {

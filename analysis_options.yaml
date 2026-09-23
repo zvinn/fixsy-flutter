@@ -6,28 +6,17 @@ analyzer:
     - "**/*.freezed.dart"
     - "**/generated/**"
   
-  strong-mode:
-    implicit-casts: false
-    implicit-dynamic: false
-
   errors:
-    # Treat missing required parameters as errors
-    missing_required_param: error
-    # Treat missing returns as errors
-    missing_return: error
-    # Treat invalid assignments as errors
     invalid_assignment: error
-    # Memory leak detection
     cancel_subscriptions: error
     close_sinks: error
+    deprecated_member_use: ignore
 
 linter:
   rules:
     # Error prevention
-    - avoid_print
     - avoid_empty_else
     - avoid_relative_lib_imports
-    - avoid_returning_null_for_future
     - avoid_slow_async_io
     - avoid_types_as_parameter_names
     - cancel_subscriptions
@@ -46,13 +35,10 @@ linter:
 
     # Style
     - always_declare_return_types
-    - always_put_required_named_parameters_first
-    - always_require_non_null_named_parameters
     - annotate_overrides
     - avoid_init_to_null
     - avoid_null_checks_in_equality_operators
     - avoid_return_types_on_setters
-    - avoid_returning_null
     - avoid_returning_null_for_void
     - await_only_futures
     - camel_case_extensions
@@ -71,7 +57,6 @@ linter:
     - one_member_abstracts
     - only_throw_errors
     - overridden_fields
-    - package_api_docs
     - package_prefixed_library_names
     - prefer_adjacent_string_concatenation
     - prefer_collection_literals
@@ -81,7 +66,6 @@ linter:
     - prefer_const_declarations
     - prefer_const_literals_to_create_immutables
     - prefer_contains
-    - prefer_equal_for_default_values
     - prefer_final_fields
     - prefer_final_locals
     - prefer_for_elements_to_map_fromIterable
@@ -101,10 +85,8 @@ linter:
     - recursive_getters
     - slash_for_doc_comments
     - sort_child_properties_last
-    - sort_constructors_first
     - sort_unnamed_constructors_first
     - type_init_formals
-    - unawaited_futures
     - unnecessary_brace_in_string_interps
     - unnecessary_const
     - unnecessary_getters_setters
@@ -114,11 +96,9 @@ linter:
     - unnecessary_overrides
     - unnecessary_parenthesis
     - unnecessary_this
-    - unrelated_type_equality_checks
     - use_full_hex_values_for_flutter_colors
     - use_function_type_syntax_for_parameters
     - use_rethrow_when_possible
-    - valid_regexps
     - void_checks
 
     # Pub

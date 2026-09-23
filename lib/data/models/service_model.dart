@@ -1,16 +1,5 @@
 /// Service Model
 class Service {
-  final String id;
-  final String name;
-  final String nameAr;
-  final String category;
-  final String description;
-  final String descriptionAr;
-  final double price;
-  final String? imageUrl;
-  final bool isActive;
-  final DateTime createdAt;
-  final DateTime updatedAt;
 
   Service({
     required this.id,
@@ -20,10 +9,8 @@ class Service {
     required this.description,
     required this.descriptionAr,
     required this.price,
-    this.imageUrl,
+    required this.createdAt, required this.updatedAt, this.imageUrl,
     this.isActive = true,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   /// Create from Firestore document
@@ -42,6 +29,17 @@ class Service {
       updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
   }
+  final String id;
+  final String name;
+  final String nameAr;
+  final String category;
+  final String description;
+  final String descriptionAr;
+  final double price;
+  final String? imageUrl;
+  final bool isActive;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   /// Convert to Firestore document
   Map<String, dynamic> toJson() {

@@ -3,6 +3,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// Language Provider - Manages app language state
 class LanguageProvider extends ChangeNotifier {
+  
+  LanguageProvider() {
+    _loadLanguage();
+  }
   static const String _languageKey = 'app_language';
   
   Locale _locale = const Locale('ar'); // Default to Arabic
@@ -13,10 +17,6 @@ class LanguageProvider extends ChangeNotifier {
   bool get isArabic => _locale.languageCode == 'ar';
   bool get isEnglish => _locale.languageCode == 'en';
   String get languageCode => _locale.languageCode;
-  
-  LanguageProvider() {
-    _loadLanguage();
-  }
   
   /// Load saved language preference
   Future<void> _loadLanguage() async {

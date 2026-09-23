@@ -2,21 +2,17 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
 
 /// Minimal Service Card - Clean design without gradients
-class EnhancedServiceCard extends StatelessWidget {
+class EnhancedServiceCard extends StatelessWidget { // Kept for compatibility but ignored
+
+  const EnhancedServiceCard({
+    required this.icon, required this.title, required this.subtitle, required this.onTap, super.key,
+    this.gradientColors,
+  });
   final IconData icon;
   final String title;
   final String subtitle;
   final VoidCallback onTap;
-  final List<Color>? gradientColors; // Kept for compatibility but ignored
-
-  const EnhancedServiceCard({
-    Key? key,
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.onTap,
-    this.gradientColors,
-  }) : super(key: key);
+  final List<Color>? gradientColors;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +54,7 @@ class EnhancedServiceCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     subtitle,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 12,
                       color: AppTheme.textSecondaryColor,
                     ),
@@ -75,20 +71,16 @@ class EnhancedServiceCard extends StatelessWidget {
 
 /// Stats Card Widget
 class StatsCard extends StatelessWidget {
+
+  const StatsCard({
+    required this.title, required this.value, required this.icon, required this.color, super.key,
+    this.trend,
+  });
   final String title;
   final String value;
   final IconData icon;
   final Color color;
   final String? trend;
-
-  const StatsCard({
-    Key? key,
-    required this.title,
-    required this.value,
-    required this.icon,
-    required this.color,
-    this.trend,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -163,16 +155,15 @@ class StatsCard extends StatelessWidget {
 
 /// Section Header Widget
 class SectionHeader extends StatelessWidget {
+
+  const SectionHeader({
+    required this.title, super.key,
+    this.subtitle,
+    this.onSeeAll,
+  });
   final String title;
   final String? subtitle;
   final VoidCallback? onSeeAll;
-
-  const SectionHeader({
-    Key? key,
-    required this.title,
-    this.subtitle,
-    this.onSeeAll,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -223,20 +214,17 @@ class SectionHeader extends StatelessWidget {
 
 /// Empty State Widget
 class EmptyStateWidget extends StatelessWidget {
+
+  const EmptyStateWidget({
+    required this.icon, required this.title, required this.subtitle, super.key,
+    this.buttonText,
+    this.onButtonPressed,
+  });
   final IconData icon;
   final String title;
   final String subtitle;
   final String? buttonText;
   final VoidCallback? onButtonPressed;
-
-  const EmptyStateWidget({
-    Key? key,
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    this.buttonText,
-    this.onButtonPressed,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

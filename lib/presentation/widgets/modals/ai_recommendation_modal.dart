@@ -5,16 +5,15 @@ import '../../../data/services/ai_service.dart';
 
 /// AI Recommendation Modal - Shows AI-powered technician recommendations
 class AIRecommendationModal extends StatefulWidget {
-  final String serviceType;
-  final String? problemDescription;
-  final VoidCallback? onSelectTechnician;
 
   const AIRecommendationModal({
-    super.key,
-    required this.serviceType,
+    required this.serviceType, super.key,
     this.problemDescription,
     this.onSelectTechnician,
   });
+  final String serviceType;
+  final String? problemDescription;
+  final VoidCallback? onSelectTechnician;
 
   /// Show the modal
   static Future<void> show(
@@ -141,7 +140,7 @@ class _AIRecommendationModalState extends State<AIRecommendationModal> {
                     color: AppTheme.primaryColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.auto_awesome,
                     color: AppTheme.primaryColor,
                   ),
@@ -251,7 +250,7 @@ class _LoadingAnimation extends StatelessWidget {
             color: AppTheme.primaryColor.withOpacity(0.1),
             shape: BoxShape.circle,
           ),
-          child: Icon(
+          child: const Icon(
             Icons.psychology,
             size: 40,
             color: AppTheme.primaryColor,
@@ -281,13 +280,13 @@ class _LoadingAnimation extends StatelessWidget {
 }
 
 class _RecommendationCard extends StatelessWidget {
-  final String recommendation;
-  final bool isDark;
 
   const _RecommendationCard({
     required this.recommendation,
     required this.isDark,
   });
+  final String recommendation;
+  final bool isDark;
 
   @override
   Widget build(BuildContext context) {
@@ -310,7 +309,7 @@ class _RecommendationCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
+          const Icon(
             Icons.lightbulb,
             color: AppTheme.primaryColor,
           ),
@@ -331,15 +330,15 @@ class _RecommendationCard extends StatelessWidget {
 }
 
 class _TechnicianCard extends StatelessWidget {
-  final Map<String, dynamic> technician;
-  final bool isDark;
-  final VoidCallback onSelect;
 
   const _TechnicianCard({
     required this.technician,
     required this.isDark,
     required this.onSelect,
   });
+  final Map<String, dynamic> technician;
+  final bool isDark;
+  final VoidCallback onSelect;
 
   @override
   Widget build(BuildContext context) {
@@ -416,7 +415,7 @@ class _TechnicianCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.star,
                           size: 14,
                           color: Colors.amber,
@@ -447,7 +446,7 @@ class _TechnicianCard extends StatelessWidget {
                 children: [
                   Text(
                     '${technician['price']} ج.م',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                       color: AppTheme.primaryColor,

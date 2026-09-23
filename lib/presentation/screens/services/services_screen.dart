@@ -21,6 +21,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
     super.initState();
     // Load services on init
     Future.microtask(() {
+      if (!mounted) return;
       context.read<ServicesProvider>().loadServices();
     });
   }

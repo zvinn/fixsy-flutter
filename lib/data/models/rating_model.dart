@@ -1,25 +1,13 @@
 /// Rating Model - نموذج التقييمات
 class Rating {
-  final String id;
-  final String bookingId;
-  final String technicianId;
-  final String userId;
-  final double rating; // 1-5
-  final String? comment;
-  final DateTime createdAt;
-  
-  // Additional fields for display
-  final String? userName;
-  final String? technicianName;
-
   Rating({
     required this.id,
     required this.bookingId,
     required this.technicianId,
     required this.userId,
     required this.rating,
-    this.comment,
     required this.createdAt,
+    this.comment,
     this.userName,
     this.technicianName,
   });
@@ -32,12 +20,24 @@ class Rating {
       technicianId: json['technicianId'] as String,
       userId: json['userId'] as String,
       rating: (json['rating'] as num).toDouble(),
-      comment: json['comment'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String),
+      comment: json['comment'] as String?,
       userName: json['userName'] as String?,
       technicianName: json['technicianName'] as String?,
     );
   }
+
+  final String id;
+  final String bookingId;
+  final String technicianId;
+  final String userId;
+  final double rating; // 1-5
+  final String? comment;
+  final DateTime createdAt;
+  
+  // Additional fields for display
+  final String? userName;
+  final String? technicianName;
 
   /// Convert to Firestore document
   Map<String, dynamic> toJson() {
@@ -72,8 +72,8 @@ class Rating {
       technicianId: technicianId ?? this.technicianId,
       userId: userId ?? this.userId,
       rating: rating ?? this.rating,
-      comment: comment ?? this.comment,
       createdAt: createdAt ?? this.createdAt,
+      comment: comment ?? this.comment,
       userName: userName ?? this.userName,
       technicianName: technicianName ?? this.technicianName,
     );
@@ -97,11 +97,6 @@ class Rating {
 
 /// Technician Rating Statistics
 class TechnicianRating {
-  final String technicianId;
-  final double averageRating;
-  final int totalRatings;
-  final Map<int, int> ratingDistribution; // {1: 2, 2: 1, 3: 5, 4: 10, 5: 20}
-
   TechnicianRating({
     required this.technicianId,
     required this.averageRating,
@@ -117,6 +112,11 @@ class TechnicianRating {
       ratingDistribution: Map<int, int>.from(json['ratingDistribution'] as Map),
     );
   }
+
+  final String technicianId;
+  final double averageRating;
+  final int totalRatings;
+  final Map<int, int> ratingDistribution; // {1: 2, 2: 1, 3: 5, 4: 10, 5: 20}
 
   Map<String, dynamic> toJson() {
     return {

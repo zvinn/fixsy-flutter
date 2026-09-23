@@ -5,7 +5,10 @@ import '../../data/services/rating_service.dart';
 /// Rating Provider
 /// Manages ratings state and operations
 class RatingProvider with ChangeNotifier {
-  final RatingService _ratingService = RatingService();
+  RatingProvider({RatingService? ratingService})
+      : _ratingService = ratingService ?? RatingService();
+
+  final RatingService _ratingService;
 
   List<Rating> _ratings = [];
   TechnicianRating? _technicianStats;

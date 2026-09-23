@@ -121,7 +121,7 @@ class AuthService {
   Future<User?> signInWithGoogle() async {
     try {
       // Trigger Google Sign-In flow
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      final googleUser = await _googleSignIn.signIn();
       
       if (googleUser == null) {
         // User cancelled
@@ -129,7 +129,7 @@ class AuthService {
       }
 
       // Get auth details
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final googleAuth = await googleUser.authentication;
 
       // Create Firebase credential
       final credential = firebase_auth.GoogleAuthProvider.credential(

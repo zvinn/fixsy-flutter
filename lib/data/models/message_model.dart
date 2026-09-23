@@ -12,15 +12,6 @@ enum MessageType {
 
 /// Message Model
 class Message {
-  final String id;
-  final String conversationId;
-  final String senderId;
-  final String senderName;
-  final String content;
-  final MessageType type;
-  final String? imageUrl;
-  final DateTime timestamp;
-  final bool isRead;
 
   Message({
     required this.id,
@@ -28,9 +19,8 @@ class Message {
     required this.senderId,
     required this.senderName,
     required this.content,
-    this.type = MessageType.text,
+    required this.timestamp, this.type = MessageType.text,
     this.imageUrl,
-    required this.timestamp,
     this.isRead = false,
   });
 
@@ -49,6 +39,15 @@ class Message {
       isRead: json['isRead'] as bool? ?? false,
     );
   }
+  final String id;
+  final String conversationId;
+  final String senderId;
+  final String senderName;
+  final String content;
+  final MessageType type;
+  final String? imageUrl;
+  final DateTime timestamp;
+  final bool isRead;
 
   Map<String, dynamic> toJson() {
     return {

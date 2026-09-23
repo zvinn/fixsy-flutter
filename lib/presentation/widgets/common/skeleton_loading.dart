@@ -3,10 +3,6 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 /// Skeleton Loading Widget for various use cases
 class SkeletonLoading extends StatelessWidget {
-  final double width;
-  final double height;
-  final double borderRadius;
-  final bool isCircle;
 
   const SkeletonLoading({
     super.key,
@@ -15,6 +11,10 @@ class SkeletonLoading extends StatelessWidget {
     this.borderRadius = 8,
     this.isCircle = false,
   });
+  final double width;
+  final double height;
+  final double borderRadius;
+  final bool isCircle;
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +38,6 @@ class SkeletonLoading extends StatelessWidget {
 
 /// Card Skeleton - for loading cards
 class CardSkeleton extends StatelessWidget {
-  final bool showImage;
-  final bool showAvatar;
-  final int lines;
-  final double height;
 
   const CardSkeleton({
     super.key,
@@ -50,6 +46,10 @@ class CardSkeleton extends StatelessWidget {
     this.lines = 3,
     this.height = 120,
   });
+  final bool showImage;
+  final bool showAvatar;
+  final int lines;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
@@ -115,9 +115,6 @@ class CardSkeleton extends StatelessWidget {
 
 /// List Skeleton - for loading lists
 class ListSkeleton extends StatelessWidget {
-  final int itemCount;
-  final double itemHeight;
-  final bool showAvatar;
 
   const ListSkeleton({
     super.key,
@@ -125,6 +122,9 @@ class ListSkeleton extends StatelessWidget {
     this.itemHeight = 72,
     this.showAvatar = true,
   });
+  final int itemCount;
+  final double itemHeight;
+  final bool showAvatar;
 
   @override
   Widget build(BuildContext context) {
@@ -163,21 +163,21 @@ class ServiceCardSkeleton extends StatelessWidget {
           color: isDark ? Colors.white12 : Colors.grey.shade200,
         ),
       ),
-      child: Column(
+      child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SkeletonLoading(
+          SkeletonLoading(
             width: 48,
             height: 48,
             borderRadius: 12,
           ),
-          const Spacer(),
-          const SkeletonLoading(
+          Spacer(),
+          SkeletonLoading(
             width: 80,
             height: 16,
           ),
-          const SizedBox(height: 8),
-          const SkeletonLoading(
+          SizedBox(height: 8),
+          SkeletonLoading(
             width: 60,
             height: 12,
           ),
@@ -204,34 +204,34 @@ class BookingCardSkeleton extends StatelessWidget {
           color: isDark ? Colors.white12 : Colors.grey.shade200,
         ),
       ),
-      child: Column(
+      child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const SkeletonLoading(
+              SkeletonLoading(
                 width: 50,
                 height: 50,
                 isCircle: true,
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     SkeletonLoading(width: 120, height: 16),
                     SizedBox(height: 8),
                     SkeletonLoading(width: 80, height: 12),
                   ],
                 ),
               ),
-              const SkeletonLoading(width: 60, height: 24, borderRadius: 12),
+              SkeletonLoading(width: 60, height: 24, borderRadius: 12),
             ],
           ),
-          const SizedBox(height: 16),
-          const SkeletonLoading(height: 14),
-          const SizedBox(height: 8),
-          const SkeletonLoading(width: 150, height: 14),
+          SizedBox(height: 16),
+          SkeletonLoading(height: 14),
+          SizedBox(height: 8),
+          SkeletonLoading(width: 150, height: 14),
         ],
       ),
     ).animate(onPlay: (c) => c.repeat()).shimmer(duration: 1200.ms);
@@ -277,12 +277,12 @@ class ProfileSkeleton extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
-              children: List.generate(4, (i) => Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12),
+              children: List.generate(4, (i) => const Padding(
+                padding: EdgeInsets.symmetric(vertical: 12),
                 child: Row(
                   children: [
                     SkeletonLoading(width: 40, height: 40, borderRadius: 8),
-                    const SizedBox(width: 16),
+                    SizedBox(width: 16),
                     Expanded(child: SkeletonLoading(height: 16)),
                   ],
                 ),

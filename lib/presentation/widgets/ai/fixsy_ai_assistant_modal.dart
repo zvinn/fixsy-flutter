@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import '../../../../core/theme/app_theme.dart';
-import '../../../../core/l10n/app_localizations.dart';
 import '../../../../data/services/ai_service.dart';
 
 /// Floating AI Assistant Action Button
 /// Modern glowing pill with gradient and sparkles
 class FloatingAiAssistantButton extends StatefulWidget {
-  final VoidCallback? onPressed;
-  final bool enableAnimation;
 
   const FloatingAiAssistantButton({
     super.key,
     this.onPressed,
     this.enableAnimation = true,
   });
+  final VoidCallback? onPressed;
+  final bool enableAnimation;
 
   @override
   State<FloatingAiAssistantButton> createState() => _FloatingAiAssistantButtonState();
@@ -116,14 +113,14 @@ class _FloatingAiAssistantButtonState extends State<FloatingAiAssistantButton>
 /// Comprehensive Fixsy AI Assistant Modal
 /// Provides problem diagnosis, instant price estimation, safety advice, tips, and conversational Q&A
 class FixsyAiAssistantModal extends StatefulWidget {
-  final String? initialQuery;
-  final VoidCallback? onBookTechnician;
 
   const FixsyAiAssistantModal({
     super.key,
     this.initialQuery,
     this.onBookTechnician,
   });
+  final String? initialQuery;
+  final VoidCallback? onBookTechnician;
 
   /// Show the modal bottom sheet
   static Future<void> show(
@@ -1023,11 +1020,11 @@ class _FixsyAiAssistantModalState extends State<FixsyAiAssistantModal> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          const Row(
             children: [
-              const Icon(Icons.chat_bubble_outline, size: 18, color: Color(0xFF7C3AED)),
-              const SizedBox(width: 8),
-              const Text(
+              Icon(Icons.chat_bubble_outline, size: 18, color: Color(0xFF7C3AED)),
+              SizedBox(width: 8),
+              Text(
                 'استشر Fixsy AI حول هذا العطل:',
                 style: TextStyle(
                   fontSize: 13,

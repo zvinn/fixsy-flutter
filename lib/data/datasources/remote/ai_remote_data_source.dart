@@ -14,14 +14,14 @@ abstract class AiRemoteDataSource {
 }
 
 class AiRemoteDataSourceImpl implements AiRemoteDataSource {
+
+  AiRemoteDataSourceImpl(this._dio);
   final Dio _dio;
   static const String _groqApiUrl = 'https://api.groq.com/openai/v1/chat/completions';
 
-  AiRemoteDataSourceImpl(this._dio);
-
   @override
   Future<AiDiagnosis> analyzeProblem({required String description}) async {
-    final prompt = '''
+    const prompt = '''
 Analyze problem:
 Description: 
 
@@ -72,7 +72,7 @@ Respond with JSON only:
     required String serviceType,
     String? problemDescription,
   }) async {
-    final prompt = '''
+    const prompt = '''
 Recommend quick safety advice for .
 
 ''';

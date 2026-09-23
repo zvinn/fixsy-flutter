@@ -5,6 +5,17 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 enum SyncTaskType { booking, rating, message, profileUpdate, other }
 
 class SyncTask {
+
+  SyncTask({
+    required this.id,
+    required this.type,
+    required this.title,
+    required this.createdAt, this.description,
+    this.payload = const {},
+    this.isSynced = false,
+    this.isFailed = false,
+    this.retryCount = 0,
+  });
   final String id;
   final SyncTaskType type;
   final String title;
@@ -14,18 +25,6 @@ class SyncTask {
   bool isSynced;
   bool isFailed;
   int retryCount;
-
-  SyncTask({
-    required this.id,
-    required this.type,
-    required this.title,
-    this.description,
-    this.payload = const {},
-    required this.createdAt,
-    this.isSynced = false,
-    this.isFailed = false,
-    this.retryCount = 0,
-  });
 
   String get typeLabel {
     switch (type) {
@@ -59,6 +58,17 @@ class SyncTask {
 }
 
 class ConnectivityProvider extends ChangeNotifier {
+
+  ConnectivityProvider({
+    bool initialOnline = true,
+    Connectivity? connectivity,
+    bool autoInit = true,
+  })  : _isOnline = initialOnline,
+        _connectivity = connectivity {
+    if (autoInit) {
+      _init();
+    }
+  }
   bool _isOnline = true;
   bool _justReconnected = false;
   bool _isSyncing = false;
@@ -72,17 +82,6 @@ class ConnectivityProvider extends ChangeNotifier {
   bool get isSyncing => _isSyncing;
   List<SyncTask> get syncQueue => List.unmodifiable(_syncQueue);
   int get pendingCount => _syncQueue.where((task) => !task.isSynced).length;
-
-  ConnectivityProvider({
-    bool initialOnline = true,
-    Connectivity? connectivity,
-    bool autoInit = true,
-  })  : _isOnline = initialOnline,
-        _connectivity = connectivity {
-    if (autoInit) {
-      _init();
-    }
-  }
 
   void _init() {
     try {
@@ -107,7 +106,7 @@ class ConnectivityProvider extends ChangeNotifier {
   }
 
   void _updateStatus(List<ConnectivityResult> result) {
-    bool newStatus = !result.contains(ConnectivityResult.none);
+    final newStatus = !result.contains(ConnectivityResult.none);
     setOnlineStatus(newStatus);
   }
 

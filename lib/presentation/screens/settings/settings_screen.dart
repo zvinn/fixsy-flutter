@@ -97,8 +97,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildListTile({
     required IconData icon,
     required String title,
-    String? subtitle,
-    required VoidCallback onTap,
+    required VoidCallback onTap, String? subtitle,
   }) {
     return ListTile(
       leading: Icon(icon),

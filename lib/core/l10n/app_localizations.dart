@@ -4,9 +4,9 @@ import 'translations_en.dart';
 
 /// App Localizations - Centralized translation system
 class AppLocalizations {
-  final Locale locale;
   
   AppLocalizations(this.locale);
+  final Locale locale;
   
   static AppLocalizations of(BuildContext context) {
     return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
@@ -33,7 +33,7 @@ class AppLocalizations {
   }
   
   String translate(String key, {Map<String, String>? params}) {
-    String text = _localizedStrings[key] ?? key;
+    var text = _localizedStrings[key] ?? key;
     
     if (params != null) {
       params.forEach((paramKey, value) {
@@ -64,7 +64,7 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   
   @override
   Future<AppLocalizations> load(Locale locale) async {
-    AppLocalizations localizations = AppLocalizations(locale);
+    final localizations = AppLocalizations(locale);
     await localizations.load();
     return localizations;
   }
@@ -80,7 +80,7 @@ extension LocalizationExtension on BuildContext {
     if (l10n != null) {
       return l10n!.translate(key, params: params);
     }
-    String text = translationsAr[key] ?? key;
+    var text = translationsAr[key] ?? key;
     if (params != null) {
       params.forEach((paramKey, value) {
         text = text.replaceAll('{$paramKey}', value);

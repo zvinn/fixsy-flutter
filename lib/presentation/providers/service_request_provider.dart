@@ -7,9 +7,6 @@ import '../../data/services/firestore_service.dart';
 import '../../data/services/analytics_service.dart';
 
 class ServiceRequestProvider extends ChangeNotifier {
-  final AiService _aiService;
-  final StorageService? _storageService;
-  final FirestoreService? _firestoreService;
 
   ServiceRequestProvider({
     AiService? aiService,
@@ -18,6 +15,9 @@ class ServiceRequestProvider extends ChangeNotifier {
   })  : _aiService = aiService ?? AiService(),
         _storageService = storageService,
         _firestoreService = firestoreService;
+  final AiService _aiService;
+  final StorageService? _storageService;
+  final FirestoreService? _firestoreService;
   
   // Form state
   String _selectedServiceType = '';
@@ -135,7 +135,7 @@ class ServiceRequestProvider extends ChangeNotifier {
       final storage = _storageService ?? StorageService();
       final firestore = _firestoreService ?? FirestoreService();
       
-      List<String> imageUrls = [];
+      final imageUrls = <String>[];
       for (var image in _images) {
         final url = await storage.uploadFile(
           file: image,
@@ -155,7 +155,7 @@ class ServiceRequestProvider extends ChangeNotifier {
         scheduledFor: _scheduledDate,
         imageUrls: imageUrls,
         estimatedPrice: _aiDiagnosis?.estimatedPrice ?? 0,
-        aiDiagnosis: _aiDiagnosis != null ? _aiDiagnosis!.problem : null,
+        aiDiagnosis: _aiDiagnosis?.problem,
       );
       
       // Save to Firestore

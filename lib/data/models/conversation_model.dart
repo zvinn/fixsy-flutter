@@ -2,17 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Conversation Model
 class Conversation {
-  final String id;
-  final String bookingId;
-  final String userId;
-  final String userName;
-  final String technicianId;
-  final String technicianName;
-  final String lastMessage;
-  final DateTime lastMessageTime;
-  final Map<String, int> unreadCount; // {userId: count, technicianId: count}
-  final bool isActive;
-  final DateTime createdAt;
 
   Conversation({
     required this.id,
@@ -21,11 +10,9 @@ class Conversation {
     required this.userName,
     required this.technicianId,
     required this.technicianName,
-    this.lastMessage = '',
-    required this.lastMessageTime,
+    required this.lastMessageTime, required this.createdAt, this.lastMessage = '',
     Map<String, int>? unreadCount,
     this.isActive = true,
-    required this.createdAt,
   }) : unreadCount = unreadCount ?? {};
 
   factory Conversation.fromJson(Map<String, dynamic> json) {
@@ -49,6 +36,17 @@ class Conversation {
           : DateTime.parse(json['createdAt'] as String),
     );
   }
+  final String id;
+  final String bookingId;
+  final String userId;
+  final String userName;
+  final String technicianId;
+  final String technicianName;
+  final String lastMessage;
+  final DateTime lastMessageTime;
+  final Map<String, int> unreadCount; // {userId: count, technicianId: count}
+  final bool isActive;
+  final DateTime createdAt;
 
   Map<String, dynamic> toJson() {
     return {

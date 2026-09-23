@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:provider/provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -83,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final email = SecurityUtils.sanitizeEmail(_emailController.text);
     if (SecurityUtils.isRateLimited('login:$email', maxAttempts: 5)) {
       Fluttertoast.showToast(
-        msg: "محاولات كثيرة. يرجى الانتظار",
+        msg: 'محاولات كثيرة. يرجى الانتظار',
         backgroundColor: Colors.orange,
         toastLength: Toast.LENGTH_LONG,
       );
@@ -108,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
       
       if (mounted) {
         Fluttertoast.showToast(
-          msg: "تم تسجيل الدخول بنجاح! 🎉",
+          msg: 'تم تسجيل الدخول بنجاح! 🎉',
           backgroundColor: Colors.green,
           toastLength: Toast.LENGTH_LONG,
         );
@@ -116,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } on AuthException catch (e) {
       AppLogger.warn('Login failed', data: {'error': e.message});
       if (mounted) {
-        String message = e.message;
+        var message = e.message;
         if (e.message.contains('user-not-found')) {
           message = 'المستخدم غير موجود. الرجاء إنشاء حساب جديد.';
         } else if (e.message.contains('wrong-password')) {
@@ -162,14 +161,14 @@ class _LoginScreenState extends State<LoginScreen> {
       
       if (mounted) {
         Fluttertoast.showToast(
-          msg: "تم تسجيل الدخول بنجاح! 🎉",
+          msg: 'تم تسجيل الدخول بنجاح! 🎉',
           backgroundColor: Colors.green,
         );
       }
     } catch (e) {
       if (mounted) {
         Fluttertoast.showToast(
-          msg: "خطأ في تسجيل الدخول: ${e.toString()}",
+          msg: 'خطأ في تسجيل الدخول: ${e.toString()}',
           backgroundColor: Colors.red,
         );
       }
@@ -188,14 +187,14 @@ class _LoginScreenState extends State<LoginScreen> {
       
       if (mounted) {
         Fluttertoast.showToast(
-          msg: "تم تسجيل الدخول بواسطة Apple بنجاح! 🍏",
+          msg: 'تم تسجيل الدخول بواسطة Apple بنجاح! 🍏',
           backgroundColor: Colors.green,
         );
       }
     } catch (e) {
       if (mounted) {
         Fluttertoast.showToast(
-          msg: "خطأ في تسجيل الدخول بواسطة Apple: ${e.toString()}",
+          msg: 'خطأ في تسجيل الدخول بواسطة Apple: ${e.toString()}',
           backgroundColor: Colors.red,
         );
       }
@@ -215,7 +214,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (mounted) {
         final roleName = role == 'client' ? 'العميل' : (role == 'tech' ? 'الفني' : 'المدير');
         Fluttertoast.showToast(
-          msg: "تم الدخول كـ $roleName التجريبي بنجاح! 🚀",
+          msg: 'تم الدخول كـ $roleName التجريبي بنجاح! 🚀',
           backgroundColor: Colors.green,
         );
       }
@@ -312,7 +311,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       // Logo
                       const SizedBox(height: 32),
                       
-                      Text(
+                      const Text(
                         'Fixsy',
                         textAlign: TextAlign.center,
                         style: TextStyle(
@@ -478,11 +477,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Row(
+                            const Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(Icons.flash_on, size: 18, color: Colors.amber),
-                                const SizedBox(width: 6),
+                                Icon(Icons.flash_on, size: 18, color: Colors.amber),
+                                SizedBox(width: 6),
                                 Text(
                                   'دخول تجريبي سريع (Demo Accounts)',
                                   style: TextStyle(
@@ -553,11 +552,11 @@ class _LoginScreenState extends State<LoginScreen> {
                               fontFamily: 'Cairo', // Ensure font consistency
                               fontSize: 14,
                             ),
-                            children: [
-                              const TextSpan(text: 'ليس لديك حساب؟ '),
+                            children: const [
+                              TextSpan(text: 'ليس لديك حساب؟ '),
                               TextSpan(
                                 text: 'سجل الآن',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: AppTheme.primaryColor,
                                   fontWeight: FontWeight.bold,
                                 ),

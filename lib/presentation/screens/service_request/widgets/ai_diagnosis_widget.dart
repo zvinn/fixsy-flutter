@@ -3,14 +3,13 @@ import '../../../../data/services/ai_service.dart';
 import '../../../../core/theme/app_theme.dart';
 
 class AiDiagnosisWidget extends StatelessWidget {
-  final AiDiagnosis diagnosis;
-  final VoidCallback? onApplyService;
 
   const AiDiagnosisWidget({
-    super.key,
-    required this.diagnosis,
+    required this.diagnosis, super.key,
     this.onApplyService,
   });
+  final AiDiagnosis diagnosis;
+  final VoidCallback? onApplyService;
 
   @override
   Widget build(BuildContext context) {

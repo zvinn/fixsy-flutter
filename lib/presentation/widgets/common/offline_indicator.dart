@@ -7,14 +7,13 @@ import '../../../core/theme/app_theme.dart';
 /// Offline Indicator Widget
 /// Wraps application or screen to show top banner when offline or upon reconnection
 class OfflineIndicator extends StatefulWidget {
-  final Widget child;
-  final bool showBanner;
 
   const OfflineIndicator({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.showBanner = true,
   });
+  final Widget child;
+  final bool showBanner;
 
   @override
   State<OfflineIndicator> createState() => _OfflineIndicatorState();
@@ -421,12 +420,12 @@ class _SyncQueueModal extends StatelessWidget {
 
 /// Offline Overlay - Shows over content when completely offline
 class OfflineOverlay extends StatelessWidget {
-  final VoidCallback? onRetry;
 
   const OfflineOverlay({
     super.key,
     this.onRetry,
   });
+  final VoidCallback? onRetry;
 
   @override
   Widget build(BuildContext context) {

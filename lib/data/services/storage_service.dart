@@ -66,7 +66,7 @@ class StorageService {
   }) async {
     try {
       // Pick image from gallery
-      final XFile? pickedFile = await _imagePicker.pickImage(
+      final pickedFile = await _imagePicker.pickImage(
         source: ImageSource.gallery,
         maxWidth: 512,
         maxHeight: 512,
@@ -95,7 +95,7 @@ class StorageService {
     Function(double)? onProgress,
   }) async {
     try {
-      final XFile? pickedFile = await _imagePicker.pickImage(
+      final pickedFile = await _imagePicker.pickImage(
         source: ImageSource.gallery,
         maxWidth: 1024,
         maxHeight: 1024,

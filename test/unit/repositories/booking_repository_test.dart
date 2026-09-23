@@ -154,10 +154,8 @@ void main() {
         };
 
         for (final entry in validTransitions.entries) {
-          final currentStatus = entry.key;
-          final allowedNextStatuses = entry.value;
-
-          expect(allowedNextStatuses, isA<List<String>>());
+          expect(entry.key, isNotEmpty);
+          expect(entry.value, isA<List<String>>());
         }
       });
     });

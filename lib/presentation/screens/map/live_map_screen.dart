@@ -7,11 +7,6 @@ import '../../../core/theme/app_theme.dart';
 
 /// LiveMap Screen - Real-time technician tracking
 class LiveMapScreen extends StatefulWidget {
-  final String? technicianId;
-  final String? technicianName;
-  final LatLng? clientLocation;
-  final LatLng? technicianLocation;
-
   const LiveMapScreen({
     super.key,
     this.technicianId,
@@ -19,6 +14,11 @@ class LiveMapScreen extends StatefulWidget {
     this.clientLocation,
     this.technicianLocation,
   });
+
+  final String? technicianId;
+  final String? technicianName;
+  final LatLng? clientLocation;
+  final LatLng? technicianLocation;
 
   @override
   State<LiveMapScreen> createState() => _LiveMapScreenState();
@@ -651,7 +651,7 @@ class _LiveMapScreenState extends State<LiveMapScreen> {
     ).animate().slideY(begin: 0.3, end: 0, duration: 400.ms);
   }
 
-  void _setDarkMapStyle() async {
+  Future<void> _setDarkMapStyle() async {
     const darkMapStyle = '''
     [
       {"elementType": "geometry", "stylers": [{"color": "#242f3e"}]},
@@ -663,22 +663,23 @@ class _LiveMapScreenState extends State<LiveMapScreen> {
       {"featureType": "water", "elementType": "geometry", "stylers": [{"color": "#17263c"}]}
     ]
     ''';
-    _mapController?.setMapStyle(darkMapStyle);
+    // ignore: deprecated_member_use
+    await _mapController?.setMapStyle(darkMapStyle);
   }
 }
 
 class _InfoItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-  final bool isDark;
-
   const _InfoItem({
     required this.icon,
     required this.label,
     required this.value,
     required this.isDark,
   });
+
+  final IconData icon;
+  final String label;
+  final String value;
+  final bool isDark;
 
   @override
   Widget build(BuildContext context) {

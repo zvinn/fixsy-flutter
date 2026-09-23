@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 
 class ServiceSelectorWidget extends StatelessWidget {
-  final String selectedService;
-  final Function(String) onServiceSelected;
 
   const ServiceSelectorWidget({
-    super.key,
-    required this.selectedService,
-    required this.onServiceSelected,
+    required this.selectedService, required this.onServiceSelected, super.key,
   });
+  final String selectedService;
+  final Function(String) onServiceSelected;
 
   static const services = [
     {'name': 'سباكة', 'icon': Icons.plumbing, 'color': Colors.blue},

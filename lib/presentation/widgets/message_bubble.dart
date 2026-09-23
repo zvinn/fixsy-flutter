@@ -6,14 +6,12 @@ import 'package:intl/intl.dart';
 /// Message Bubble Widget
 /// Displays individual chat messages
 class MessageBubble extends StatelessWidget {
-  final Message message;
-  final bool isFromCurrentUser;
 
   const MessageBubble({
-    Key? key,
-    required this.message,
-    required this.isFromCurrentUser,
-  }) : super(key: key);
+    required this.message, required this.isFromCurrentUser, super.key,
+  });
+  final Message message;
+  final bool isFromCurrentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -194,14 +192,12 @@ class MessageBubble extends StatelessWidget {
 
 /// ClipRounded Widget
 class ClipRounded extends StatelessWidget {
-  final Widget child;
-  final BorderRadius borderRadius;
 
   const ClipRounded({
-    Key? key,
-    required this.child,
-    required this.borderRadius,
-  }) : super(key: key);
+    required this.child, required this.borderRadius, super.key,
+  });
+  final Widget child;
+  final BorderRadius borderRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -214,9 +210,9 @@ class ClipRounded extends StatelessWidget {
 
 /// Full Screen Image Viewer
 class _FullScreenImage extends StatelessWidget {
-  final String imageUrl;
 
   const _FullScreenImage({required this.imageUrl});
+  final String imageUrl;
 
   @override
   Widget build(BuildContext context) {

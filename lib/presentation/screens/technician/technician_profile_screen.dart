@@ -1,18 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../routes/app_routes.dart';
 
 class TechnicianProfileScreen extends StatefulWidget {
-  final String techId;
-  final String techName;
-  final String specialty;
-  final String area;
-  final double rating;
-  final int completedJobs;
-  final String phone;
-  final bool isVerified;
-  final String? avatarUrl;
 
   const TechnicianProfileScreen({
     super.key,
@@ -26,6 +16,15 @@ class TechnicianProfileScreen extends StatefulWidget {
     this.isVerified = true,
     this.avatarUrl,
   });
+  final String techId;
+  final String techName;
+  final String specialty;
+  final String area;
+  final double rating;
+  final int completedJobs;
+  final String phone;
+  final bool isVerified;
+  final String? avatarUrl;
 
   @override
   State<TechnicianProfileScreen> createState() => _TechnicianProfileScreenState();
@@ -639,7 +638,7 @@ class _TechnicianProfileScreenState extends State<TechnicianProfileScreen>
           ),
           const SizedBox(height: 10),
 
-          ..._reviews.map((rev) => _buildReviewItem(rev)).toList(),
+          ..._reviews.map((rev) => _buildReviewItem(rev)),
           const SizedBox(height: 20),
         ],
       ),
@@ -894,9 +893,9 @@ class _TechnicianProfileScreenState extends State<TechnicianProfileScreen>
 }
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  final TabBar _tabBar;
 
   _SliverAppBarDelegate(this._tabBar);
+  final TabBar _tabBar;
 
   @override
   double get minExtent => _tabBar.preferredSize.height;

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 /// Custom Page Route with Slide Transition
 class SlidePageRoute<T> extends PageRouteBuilder<T> {
-  final Widget page;
-  final AxisDirection direction;
 
   SlidePageRoute({
     required this.page,
@@ -30,7 +28,7 @@ class SlidePageRoute<T> extends PageRouteBuilder<T> {
             const end = Offset.zero;
             const curve = Curves.easeInOutCubic;
 
-            var tween = Tween(begin: begin, end: end).chain(
+            final tween = Tween(begin: begin, end: end).chain(
               CurveTween(curve: curve),
             );
 
@@ -41,11 +39,12 @@ class SlidePageRoute<T> extends PageRouteBuilder<T> {
           },
           transitionDuration: const Duration(milliseconds: 350),
         );
+  final Widget page;
+  final AxisDirection direction;
 }
 
 /// Fade Page Route
 class FadePageRoute<T> extends PageRouteBuilder<T> {
-  final Widget page;
 
   FadePageRoute({required this.page})
       : super(
@@ -58,11 +57,11 @@ class FadePageRoute<T> extends PageRouteBuilder<T> {
           },
           transitionDuration: const Duration(milliseconds: 300),
         );
+  final Widget page;
 }
 
 /// Scale and Fade Page Route
 class ScaleFadePageRoute<T> extends PageRouteBuilder<T> {
-  final Widget page;
 
   ScaleFadePageRoute({required this.page})
       : super(
@@ -72,7 +71,7 @@ class ScaleFadePageRoute<T> extends PageRouteBuilder<T> {
             const end = 1.0;
             const curve = Curves.easeInOutCubic;
 
-            var scaleTween = Tween(begin: begin, end: end).chain(
+            final scaleTween = Tween(begin: begin, end: end).chain(
               CurveTween(curve: curve),
             );
 
@@ -86,11 +85,11 @@ class ScaleFadePageRoute<T> extends PageRouteBuilder<T> {
           },
           transitionDuration: const Duration(milliseconds: 400),
         );
+  final Widget page;
 }
 
 /// Bottom Sheet Slide Route
 class BottomSheetPageRoute<T> extends PageRouteBuilder<T> {
-  final Widget page;
 
   BottomSheetPageRoute({required this.page})
       : super(
@@ -100,7 +99,7 @@ class BottomSheetPageRoute<T> extends PageRouteBuilder<T> {
             const end = Offset.zero;
             const curve = Curves.easeOut;
 
-            var tween = Tween(begin: begin, end: end).chain(
+            final tween = Tween(begin: begin, end: end).chain(
               CurveTween(curve: curve),
             );
 
@@ -113,6 +112,7 @@ class BottomSheetPageRoute<T> extends PageRouteBuilder<T> {
           opaque: false,
           barrierColor: Colors.black54,
         );
+  final Widget page;
 }
 
 /// Extension for easy navigation with custom transitions

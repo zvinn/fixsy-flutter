@@ -1,12 +1,13 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../core/utils/app_logger.dart';
 import '../models/notification_model.dart';
 
 /// Top-level function for background message handler
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print('Handling background message: ${message.messageId}');
+  AppLogger.debug('Handling background message: ${message.messageId}');
   // You can process the message here if needed
 }
 
@@ -35,7 +36,7 @@ class NotificationService {
 
     // Get FCM token
     final token = await _firebaseMessaging.getToken();
-    print('FCM Token: $token');
+    AppLogger.debug('FCM Token: $token');
 
     // Listen to token refresh
     _firebaseMessaging.onTokenRefresh.listen(_handleTokenRefresh);
@@ -71,7 +72,7 @@ class NotificationService {
       sound: true,
     );
 
-    print('Notification permission status: ${settings.authorizationStatus}');
+    AppLogger.debug('Notification permission status: ${settings.authorizationStatus}');
   }
 
   /// Initialize local notifications
@@ -96,7 +97,7 @@ class NotificationService {
 
   /// Handle foreground messages
   void _handleForegroundMessage(RemoteMessage message) {
-    print('Foreground message: ${message.notification?.title}');
+    AppLogger.debug('Foreground message: ${message.notification?.title}');
     
     // Show local notification
     _showLocalNotification(
@@ -148,20 +149,20 @@ class NotificationService {
 
   /// Handle message tap (from background/terminated)
   void _handleMessageTap(RemoteMessage message) {
-    print('Message tapped: ${message.data}');
+    AppLogger.debug('Message tapped: ${message.data}');
     // Navigate to appropriate screen based on notification type
     // This should be handled by the app's navigation logic
   }
 
   /// Handle local notification tap
   void _handleLocalNotificationTap(NotificationResponse response) {
-    print('Local notification tapped: ${response.payload}');
+    AppLogger.debug('Local notification tapped: ${response.payload}');
     // Handle navigation
   }
 
   /// Handle token refresh
   Future<void> _handleTokenRefresh(String newToken) async {
-    print('FCM Token refreshed: $newToken');
+    AppLogger.debug('FCM Token refreshed: $newToken');
     // Update token in Firestore if user is logged in
   }
 
@@ -173,7 +174,7 @@ class NotificationService {
         'fcmTokenUpdatedAt': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      print('Error saving FCM token: $e');
+      AppLogger.error('Error saving FCM token: $e');
     }
   }
 
@@ -197,7 +198,7 @@ class NotificationService {
 
       await _firestore.collection('notifications').add(notificationData);
     } catch (e) {
-      print('Error saving notification: $e');
+      AppLogger.error('Error saving notification: $e');
     }
   }
 
@@ -208,7 +209,7 @@ class NotificationService {
         'isRead': true,
       });
     } catch (e) {
-      print('Error marking notification as read: $e');
+      AppLogger.error('Error marking notification as read: $e');
     }
   }
 
@@ -232,7 +233,7 @@ class NotificationService {
         return AppNotification.fromJson(data);
       }).toList();
     } catch (e) {
-      print('Error getting notifications: $e');
+      AppLogger.error('Error getting notifications: $e');
       return [];
     }
   }

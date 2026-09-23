@@ -8,6 +8,10 @@ import '../../core/utils/app_logger.dart';
 import '../../data/services/analytics_service.dart';
 
 class AuthProvider extends ChangeNotifier {
+
+  AuthProvider() {
+    _init();
+  }
   final AuthService _authService = AuthService();
   User? _currentUser;
   bool _isLoading = true;
@@ -15,10 +19,6 @@ class AuthProvider extends ChangeNotifier {
   User? get currentUser => _currentUser;
   bool get isAuthenticated => _currentUser != null;
   bool get isLoading => _isLoading;
-
-  AuthProvider() {
-    _init();
-  }
 
   void _init() {
     _authService.authStateChanges.listen((user) {

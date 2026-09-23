@@ -8,17 +8,6 @@ import '../../core/error/error_logger.dart';
 
 /// AI Diagnosis Result Model
 class AiDiagnosis {
-  final String problem;
-  final String suggestedService;
-  final String solution;
-  final double estimatedPrice;
-  final String confidence;
-  final double minPrice;
-  final double maxPrice;
-  final String? advice;
-  final List<String> tips;
-  final String severity; // 'critical', 'high', 'medium', 'low'
-  final String icon;
 
   AiDiagnosis({
     required this.problem,
@@ -43,14 +32,25 @@ class AiDiagnosis {
       solution: json['solution'] ?? json['advice'] ?? '',
       estimatedPrice: est,
       confidence: json['confidence'] ?? 'متوسطة',
-      minPrice: json['minPrice'] != null ? (json['minPrice']).toDouble() : null,
-      maxPrice: json['maxPrice'] != null ? (json['maxPrice']).toDouble() : null,
+      minPrice: json['minPrice']?.toDouble(),
+      maxPrice: json['maxPrice']?.toDouble(),
       advice: json['advice'] ?? json['recommendation'],
       tips: (json['tips'] as List?)?.map((e) => e.toString()).toList() ?? [],
       severity: json['severity'] ?? 'medium',
       icon: json['icon'] ?? '🔧',
     );
   }
+  final String problem;
+  final String suggestedService;
+  final String solution;
+  final double estimatedPrice;
+  final String confidence;
+  final double minPrice;
+  final double maxPrice;
+  final String? advice;
+  final List<String> tips;
+  final String severity; // 'critical', 'high', 'medium', 'low'
+  final String icon;
 
   Map<String, dynamic> toJson() {
     return {
@@ -86,7 +86,7 @@ class AiService {
         final hasImages = images.isNotEmpty;
         final model = hasImages ? 'llama-3.2-11b-vision-preview' : 'llama-3.3-70b-versatile';
 
-        final systemPrompt = '''
+        const systemPrompt = '''
 أنت خبير فني متخصص في تشخيص أعطال المنازل والصيانة (سباكة، كهرباء، نجارة، تكييف، دهان).
 قم بتحليل وصف المشكلة والصور المرفقة إن وجدت، ثم أرجع التشخيص بصيغة JSON حصراً بالشكل التالي:
 {
@@ -98,14 +98,14 @@ class AiService {
 }
 ''';
 
-        final List<Map<String, dynamic>> userContent = [];
+        final userContent = <Map<String, dynamic>>[];
         userContent.add({
           'type': 'text',
           'text': 'وصف المشكلة: $description',
         });
 
         // Add base64 encoded images if present (max 3 images)
-        for (int i = 0; i < images.length && i < 3; i++) {
+        for (var i = 0; i < images.length && i < 3; i++) {
           try {
             final bytes = await images[i].readAsBytes();
             final base64Image = base64Encode(bytes);
@@ -331,7 +331,7 @@ class AiService {
       'أخرى': 100.0,
     };
 
-    double basePrice = basePrices[serviceType] ?? 100.0;
+    var basePrice = basePrices[serviceType] ?? 100.0;
     
     // Adjust based on description length (complexity indicator)
     if (description.length > 200) {

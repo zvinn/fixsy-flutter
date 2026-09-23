@@ -4,9 +4,9 @@ import '../datasources/remote/ai_remote_data_source.dart';
 import '../../core/error/error_logger.dart';
 
 class AiRepositoryImpl implements AiRepository {
-  final AiRemoteDataSource _remoteDataSource;
 
   AiRepositoryImpl(this._remoteDataSource);
+  final AiRemoteDataSource _remoteDataSource;
 
   @override
   Future<AiDiagnosis> analyzeProblem({required String description}) async {

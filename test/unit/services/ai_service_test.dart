@@ -97,7 +97,7 @@ void main() {
 
       test('should increase price for medium and long complexity descriptions', () {
         final simplePrice = aiService.estimatePrice('سباكة', 'تسريب بسيط');
-        final complexDesc = 'تسريب مياه كبير جدا في الحمام والمطبخ ومحتاج تكسير وتغيير كل المواسير الداخلية والخارجية والجبس بورد محتاج شغل كتير ومعدات خاصة وتغيير المحابس الرئيسية بالكامل وعمل عوازل جديدة للأرضيات والجدران لحماية المبنى من الرطوبة والتلف المستمر';
+        const complexDesc = 'تسريب مياه كبير جدا في الحمام والمطبخ ومحتاج تكسير وتغيير كل المواسير الداخلية والخارجية والجبس بورد محتاج شغل كتير ومعدات خاصة وتغيير المحابس الرئيسية بالكامل وعمل عوازل جديدة للأرضيات والجدران لحماية المبنى من الرطوبة والتلف المستمر';
         final complexPrice = aiService.estimatePrice('سباكة', complexDesc);
 
         expect(complexPrice, greaterThan(simplePrice));

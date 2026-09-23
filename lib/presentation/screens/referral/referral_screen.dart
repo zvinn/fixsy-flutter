@@ -8,7 +8,7 @@ import '../../../core/theme/app_theme.dart';
 class ReferralService {
   /// Generate a unique referral code based on user ID
   static String generateCode(String userId) {
-    final prefix = 'FIXSY';
+    const prefix = 'FIXSY';
     final suffix = userId.substring(0, 4).toUpperCase();
     final random = DateTime.now().millisecondsSinceEpoch.toString().substring(8);
     return '$prefix$suffix$random';
@@ -22,18 +22,17 @@ class ReferralService {
 
 /// Referral Screen - Shows user's referral code and stats
 class ReferralScreen extends StatefulWidget {
-  final String userId;
-  final String? referralCode;
-  final int referralCount;
-  final double earnedRewards;
 
   const ReferralScreen({
-    super.key,
-    required this.userId,
+    required this.userId, super.key,
     this.referralCode,
     this.referralCount = 0,
     this.earnedRewards = 0,
   });
+  final String userId;
+  final String? referralCode;
+  final int referralCount;
+  final double earnedRewards;
 
   @override
   State<ReferralScreen> createState() => _ReferralScreenState();
@@ -242,7 +241,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
                           Expanded(
                             child: Text(
                               _referralCode,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
                                 color: AppTheme.primaryColor,
@@ -252,7 +251,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
                           ),
                           IconButton(
                             onPressed: _copyCode,
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.copy,
                               color: AppTheme.primaryColor,
                             ),
@@ -436,11 +435,6 @@ class _ReferralScreenState extends State<ReferralScreen> {
 }
 
 class _StatBox extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-  final Color color;
-  final bool isDark;
 
   const _StatBox({
     required this.icon,
@@ -449,6 +443,11 @@ class _StatBox extends StatelessWidget {
     required this.color,
     required this.isDark,
   });
+  final IconData icon;
+  final String label;
+  final String value;
+  final Color color;
+  final bool isDark;
 
   @override
   Widget build(BuildContext context) {
@@ -494,15 +493,15 @@ class _StatBox extends StatelessWidget {
 }
 
 class _StepItem extends StatelessWidget {
-  final int number;
-  final String text;
-  final bool isDark;
 
   const _StepItem({
     required this.number,
     required this.text,
     required this.isDark,
   });
+  final int number;
+  final String text;
+  final bool isDark;
 
   @override
   Widget build(BuildContext context) {
@@ -513,7 +512,7 @@ class _StepItem extends StatelessWidget {
           Container(
             width: 28,
             height: 28,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: AppTheme.primaryColor,
               shape: BoxShape.circle,
             ),

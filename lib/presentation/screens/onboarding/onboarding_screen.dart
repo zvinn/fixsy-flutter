@@ -63,7 +63,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               alignment: Alignment.centerLeft,
               child: TextButton(
                 onPressed: _completeOnboarding,
-                child: Text(
+                child: const Text(
                   'تخطي',
                   style: TextStyle(color: AppTheme.textSecondaryLight),
                 ),
@@ -144,10 +144,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 }
 
 class OnboardingItem {
-  final String title;
-  final String description;
-  final IconData icon;
-  final Color color;
 
   OnboardingItem({
     required this.title,
@@ -155,12 +151,16 @@ class OnboardingItem {
     required this.icon,
     required this.color,
   });
+  final String title;
+  final String description;
+  final IconData icon;
+  final Color color;
 }
 
 class _OnboardingPage extends StatelessWidget {
-  final OnboardingItem item;
 
   const _OnboardingPage({required this.item});
+  final OnboardingItem item;
 
   @override
   Widget build(BuildContext context) {

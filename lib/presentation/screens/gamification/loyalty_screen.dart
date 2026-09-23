@@ -26,7 +26,7 @@ class LoyaltyScreen extends ConsumerWidget {
             flexibleSpace: FlexibleSpaceBar(
               title: const Text('نقاطي ومكافآتي'),
               background: Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topRight,
                     end: Alignment.bottomLeft,

@@ -1,9 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LoyaltyState {
-  final int points;
-  final int level;
-  final String levelName;
 
   LoyaltyState({
     required this.points,
@@ -14,6 +11,9 @@ class LoyaltyState {
   factory LoyaltyState.initial() {
     return LoyaltyState(points: 350, level: 2, levelName: 'فضي');
   }
+  final int points;
+  final int level;
+  final String levelName;
 
   LoyaltyState copyWith({int? points, int? level, String? levelName}) {
     return LoyaltyState(
@@ -32,8 +32,8 @@ class LoyaltyNotifier extends StateNotifier<LoyaltyState> {
 
   void addPoints(int amount) {
     final newPoints = state.points + amount;
-    int newLevel = state.level;
-    String newLevelName = state.levelName;
+    var newLevel = state.level;
+    var newLevelName = state.levelName;
 
     if (newPoints >= 5000) {
       newLevel = 3;

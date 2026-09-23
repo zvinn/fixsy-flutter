@@ -9,16 +9,14 @@ enum PaymentMethodType {
 }
 
 class PaymentMethodSelector extends StatelessWidget {
+
+  const PaymentMethodSelector({
+    required this.selectedMethod, required this.onMethodChanged, super.key,
+    this.walletBalance = 0.0,
+  });
   final PaymentMethodType selectedMethod;
   final Function(PaymentMethodType) onMethodChanged;
   final double walletBalance;
-
-  const PaymentMethodSelector({
-    super.key,
-    required this.selectedMethod,
-    required this.onMethodChanged,
-    this.walletBalance = 0.0,
-  });
 
   @override
   Widget build(BuildContext context) {

@@ -6,16 +6,12 @@ import 'package:fixsy_flutter/presentation/widgets/scheduling/slot_scheduling_mo
 void main() {
   group('SlotSchedulingWidget Tests', () {
     testWidgets('renders toggle buttons for now and scheduled booking', (tester) async {
-      SchedulingData? updatedData;
-
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: SingleChildScrollView(
               child: SlotSchedulingWidget(
-                onSchedulingChanged: (data) {
-                  updatedData = data;
-                },
+                onSchedulingChanged: (_) {},
               ),
             ),
           ),

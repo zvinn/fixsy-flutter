@@ -3,22 +3,20 @@ import 'package:flutter/material.dart';
 /// Animated Gradient Card
 /// Beautiful card with gradient background and animations
 class AnimatedGradientCard extends StatefulWidget {
+
+  const AnimatedGradientCard({
+    required this.child, required this.gradientColors, super.key,
+    this.animationDuration = const Duration(milliseconds: 300),
+    this.borderRadius = 20,
+    this.padding = const EdgeInsets.all(20),
+    this.onTap,
+  });
   final Widget child;
   final List<Color> gradientColors;
   final Duration animationDuration;
   final double borderRadius;
   final EdgeInsets padding;
   final VoidCallback? onTap;
-
-  const AnimatedGradientCard({
-    Key? key,
-    required this.child,
-    required this.gradientColors,
-    this.animationDuration = const Duration(milliseconds: 300),
-    this.borderRadius = 20,
-    this.padding = const EdgeInsets.all(20),
-    this.onTap,
-  }) : super(key: key);
 
   @override
   State<AnimatedGradientCard> createState() => _AnimatedGradientCardState();
@@ -86,18 +84,16 @@ class _AnimatedGradientCardState extends State<AnimatedGradientCard>
 
 /// Shimmer Loading Effect
 class ShimmerLoading extends StatefulWidget {
+
+  const ShimmerLoading({
+    required this.child, required this.isLoading, super.key,
+    this.baseColor = const Color(0xFFE0E0E0),
+    this.highlightColor = const Color(0xFFF5F5F5),
+  });
   final Widget child;
   final bool isLoading;
   final Color baseColor;
   final Color highlightColor;
-
-  const ShimmerLoading({
-    Key? key,
-    required this.child,
-    required this.isLoading,
-    this.baseColor = const Color(0xFFE0E0E0),
-    this.highlightColor = const Color(0xFFF5F5F5),
-  }) : super(key: key);
 
   @override
   State<ShimmerLoading> createState() => _ShimmerLoadingState();
@@ -157,22 +153,21 @@ class _ShimmerLoadingState extends State<ShimmerLoading>
 
 /// Glass Morphism Container
 class GlassMorphismContainer extends StatelessWidget {
+
+  const GlassMorphismContainer({
+    required this.child, super.key,
+    this.blur = 10.0,
+    this.opacity = 0.2,
+    this.borderRadius = 20.0,
+    this.padding = const EdgeInsets.all(20),
+    this.border,
+  });
   final Widget child;
   final double blur;
   final double opacity;
   final double borderRadius;
   final EdgeInsets padding;
   final Border? border;
-
-  const GlassMorphismContainer({
-    Key? key,
-    required this.child,
-    this.blur = 10.0,
-    this.opacity = 0.2,
-    this.borderRadius = 20.0,
-    this.padding = const EdgeInsets.all(20),
-    this.border,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -199,20 +194,18 @@ class GlassMorphismContainer extends StatelessWidget {
 
 /// Animated Icon Button
 class AnimatedIconButton extends StatefulWidget {
+
+  const AnimatedIconButton({
+    required this.icon, required this.onPressed, super.key,
+    this.color,
+    this.size = 24,
+    this.tooltip,
+  });
   final IconData icon;
   final VoidCallback onPressed;
   final Color? color;
   final double size;
   final String? tooltip;
-
-  const AnimatedIconButton({
-    Key? key,
-    required this.icon,
-    required this.onPressed,
-    this.color,
-    this.size = 24,
-    this.tooltip,
-  }) : super(key: key);
 
   @override
   State<AnimatedIconButton> createState() => _AnimatedIconButtonState();
@@ -266,20 +259,19 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
 
 /// Custom Badge
 class CustomBadge extends StatelessWidget {
+
+  const CustomBadge({
+    required this.text, super.key,
+    this.backgroundColor = const Color(0xFFEF4444),
+    this.textColor = Colors.white,
+    this.fontSize = 12,
+    this.padding = const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+  });
   final String text;
   final Color backgroundColor;
   final Color textColor;
   final double fontSize;
   final EdgeInsets padding;
-
-  const CustomBadge({
-    Key? key,
-    required this.text,
-    this.backgroundColor = const Color(0xFFEF4444),
-    this.textColor = Colors.white,
-    this.fontSize = 12,
-    this.padding = const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -303,16 +295,14 @@ class CustomBadge extends StatelessWidget {
 
 /// Skeleton Loader
 class SkeletonLoader extends StatelessWidget {
+
+  const SkeletonLoader({
+    required this.width, required this.height, super.key,
+    this.borderRadius = 8,
+  });
   final double width;
   final double height;
   final double borderRadius;
-
-  const SkeletonLoader({
-    Key? key,
-    required this.width,
-    required this.height,
-    this.borderRadius = 8,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -64,12 +64,12 @@ class _TechSignupScreenState extends State<TechSignupScreen> {
                         const Spacer(),
                       ],
                     ),
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.build, color: Colors.white, size: 28),
-                        const SizedBox(width: 10),
-                        const Text(
+                        Icon(Icons.build, color: Colors.white, size: 28),
+                        SizedBox(width: 10),
+                        Text(
                           'تسجيل فني جديد',
                           style: TextStyle(
                             color: Colors.white,
@@ -80,7 +80,7 @@ class _TechSignupScreenState extends State<TechSignupScreen> {
                       ],
                     ),
                     const SizedBox(height: 8),
-                    Text(
+                    const Text(
                       'انضم لفريق فنيين Fixsy وابدأ في استقبال الطلبات',
                       style: TextStyle(color: Colors.white70, fontSize: 14),
                     ),

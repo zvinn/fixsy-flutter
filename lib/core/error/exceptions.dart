@@ -1,13 +1,14 @@
 /// Custom Exception Classes for Fixsy Flutter
 /// Provides specific exception types for better error handling
+library;
 
 /// Base App Exception
 class AppException implements Exception {
+
+  AppException(this.message, {this.code, this.originalError});
   final String message;
   final String? code;
   final dynamic originalError;
-
-  AppException(this.message, {this.code, this.originalError});
 
   @override
   String toString() => 'AppException: $message';
@@ -15,8 +16,7 @@ class AppException implements Exception {
 
 /// Network Related Exceptions
 class NetworkException extends AppException {
-  NetworkException(String message, {String? code, dynamic originalError})
-      : super(message, code: code, originalError: originalError);
+  NetworkException(super.message, {super.code, super.originalError});
 
   @override
   String toString() => 'NetworkException: $message';
@@ -33,14 +33,12 @@ class TimeoutException extends NetworkException {
 }
 
 class ServerException extends NetworkException {
-  ServerException([String message = 'خطأ في الخادم. يرجى المحاولة لاحقاً'])
-      : super(message);
+  ServerException([super.message = 'خطأ في الخادم. يرجى المحاولة لاحقاً']);
 }
 
 /// Authentication Exceptions
 class AuthException extends AppException {
-  AuthException(String message, {String? code, dynamic originalError})
-      : super(message, code: code, originalError: originalError);
+  AuthException(super.message, {super.code, super.originalError});
 
   @override
   String toString() => 'AuthException: $message';
@@ -78,10 +76,9 @@ class SessionExpiredException extends AuthException {
 
 /// Validation Exceptions
 class ValidationException extends AppException {
-  final Map<String, String>? fieldErrors;
 
-  ValidationException(String message, {this.fieldErrors, String? code})
-      : super(message, code: code);
+  ValidationException(super.message, {this.fieldErrors, super.code});
+  final Map<String, String>? fieldErrors;
 
   @override
   String toString() => 'ValidationException: $message';
@@ -98,24 +95,22 @@ class InvalidPhoneException extends ValidationException {
 }
 
 class EmptyFieldException extends ValidationException {
-  final String fieldName;
 
   EmptyFieldException(this.fieldName)
       : super('$fieldName مطلوب');
+  final String fieldName;
 }
 
 /// Firestore Exceptions
 class FirestoreException extends AppException {
-  FirestoreException(String message, {String? code, dynamic originalError})
-      : super(message, code: code, originalError: originalError);
+  FirestoreException(super.message, {super.code, super.originalError});
 
   @override
   String toString() => 'FirestoreException: $message';
 }
 
 class DocumentNotFoundException extends FirestoreException {
-  DocumentNotFoundException([String message = 'البيانات غير موجودة'])
-      : super(message);
+  DocumentNotFoundException([super.message = 'البيانات غير موجودة']);
 }
 
 class PermissionDeniedException extends FirestoreException {
@@ -125,8 +120,7 @@ class PermissionDeniedException extends FirestoreException {
 
 /// Cache Exceptions
 class CacheException extends AppException {
-  CacheException(String message, {String? code, dynamic originalError})
-      : super(message, code: code, originalError: originalError);
+  CacheException(super.message, {super.code, super.originalError});
 
   @override
   String toString() => 'CacheException: $message';
@@ -134,8 +128,7 @@ class CacheException extends AppException {
 
 /// Payment Exceptions
 class PaymentException extends AppException {
-  PaymentException(String message, {String? code, dynamic originalError})
-      : super(message, code: code, originalError: originalError);
+  PaymentException(super.message, {super.code, super.originalError});
 
   @override
   String toString() => 'PaymentException: $message';
@@ -153,16 +146,14 @@ class PaymentDeclinedException extends PaymentException {
 
 /// File/Storage Exceptions
 class StorageException extends AppException {
-  StorageException(String message, {String? code, dynamic originalError})
-      : super(message, code: code, originalError: originalError);
+  StorageException(super.message, {super.code, super.originalError});
 
   @override
   String toString() => 'StorageException: $message';
 }
 
 class FileUploadException extends StorageException {
-  FileUploadException([String message = 'فشل رفع الملف'])
-      : super(message);
+  FileUploadException([super.message = 'فشل رفع الملف']);
 }
 
 class FileTooLargeException extends StorageException {
@@ -172,12 +163,12 @@ class FileTooLargeException extends StorageException {
 
 /// Rate Limiting Exception
 class RateLimitException extends AppException {
-  final DateTime? retryAfter;
 
   RateLimitException({
     String message = 'تم تجاوز الحد المسموح. يرجى المحاولة لاحقاً',
     this.retryAfter,
   }) : super(message);
+  final DateTime? retryAfter;
 
   @override
   String toString() => 'RateLimitException: $message';
@@ -185,8 +176,7 @@ class RateLimitException extends AppException {
 
 /// Unknown Exception
 class UnknownException extends AppException {
-  UnknownException([String message = 'حدث خطأ غير متوقع'])
-      : super(message);
+  UnknownException([super.message = 'حدث خطأ غير متوقع']);
 
   @override
   String toString() => 'UnknownException: $message';

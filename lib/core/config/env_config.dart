@@ -23,6 +23,6 @@ class EnvConfig {
   /// Initialize environment configuration
   /// Should be called in main() before runApp()
   static Future<void> init() async {
-    await dotenv.load(fileName: ".env");
+    await dotenv.load(fileName: '.env');
   }
 }

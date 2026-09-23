@@ -1,13 +1,5 @@
 /// Notification Model
 class AppNotification {
-  final String id;
-  final String userId;
-  final String title;
-  final String body;
-  final String type; // booking_accepted, technician_arrived, service_completed, etc.
- final Map<String, dynamic> data;
-  final bool isRead;
-  final DateTime createdAt;
 
   AppNotification({
     required this.id,
@@ -16,8 +8,7 @@ class AppNotification {
     required this.body,
     required this.type,
     required this.data,
-    this.isRead = false,
-    required this.createdAt,
+    required this.createdAt, this.isRead = false,
   });
 
   factory AppNotification.fromJson(Map<String, dynamic> json) {
@@ -32,6 +23,14 @@ class AppNotification {
       createdAt: DateTime.parse(json['createdAt'] as String),
     );
   }
+  final String id;
+  final String userId;
+  final String title;
+  final String body;
+  final String type; // booking_accepted, technician_arrived, service_completed, etc.
+ final Map<String, dynamic> data;
+  final bool isRead;
+  final DateTime createdAt;
 
   Map<String, dynamic> toJson() {
     return {

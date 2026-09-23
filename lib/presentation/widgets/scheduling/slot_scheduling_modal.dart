@@ -21,15 +21,15 @@ Future<SchedulingData?> showSlotSchedulingBottomSheet({
 }
 
 class _SlotSchedulingModal extends StatefulWidget {
-  final SchedulingData? initialData;
-  final String? technicianName;
-  final String? serviceTitle;
 
   const _SlotSchedulingModal({
     this.initialData,
     this.technicianName,
     this.serviceTitle,
   });
+  final SchedulingData? initialData;
+  final String? technicianName;
+  final String? serviceTitle;
 
   @override
   State<_SlotSchedulingModal> createState() => _SlotSchedulingModalState();

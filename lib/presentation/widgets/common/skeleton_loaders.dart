@@ -3,12 +3,12 @@ import 'package:shimmer/shimmer.dart';
 
 /// Skeleton Loader for List Items
 class SkeletonListLoader extends StatelessWidget {
-  final int itemCount;
 
   const SkeletonListLoader({
-    Key? key,
+    super.key,
     this.itemCount = 5,
-  }) : super(key: key);
+  });
+  final int itemCount;
 
   @override
   Widget build(BuildContext context) {
@@ -37,14 +37,14 @@ class SkeletonListLoader extends StatelessWidget {
 
 /// Skeleton Card Loader
 class SkeletonCardLoader extends StatelessWidget {
-  final double height;
-  final double? width;
 
   const SkeletonCardLoader({
-    Key? key,
+    super.key,
     this.height = 200,
     this.width,
-  }) : super(key: key);
+  });
+  final double height;
+  final double? width;
 
   @override
   Widget build(BuildContext context) {
@@ -65,14 +65,14 @@ class SkeletonCardLoader extends StatelessWidget {
 
 /// Skeleton Grid Loader
 class SkeletonGridLoader extends StatelessWidget {
-  final int itemCount;
-  final int crossAxisCount;
 
   const SkeletonGridLoader({
-    Key? key,
+    super.key,
     this.itemCount = 4,
     this.crossAxisCount = 2,
-  }) : super(key: key);
+  });
+  final int itemCount;
+  final int crossAxisCount;
 
   @override
   Widget build(BuildContext context) {
@@ -104,14 +104,13 @@ class SkeletonGridLoader extends StatelessWidget {
 
 /// Skeleton Text Loader
 class SkeletonTextLoader extends StatelessWidget {
-  final double width;
-  final double height;
 
   const SkeletonTextLoader({
-    Key? key,
-    required this.width,
+    required this.width, super.key,
     this.height = 16,
-  }) : super(key: key);
+  });
+  final double width;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +131,7 @@ class SkeletonTextLoader extends StatelessWidget {
 
 /// Booking Card Skeleton
 class BookingCardSkeleton extends StatelessWidget {
-  const BookingCardSkeleton({Key? key}) : super(key: key);
+  const BookingCardSkeleton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -195,7 +194,7 @@ class BookingCardSkeleton extends StatelessWidget {
 
 /// Service Card Skeleton
 class ServiceCardSkeleton extends StatelessWidget {
-  const ServiceCardSkeleton({Key? key}) : super(key: key);
+  const ServiceCardSkeleton({super.key});
 
   @override
   Widget build(BuildContext context) {

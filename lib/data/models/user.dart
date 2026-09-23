@@ -1,24 +1,10 @@
 class User {
-  final String id;
-  final String email;
-  final String displayName;
-  final String? photoURL;
-  final String role; // 'client', 'technician', 'admin'
-  final DateTime createdAt;
-  final String? phone;
-  String? get phoneNumber => phone;
-
-  bool get isAdmin => role == 'admin';
-  bool get isTechnician => role == 'technician' || role == 'tech';
-  bool get isClient => role == 'client' || role == 'customer';
 
   User({
     required this.id,
     required this.email,
     required this.displayName,
-    this.photoURL,
-    required this.role,
-    required this.createdAt,
+    required this.role, required this.createdAt, this.photoURL,
     String? phone,
     String? phoneNumber,
   }) : phone = phone ?? phoneNumber;
@@ -34,6 +20,18 @@ class User {
       phone: (json['phone'] ?? json['phoneNumber']) as String?,
     );
   }
+  final String id;
+  final String email;
+  final String displayName;
+  final String? photoURL;
+  final String role; // 'client', 'technician', 'admin'
+  final DateTime createdAt;
+  final String? phone;
+  String? get phoneNumber => phone;
+
+  bool get isAdmin => role == 'admin';
+  bool get isTechnician => role == 'technician' || role == 'tech';
+  bool get isClient => role == 'client' || role == 'customer';
 
   Map<String, dynamic> toJson() {
     return {

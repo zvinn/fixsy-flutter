@@ -159,7 +159,7 @@ class _StoreScreenState extends State<StoreScreen> {
                         const Icon(Icons.shopping_bag_outlined, color: AppTheme.primaryColor),
                         const SizedBox(width: 8),
                         Text(
-                          'سلة المشتريات (${_totalCartItems})',
+                          'سلة المشتريات ($_totalCartItems)',
                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       ],
@@ -323,7 +323,7 @@ class _StoreScreenState extends State<StoreScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var filteredProducts = _products.where((p) {
+    final filteredProducts = _products.where((p) {
       final matchesCategory = _selectedCategory == 'الكل' || p['category'] == _selectedCategory;
       final matchesSearch = _searchQuery.isEmpty || p['name'].toString().toLowerCase().contains(_searchQuery.toLowerCase());
       return matchesCategory && matchesSearch;
