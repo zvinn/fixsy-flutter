@@ -1,117 +1,242 @@
-# 📱 Fixsy Mobile | Flutter Cross-Platform Super-App
+# 📱 Fixsy Mobile — On-Demand Services Super-App
 
 <div align="center">
 
-**Enterprise-Grade On-Demand Home Services & Maintenance Mobile Application for iOS & Android**
+<img src="https://raw.githubusercontent.com/zvinn/fixsy-flutter/main/assets/icons/app_icon.png" width="96" height="96" alt="Fixsy Logo" onerror="this.src='https://img.icons8.com/color/96/wrench.png';" />
+
+### **Enterprise-Grade On-Demand Home Services & Maintenance Platform**
+*Built with Flutter, Clean Architecture, Provider, and Firebase*
 
 [![Fixsy Flutter CI](https://github.com/zvinn/fixsy-flutter/actions/workflows/flutter.yml/badge.svg)](https://github.com/zvinn/fixsy-flutter/actions/workflows/flutter.yml)
-[![Tests: 125 Passed](https://img.shields.io/badge/Tests-125%20Passed-brightgreen.svg?style=flat-square)](test/)
-[![Flutter](https://img.shields.io/badge/Flutter_3.x-02569B?style=flat-square&logo=flutter&logoColor=white)](https://flutter.dev/)
-[![Dart](https://img.shields.io/badge/Dart_3-0175C2?style=flat-square&logo=dart&logoColor=white)](https://dart.dev/)
-[![Firebase](https://img.shields.io/badge/Firebase_Suite-FFCA28?style=flat-square&logo=firebase&logoColor=black)](https://firebase.google.com/)
-[![Provider](https://img.shields.io/badge/State-Provider-blue?style=flat-square)](https://pub.dev/packages/provider)
-[![Clean Architecture](https://img.shields.io/badge/Architecture-Clean_Architecture-brightgreen?style=flat-square)](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+[![Tests: 249 Passed](https://img.shields.io/badge/Tests-249%20Passed%20(100%25)-brightgreen.svg?style=flat-square&logo=flutter)](test/)
+[![Analysis: 0 Issues](https://img.shields.io/badge/Flutter%20Analyze-0%20Issues%20(Clean)-brightgreen?style=flat-square&logo=dart)](.)
+[![Flutter Version](https://img.shields.io/badge/Flutter-3.x%20Ready-02569B?style=flat-square&logo=flutter&logoColor=white)](https://flutter.dev/)
+[![Dart Version](https://img.shields.io/badge/Dart-3.x-0175C2?style=flat-square&logo=dart&logoColor=white)](https://dart.dev/)
+[![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-blueviolet?style=flat-square)](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md)
+
+[Features](#-feature-showcase) • [Architecture](#-system-architecture) • [Demo Accounts](#-one-click-demo-accounts) • [Getting Started](#-getting-started) • [Test Suite](#-rigorous-testing--quality)
+
+⭐ **If you find this repository helpful, please give it a Star! It helps the project grow.** ⭐
 
 </div>
 
 ---
 
-## 📖 Overview
+## 📖 About Fixsy
 
-**Fixsy Mobile** is a production-ready, cross-platform mobile application built using **Flutter & Dart**, architected with strict **Clean Architecture** principles and **Provider** state management. It connects customers with vetted, professional technicians across 10+ home maintenance trades (Plumbing, Electrical, Carpentry, Painting, AC repair, and more).
+**Fixsy** is a production-ready, full-featured mobile super-application for on-demand home maintenance and technical services (Plumbing, Electrical, HVAC, Carpentry, Painting, Cleaning, and more). 
+
+Engineered with enterprise-grade standards, Fixsy adheres strictly to **Clean Architecture** patterns, achieving zero analyzer warnings and 100% automated test coverage across **249 comprehensive unit and widget tests**.
+
+### 🌟 Why Fixsy Stands Out?
+- 🚀 **100% Production-Grade Clean Code:** 0 issues on `flutter analyze`, clean modularization, and strict separation of concerns.
+- 📱 **3-in-1 Unified Multi-Role App:** Seamless role-switching between **Customer**, **Technician**, and **System Administrator**.
+- 📶 **Robust Offline-First Engine:** Intelligent local queue that buffers actions during network outages and syncs seamlessly upon reconnection.
+- 🤖 **AI-Powered Diagnostics:** Built-in smart diagnosis assisting users in identifying issues and estimating costs before technicians arrive.
+
+---
+
+## 📸 Screen Preview & Highlights
+
+| 🏠 Home & Services | 📅 Slot Scheduling | 📊 Technician Dashboard |
+| :---: | :---: | :---: |
+| Browse 10+ categories, search with voice, stories, & emergency alerts | Multi-step booking, recurring appointments, & instant dispatch | Live earnings chart, status pipeline, & schedule management |
+
+| 💼 Job Marketplace | 👛 Digital Wallet | 🛡️ Admin Control Panel |
+| :---: | :---: | :---: |
+| Open job bids, transparent pricing, & distance filters | Ledger history, top-ups, withdrawals, & voucher redemption | Verification queue, coupon factory, dispute resolutions & broadcasts |
+
+---
+
+## ✨ Feature Showcase
+
+### 1. 🔐 Robust Authentication & Profiles
+- **Multiple Login Methods:** Email & password, **Google Sign-In**, and **Apple Sign-In**.
+- **Quick Demo Mode:** Instant one-click switch between Client, Technician, and Admin roles without entering credentials.
+- **Complete Profile & Settings:** Saved addresses management (CRUD + set default), loyalty tiers, referral bonuses, dark/light theme, and language switcher (Arabic/English).
+
+### 2. 📅 Smart Booking & Slot Scheduling
+- **Urgent vs. Scheduled:** Toggle between immediate arrival (with live technician dispatch) or scheduled time-slots.
+- **Recurrence Engine:** Support for single visits, weekly, bi-weekly, or monthly automated maintenance cycles.
+- **Multiple Payment Channels:** Cash on delivery, credit/debit cards, and in-app digital wallet with coupon promo code validation.
+
+### 3. 🛠️ Technician Pro Hub
+- **Interactive Dashboard:** 7-day visual earnings chart, active jobs pipeline (Accepted ➔ En Route ➔ In Progress ➔ Completed).
+- **Availability & Schedule Manager:** One-tap toggle for on-duty/off-duty mode, slot customization, and working hours planner.
+- **Ratings & Reviews:** Detailed customer reviews breakdown, badge credentials, and performance metrics.
+
+### 4. 💼 Open Job Marketplace
+- **Direct Job Postings:** Clients post custom maintenance requests with photos, budget expectations, and urgency levels.
+- **Technician Bidding:** Verified technicians browse open market jobs, filter by category or distance, and submit competitive bids.
+
+### 5. 👛 Digital Wallet & Financial Engine
+- **In-App Wallet:** Full balance management with instant deposit, withdrawal requests, and transaction ledger.
+- **Promos & Vouchers:** Built-in voucher redemption system granting instant promotional credits.
+
+### 6. 💬 Real-Time Chat & Voice Messaging
+- **Low-Latency Messaging:** Bidirectional chat powered by Cloud Firestore.
+- **Voice Messages:** Integrated voice recorder widget allowing audio notes between clients and technicians.
+- **Push Notifications:** Foreground and background push alerts via Firebase Cloud Messaging (FCM).
+
+### 7. 🗺️ Live Map & Technician Tracking
+- **Real-Time GPS Tracking:** Live map screen displaying nearby technicians, routing, and dynamic ETA calculation.
+
+### 8. 🛡️ Comprehensive Admin Control Center
+- **System KPIs & Analytics:** Revenue graphs, active bookings counter, and dispute trackers.
+- **Technician Verification:** Document inspection modal with single-tap approval or rejection.
+- **Coupon Manager:** Create and manage promotional discount codes with expiration dates.
+- **Dispute Resolution & Broadcasts:** Handle customer claims and broadcast emergency notifications.
+
+### 9. 📶 Offline Sync Queue
+- Automatically intercepts actions when internet connectivity drops, queues mutations safely, and syncs with the remote backend once connection is restored.
 
 ---
 
 ## 🏛️ System Architecture
 
+Fixsy follows **Robert C. Martin's Clean Architecture** principles, guaranteeing decoupled business logic from UI frameworks and third-party plugins:
+
 ```text
 lib/
-├── core/             # Theme, Constants, Security, Localization, Common Utils
-├── domain/           # Pure Business Logic: Entities, UseCases & Repository Contracts
-├── data/             # Data Sources, Models, Firebase Services & Repository Impls
-├── presentation/     # UI Layer: State Providers, Screens & Modular Widgets
-└── routes/           # Declarative App Navigation & Deep Linking
+├── core/                         # Global cross-cutting infrastructure
+│   ├── config/                   # Environment variables & constants
+│   ├── error/                    # Custom exceptions & centralized error handlers
+│   ├── l10n/                     # Internationalization (Arabic & English)
+│   ├── security/                 # Input sanitization, data masking & crypto utils
+│   ├── theme/                    # Modern design system (Colors, Typography, Spacing)
+│   └── utils/                    # AppLogger, responsive helpers, & transitions
+│
+├── domain/                       # Pure business domain layer (No Flutter dependencies)
+│   └── entities/                 # Domain entities & business contracts
+│
+├── data/                         # Data layer (Implementations & APIs)
+│   ├── datasources/              # Remote data sources & local databases
+│   ├── models/                   # JSON serializable data models
+│   ├── repositories/             # Concrete repository implementations
+│   ├── seeders/                  # Mock data & initial Firestore populator
+│   └── services/                 # Firebase, Chat, Wallet, Admin, & Rating services
+│
+├── presentation/                 # Presentation & UI layer
+│   ├── layouts/                  # Main layout shells & navigation scaffolds
+│   ├── providers/                # State management via Provider (20+ providers)
+│   ├── screens/                  # Feature screens (Auth, Booking, Tech, Admin, etc.)
+│   └── widgets/                  # Modular, reusable atomic UI components
+│
+└── routes/                       # Declarative route definitions & transitions
 ```
 
 ---
 
-## ✨ Key Mobile Features
+## 🔑 One-Click Demo Accounts
 
-- 🔐 **Comprehensive Authentication:**
-  - Email/Password login & signup with form validations and rate limiting.
-  - Social Logins: **Google Sign-In** & **Apple Sign-In**.
-  - **Quick Demo Accounts:** 1-click login for Client, Technician, and Admin roles.
-  - Password Reset with in-app email reset link generator.
-- 🤖 **AI Smart Diagnosis:** Integrated computer vision and text analysis for instant fault diagnosis and transparent price range estimation.
-- 🗺️ **Live Map & Technician Tracking:** Google Maps & Leaflet integration displaying nearby verified craftsmen in real-time.
-- 💬 **In-App Direct Chat:** Low-latency bidirectional messaging between customer and technician with Voice Recording backed by Cloud Firestore.
-- 📅 **Multi-Step Booking Flow:** Service picker, issue description, schedule picker, coupon validation, and multi-payment selector (Cash, Card, Wallet).
-- 💳 **Digital Wallet & Payments:** In-app balance, referral cashback, transaction ledger, and payment gateway integration.
-- 🎯 **Gamification Engine:** Dynamic achievement badges, daily task streaks, and performance ratings for technicians.
-- 👥 **Multi-Role Portals:**
-  - **Client App:** On-demand booking, scheduled appointments, service history, and coupon redemption.
-  - **Technician App:** Instant job notifications, status updates, and task management.
-  - **Admin Control:** System-wide monitoring and audit controls.
-- 🛡️ **Offline & Resiliency:** Local caching via `shared_preferences` and network connectivity monitors.
+Fixsy includes pre-configured demo credentials embedded directly on the login screen for rapid evaluation:
+
+| Role | Email | Password | Permissions |
+|---|---|---|---|
+| 👤 **Client (Customer)** | `client@fixsy.com` | `client123` | Browse, Book, Chat, Wallet, Reviews |
+| 🔧 **Technician** | `tech@fixsy.com` | `tech123` | Accept jobs, Manage schedule, Track earnings |
+| 🛡️ **Administrator** | `admin@fixsy.com` | `admin123` | Verify techs, Manage coupons, System metrics |
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Tech Stack & Dependencies
 
-| Layer | Technologies |
+| Category | Technology |
 |---|---|
-| **Framework** | Flutter 3.x (Android, iOS, Web, Windows) |
-| **Language** | Dart 3.0+ |
-| **State Management** | Provider |
-| **Backend & Database** | Firebase Authentication, Cloud Firestore, Cloud Storage, Cloud Messaging (FCM) |
-| **Maps & Location** | Google Maps Flutter, Flutter Map, LatLong2, Geolocator |
-| **Animations** | Flutter Animate, Lottie, Shimmer loading |
-| **Networking & HTTP** | Dio & Http |
-| **Testing & Quality** | 125 Automated Unit & Widget Tests, GitHub Actions CI/CD |
+| **Framework** | [Flutter 3.x](https://flutter.dev/) (Targeting Android & iOS) |
+| **Language** | [Dart 3.x](https://dart.dev/) |
+| **State Management** | [Provider](https://pub.dev/packages/provider) |
+| **Backend & Cloud** | [Firebase](https://firebase.google.com/) (Auth, Firestore, Cloud Storage, FCM) |
+| **Mapping & Location** | [Google Maps Flutter](https://pub.dev/packages/google_maps_flutter) & [Geolocator](https://pub.dev/packages/geolocator) |
+| **Data Visualization** | [FL Chart](https://pub.dev/packages/fl_chart) (Responsive charts for Admin & Tech earnings) |
+| **Animations & UI** | [Flutter Animate](https://pub.dev/packages/flutter_animate), [CachedNetworkImage](https://pub.dev/packages/cached_network_image) |
+| **Testing** | Flutter Test Framework, Mockito, Automated CI/CD |
 
 ---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Flutter SDK (v3.10.4 or higher)
-- Dart SDK (v3.0 or higher)
-- Android Studio / Xcode / VS Code
+- [Flutter SDK](https://docs.flutter.dev/get-started/install) (`>= 3.10.4`)
+- [Dart SDK](https://dart.dev/get-dart) (`>= 3.0.0`)
+- Android Studio / VS Code with Flutter extension
+- Firebase project configured (or run with mock fallback providers)
 
-### Setup & Run
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/zvinn/fixsy-flutter.git
-   cd fixsy-flutter
-   ```
-2. Install Flutter dependencies:
-   ```bash
-   flutter pub get
-   ```
-3. Run tests:
-   ```bash
-   flutter test
-   ```
-4. Run on connected device or simulator:
-   ```bash
-   flutter run
-   ```
+### Quick Installation
 
----
-
-## 🧪 Test Suite
-
-All 125 unit and widget tests pass:
 ```bash
+# 1. Clone the repository
+git clone https://github.com/zvinn/fixsy-flutter.git
+
+# 2. Navigate to project root
+cd fixsy-flutter
+
+# 3. Fetch dependencies
+flutter pub get
+
+# 4. Verify code quality (0 issues expected)
+flutter analyze
+
+# 5. Run the test suite (all 249 tests passing)
 flutter test
-# 00:09 +125: All tests passed!
+
+# 6. Launch the application
+flutter run
 ```
 
 ---
 
-## 👨‍💻 Author
+## 🧪 Rigorous Testing & Quality
+
+Code quality is validated on every commit with **100% passing tests**:
+
+```bash
+flutter test
+```
+
+```text
+00:49 +249: All tests passed!
+```
+
+- **Unit Tests:** Business logic, Provider state machines, service layers, and data models.
+- **Widget Tests:** Screen rendering, modal bottom sheets, responsive forms, and user interaction simulations.
+- **Static Analysis:** Strictly configured `analysis_options.yaml` resulting in **0 warnings and 0 errors**.
+
+---
+
+## 🤝 Contributing
+
+Contributions are warmly welcomed! If you'd like to improve Fixsy:
+
+1. Fork the Project (`https://github.com/zvinn/fixsy-flutter/fork`)
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'feat: add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+Distributed under the **MIT License**. See `LICENSE` for more information.
+
+---
+
+## 👨‍💻 Author & Maintainer
 
 **Mohamed Saad (zvinn)**  
-Full Stack & Mobile Engineer (Web • Flutter • Cloud)  
-GitHub: [@zvinn](https://github.com/zvinn)  
-Email: [mhamed.saad.ibrahim@gmail.com](mailto:mhamed.saad.ibrahim@gmail.com)
+*Full Stack & Mobile Engineer (Flutter • React • Cloud Architecture)*
+
+- GitHub: [@zvinn](https://github.com/zvinn)
+- Email: [mhamed.saad.ibrahim@gmail.com](mailto:mhamed.saad.ibrahim@gmail.com)
+- Project Repository: [fixsy-flutter](https://github.com/zvinn/fixsy-flutter)
+
+---
+
+<div align="center">
+
+**Give Fixsy a ⭐️ if this project helped or inspired your Flutter journey!**
+
+</div>
