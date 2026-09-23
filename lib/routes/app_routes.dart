@@ -89,7 +89,21 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const ServicesScreen());
       
       case newRequest:
-        return MaterialPageRoute(builder: (_) => const NewRequestScreen());
+        final args = routeSettings.arguments;
+        String? serviceType;
+        String? description;
+        if (args is Map<String, dynamic>) {
+          serviceType = args['initialServiceType'] as String? ?? args['serviceType'] as String?;
+          description = args['initialDescription'] as String? ?? args['description'] as String?;
+        } else if (args is String) {
+          serviceType = args;
+        }
+        return MaterialPageRoute(
+          builder: (_) => NewRequestScreen(
+            initialServiceType: serviceType,
+            initialDescription: description,
+          ),
+        );
       
       case settings:
         return MaterialPageRoute(builder: (_) => const SettingsScreen());

@@ -8,6 +8,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/l10n/app_localizations.dart';
 import '../../../data/services/weather_service.dart';
 import '../../widgets/ai/voice_assistant_sheet.dart';
+import '../../widgets/ai/fixsy_ai_assistant_modal.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -100,16 +101,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               ),
             ),
             actions: [
-              // AI Vision Diagnosis Trigger
+              // AI Vision / Assistant Trigger
               Container(
                 decoration: BoxDecoration(
                   color: const Color(0xFF6366F1).withValues(alpha: 0.12),
                   shape: BoxShape.circle,
                 ),
                 child: IconButton(
-                  icon: const Icon(Icons.document_scanner_outlined, color: Color(0xFF4F46E5)),
-                  tooltip: 'فحص العطل بالكاميرا (AI Vision)',
-                  onPressed: () => Navigator.pushNamed(context, '/new-request'),
+                  key: const Key('home_ai_assistant_btn'),
+                  icon: const Icon(Icons.auto_awesome, color: Color(0xFF4F46E5)),
+                  tooltip: 'مساعد Fixsy الذكي (AI Diagnosis)',
+                  onPressed: () => FixsyAiAssistantModal.show(context),
                 ),
               ),
               const SizedBox(width: 8),
@@ -122,15 +124,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ),
                 child: IconButton(
                   icon: const Icon(Icons.mic, color: AppTheme.primaryColor),
-                  tooltip: 'المساعد الصوتي',
-                  onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      backgroundColor: Colors.transparent,
-                      builder: (context) => const VoiceAssistantSheet(),
-                    );
-                  },
+                  tooltip: 'المساعد الصوتي والذكاء الاصطناعي',
+                  onPressed: () => FixsyAiAssistantModal.show(context),
                 ),
               ),
               const SizedBox(width: 8),
@@ -481,13 +476,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         ],
       ),
 
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => Navigator.pushNamed(context, '/new-request'),
-        icon: const Icon(Icons.add),
-        label: Text(context.t('newRequest')),
-        backgroundColor: AppTheme.primaryColor,
-        foregroundColor: Colors.white,
-        elevation: 0,
+      floatingActionButton: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const FloatingAiAssistantButton(),
+          const SizedBox(width: 8),
+          FloatingActionButton.extended(
+            heroTag: 'home_new_request_fab',
+            onPressed: () => Navigator.pushNamed(context, '/new-request'),
+            icon: const Icon(Icons.add),
+            label: Text(context.t('newRequest')),
+            backgroundColor: AppTheme.primaryColor,
+            foregroundColor: Colors.white,
+            elevation: 2,
+          ),
+        ],
       ),
     );
   }

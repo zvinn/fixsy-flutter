@@ -3,10 +3,12 @@ import '../../widgets/booking/booking_modal.dart';
 
 class NewRequestScreen extends StatelessWidget {
   final String? initialServiceType;
+  final String? initialDescription;
 
   const NewRequestScreen({
     super.key, 
     this.initialServiceType,
+    this.initialDescription,
   });
 
   @override
@@ -18,6 +20,7 @@ class NewRequestScreen extends StatelessWidget {
       body: SafeArea(
         child: BookingModal(
           initialServiceType: initialServiceType,
+          initialDescription: initialDescription,
           onSubmit: () {
             // Can trigger additional actions here
           },

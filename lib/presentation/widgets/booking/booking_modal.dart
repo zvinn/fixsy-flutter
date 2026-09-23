@@ -13,11 +13,13 @@ import '../scheduling/slot_scheduling_widget.dart';
 
 class BookingModal extends StatefulWidget {
   final String? initialServiceType;
+  final String? initialDescription;
   final VoidCallback? onSubmit;
 
   const BookingModal({
     super.key,
     this.initialServiceType,
+    this.initialDescription,
     this.onSubmit,
   });
 
@@ -42,6 +44,9 @@ class _BookingModalState extends State<BookingModal> {
   @override
   void initState() {
     super.initState();
+    if (widget.initialDescription != null && widget.initialDescription!.isNotEmpty) {
+      _descriptionController.text = widget.initialDescription!;
+    }
     if (widget.initialServiceType != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         context.read<ServiceRequestProvider>().setServiceType(widget.initialServiceType!);
