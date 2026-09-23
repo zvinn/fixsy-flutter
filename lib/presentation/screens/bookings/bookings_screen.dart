@@ -244,10 +244,83 @@ class _BookingsScreenState extends State<BookingsScreen> {
                         ),
                         style: OutlinedButton.styleFrom(
                           side: const BorderSide(color: Colors.red),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                         ),
                       ),
                     ),
                   ],
+                ),
+              ],
+              if (booking.status == 'accepted' || booking.status == 'in_progress') ...[
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/live-map', arguments: {
+                            'technicianId': booking.technicianId,
+                            'technicianName': booking.technicianName ?? 'فني Fixsy المعتمد',
+                          });
+                        },
+                        icon: const Icon(Icons.navigation_outlined, size: 18),
+                        label: const Text('تتبع الفني على الخريطة'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppTheme.primaryColor,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      flex: 2,
+                      child: OutlinedButton.icon(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/chat', arguments: {
+                            'conversationId': booking.id,
+                            'otherUserName': booking.technicianName ?? 'الفني',
+                            'otherUserId': booking.technicianId ?? '',
+                          });
+                        },
+                        icon: const Icon(Icons.chat_bubble_outline, size: 18),
+                        label: const Text('محادثة'),
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+              if (booking.status == 'completed') ...[
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => AddRatingScreen(
+                            technicianId: booking.technicianId ?? '',
+                            technicianName: booking.technicianName ?? 'الفني',
+                            bookingId: booking.id,
+                          ),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.star_rate_rounded, color: Colors.amber),
+                    label: const Text('تقييم الخدمة والفني'),
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: Colors.amber),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    ),
+                  ),
                 ),
               ],
             ],

@@ -204,6 +204,53 @@ void main() {
       expect(find.byIcon(Icons.star_half), findsOneWidget);
     });
   });
+
+  group('Booking Tracking & Action Tests', () {
+    testWidgets('should render tracking and chat buttons for active booking', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Row(
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () {},
+                  icon: const Icon(Icons.location_on),
+                  label: const Text('تتبع الفني على الخريطة'),
+                ),
+                OutlinedButton.icon(
+                  onPressed: () {},
+                  icon: const Icon(Icons.chat_bubble_outline),
+                  label: const Text('محادثة'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('تتبع الفني على الخريطة'), findsOneWidget);
+      expect(find.text('محادثة'), findsOneWidget);
+      expect(find.byIcon(Icons.location_on), findsOneWidget);
+      expect(find.byIcon(Icons.chat_bubble_outline), findsOneWidget);
+    });
+
+    testWidgets('should render rating button for completed booking', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ElevatedButton.icon(
+              onPressed: () {},
+              icon: const Icon(Icons.star_outline),
+              label: const Text('تقييم الخدمة والفني'),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('تقييم الخدمة والفني'), findsOneWidget);
+      expect(find.byIcon(Icons.star_outline), findsOneWidget);
+    });
+  });
 }
 
 // Mock Widgets

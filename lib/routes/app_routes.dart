@@ -136,7 +136,15 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const CommunityHubScreen());
       
       case liveMap:
-        return MaterialPageRoute(builder: (_) => const LiveMapScreen());
+        final args = routeSettings.arguments as Map<String, dynamic>? ?? {};
+        return MaterialPageRoute(
+          builder: (_) => LiveMapScreen(
+            technicianId: args['technicianId'],
+            technicianName: args['technicianName'],
+            clientLocation: args['clientLocation'],
+            technicianLocation: args['technicianLocation'],
+          ),
+        );
       
       case adminPanel:
         return MaterialPageRoute(builder: (_) => const AdminPanelScreen());
