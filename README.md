@@ -16,6 +16,12 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md)
 
+<br/>
+
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-Try_in_Browser-2ea44f?style=for-the-badge&logo=googlechrome&logoColor=white)](https://zvinn.github.io/fixsy-flutter/)
+
+<br/>
+
 [Features](#-feature-showcase) • [Architecture](#-system-architecture) • [Demo Accounts](#-one-click-demo-accounts) • [Getting Started](#-getting-started) • [Test Suite](#-rigorous-testing--quality)
 
 ⭐ **If you find this repository helpful, please give it a Star! It helps the project grow.** ⭐
