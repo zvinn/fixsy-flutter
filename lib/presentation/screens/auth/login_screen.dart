@@ -108,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (mounted) {
         Fluttertoast.showToast(
           msg: 'تم تسجيل الدخول بنجاح! 🎉',
-          backgroundColor: Colors.green,
+          backgroundColor: AppTheme.successColor,
           toastLength: Toast.LENGTH_LONG,
         );
       }
@@ -124,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
         
         Fluttertoast.showToast(
           msg: message,
-          backgroundColor: Colors.red,
+          backgroundColor: AppTheme.errorColor,
           toastLength: Toast.LENGTH_LONG,
         );
       }
@@ -133,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (mounted) {
         Fluttertoast.showToast(
           msg: e.message,
-          backgroundColor: Colors.red,
+          backgroundColor: AppTheme.errorColor,
           toastLength: Toast.LENGTH_LONG,
         );
       }
@@ -142,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (mounted) {
         Fluttertoast.showToast(
           msg: AppErrorHandler.getUserMessage(e),
-          backgroundColor: Colors.red,
+          backgroundColor: AppTheme.errorColor,
           toastLength: Toast.LENGTH_LONG,
         );
       }
@@ -162,14 +162,14 @@ class _LoginScreenState extends State<LoginScreen> {
       if (mounted) {
         Fluttertoast.showToast(
           msg: 'تم تسجيل الدخول بنجاح! 🎉',
-          backgroundColor: Colors.green,
+          backgroundColor: AppTheme.successColor,
         );
       }
     } catch (e) {
       if (mounted) {
         Fluttertoast.showToast(
           msg: 'خطأ في تسجيل الدخول: ${e.toString()}',
-          backgroundColor: Colors.red,
+          backgroundColor: AppTheme.errorColor,
         );
       }
     } finally {
@@ -215,14 +215,14 @@ class _LoginScreenState extends State<LoginScreen> {
         final roleName = role == 'client' ? 'العميل' : (role == 'tech' ? 'الفني' : 'المدير');
         Fluttertoast.showToast(
           msg: 'تم الدخول كـ $roleName التجريبي بنجاح! 🚀',
-          backgroundColor: Colors.green,
+          backgroundColor: AppTheme.successColor,
         );
       }
     } catch (e) {
       if (mounted) {
         Fluttertoast.showToast(
           msg: e.toString(),
-          backgroundColor: Colors.red,
+          backgroundColor: AppTheme.errorColor,
         );
       }
     } finally {

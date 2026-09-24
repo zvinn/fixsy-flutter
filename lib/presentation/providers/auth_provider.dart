@@ -15,14 +15,19 @@ class AuthProvider extends ChangeNotifier {
   final AuthService _authService = AuthService();
   User? _currentUser;
   bool _isLoading = true;
+  // Flag to protect demo sessions from being overwritten by Firebase stream
+  bool _isDemoSession = false;
 
   User? get currentUser => _currentUser;
   bool get isAuthenticated => _currentUser != null;
   bool get isLoading => _isLoading;
+  bool get isDemoSession => _isDemoSession;
 
   void _init() {
     _authService.authStateChanges.listen((user) {
-      if (_currentUser != null && _currentUser!.id.startsWith('demo-')) {
+      // If in demo mode, ignore all Firebase auth state changes
+      // (no real Firebase user is signed in during demo)
+      if (_isDemoSession) {
         _isLoading = false;
         notifyListeners();
         return;
@@ -150,10 +155,13 @@ class AuthProvider extends ChangeNotifier {
       
       AppLogger.info('Demo sign in attempt for role: $role');
       final user = await _authService.signInDemo(role);
+      // Set demo flag BEFORE updating user to prevent stream from overwriting
+      _isDemoSession = true;
       _currentUser = user;
       AppLogger.info('Demo sign in successful', data: {'userId': user.id, 'role': user.role});
       await AnalyticsService.logLogin(method: 'demo_$role');
     } catch (e, stackTrace) {
+      _isDemoSession = false;
       AppLogger.error('Demo sign in error', error: e, stackTrace: stackTrace);
       throw UnknownException('حدث خطأ في الدخول التجريبي');
     } finally {
@@ -165,10 +173,17 @@ class AuthProvider extends ChangeNotifier {
   Future<void> signOut() async {
     try {
       AppLogger.info('Sign out attempt');
-      await _authService.signOut();
+      // Clear demo session flag before signing out
+      final wasDemoSession = _isDemoSession;
+      _isDemoSession = false;
       _currentUser = null;
-      AppLogger.info('Sign out successful');
       notifyListeners();
+      
+      // Only call Firebase signOut if it was a real session
+      if (!wasDemoSession) {
+        await _authService.signOut();
+      }
+      AppLogger.info('Sign out successful');
     } catch (e, stackTrace) {
       AppLogger.error('Sign out error', error: e, stackTrace: stackTrace);
       throw UnknownException('حدث خطأ في تسجيل الخروج');
