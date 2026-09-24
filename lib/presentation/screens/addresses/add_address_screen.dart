@@ -255,20 +255,23 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: isDark ? Colors.white10 : Colors.white,
+                Material(
+                  color: isDark ? Colors.white10 : Colors.white,
+                  shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: isDark ? Colors.white12 : Colors.grey.shade200),
+                    side: BorderSide(color: isDark ? Colors.white12 : Colors.grey.shade200),
                   ),
-                  child: SwitchListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: const Text('تعيين كعنوان رئيسي افتراضي', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                    subtitle: const Text('سيتم اختياره تلقائياً عند طلب أي خدمة جديدة', style: TextStyle(fontSize: 12)),
-                    value: _isDefault,
-                    activeThumbColor: AppTheme.primaryColor,
-                    onChanged: (val) => setState(() => _isDefault = val),
+                  clipBehavior: Clip.antiAlias,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                    child: SwitchListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('تعيين كعنوان رئيسي افتراضي', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                      subtitle: const Text('سيتم اختياره تلقائياً عند طلب أي خدمة جديدة', style: TextStyle(fontSize: 12)),
+                      value: _isDefault,
+                      activeThumbColor: AppTheme.primaryColor,
+                      onChanged: (val) => setState(() => _isDefault = val),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 28),

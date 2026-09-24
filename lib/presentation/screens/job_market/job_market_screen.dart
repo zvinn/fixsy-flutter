@@ -844,18 +844,17 @@ class _JobMarketScreenState extends State<JobMarketScreen> with SingleTickerProv
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (ctx) => StatefulBuilder(
-        builder: (context, setModalState) => Container(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-            top: 20,
-            left: 20,
-            right: 20,
-          ),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-          ),
+        builder: (context, setModalState) => Material(
+          color: Colors.white,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          clipBehavior: Clip.antiAlias,
           child: SingleChildScrollView(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+              top: 20,
+              left: 20,
+              right: 20,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,

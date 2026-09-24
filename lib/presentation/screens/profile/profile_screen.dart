@@ -511,12 +511,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 16),
 
               // Action List Tiles
-              Container(
-                decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF1E293B) : Colors.white,
+              Material(
+                color: isDark ? const Color(0xFF1E293B) : Colors.white,
+                shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: isDark ? Colors.white12 : Colors.grey.shade200),
+                  side: BorderSide(color: isDark ? Colors.white12 : Colors.grey.shade200),
                 ),
+                clipBehavior: Clip.antiAlias,
                 child: Column(
                   children: [
                     ListTile(
