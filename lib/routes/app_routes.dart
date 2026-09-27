@@ -31,6 +31,7 @@ import '../presentation/screens/technician/verification_screen.dart';
 import '../presentation/screens/store/store_screen.dart';
 import '../presentation/screens/contracts/contracts_screen.dart';
 import '../presentation/screens/technician/technician_profile_screen.dart';
+import '../presentation/screens/client/price_estimator_screen.dart';
 
 /// App Routes Configuration
 /// Centralized routing for the entire application
@@ -67,6 +68,7 @@ class AppRoutes {
   static const String store = '/store';
   static const String contracts = '/contracts';
   static const String techProfile = '/technician-profile';
+  static const String priceEstimator = '/price-estimator';
 
   // Route generator
   static Route<dynamic> generateRoute(RouteSettings routeSettings) {
@@ -208,6 +210,9 @@ class AppRoutes {
           ),
         );
       
+      case priceEstimator:
+        return MaterialPageRoute(builder: (_) => const PriceEstimatorScreen());
+
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

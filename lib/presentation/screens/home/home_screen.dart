@@ -375,6 +375,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     children: [
                       _buildFeaturedCard(
                         context,
+                        title: 'حاسبة التكلفة',
+                        subtitle: 'احسب تسعيرتك',
+                        icon: Icons.calculate,
+                        color: Colors.green,
+                        onTap: () => Navigator.pushNamed(context, '/price-estimator'),
+                      ),
+                      const SizedBox(width: 16),
+                      _buildFeaturedCard(
+                        context,
                         title: 'متجر Fixsy',
                         subtitle: 'قطع غيار أصلية',
                         icon: Icons.storefront,
