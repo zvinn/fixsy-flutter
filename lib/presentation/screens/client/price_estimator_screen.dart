@@ -49,8 +49,8 @@ class _PriceEstimatorScreenState extends State<PriceEstimatorScreen> {
     final base = _categories[_selectedCategoryIndex]['basePrice'] as int;
     final multiplier = _services[_selectedCategoryIndex]![_selectedServiceIndex]['multiplier'] as double;
     
-    double total = base * multiplier * _quantity;
-    if (_includeMaterials) total += (total * 0.4); // Add 40% for materials avg
+    var total = base * multiplier * _quantity;
+    if (_includeMaterials) total += total * 0.4; // Add 40% for materials avg
     if (_urgent) total += 50; // Urgent fee
     
     return total;

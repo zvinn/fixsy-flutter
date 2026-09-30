@@ -55,4 +55,4 @@ backend/dist/
 # Temporary verification logs
 *.txt
 .snapshots/
-.agent/
+

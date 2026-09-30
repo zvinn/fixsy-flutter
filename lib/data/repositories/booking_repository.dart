@@ -1,27 +1,50 @@
+import '../../core/network/network_info.dart';
+import '../../core/utils/app_logger.dart';
+import '../datasources/local/booking_local_datasource.dart';
 import '../models/booking_model.dart';
 import '../services/firestore_service.dart';
 
 /// Booking Repository
-/// Manages booking data operations
+/// Manages booking data operations with Offline-First Caching.
+/// Enforces Fixsy Constitution Principle IV.
 class BookingRepository {
-  final FirestoreService _firestoreService = FirestoreService();
+  final FirestoreService _firestoreService;
+  final IBookingLocalDataSource _localDataSource;
+  final INetworkInfo _networkInfo;
 
   static const String _collection = 'bookings';
+
+  BookingRepository({
+    FirestoreService? firestoreService,
+    IBookingLocalDataSource? localDataSource,
+    INetworkInfo? networkInfo,
+  })  : _firestoreService = firestoreService ?? FirestoreService(),
+        _localDataSource = localDataSource ?? BookingLocalDataSourceImpl(),
+        _networkInfo = networkInfo ?? NetworkInfoImpl();
 
   /// Create a new booking
   Future<String> createBooking(Booking booking) async {
     try {
-      return await _firestoreService.createDocument(
+      final id = await _firestoreService.createDocument(
         collection: _collection,
         data: booking.toJson(),
       );
+      // Cache created booking locally
+      _localDataSource.cacheBooking(booking);
+      return id;
     } catch (e) {
       throw Exception('خطأ في إنشاء الحجز: ${e.toString()}');
     }
   }
 
-  /// Get booking by ID
+  /// Get booking by ID with offline fallback
   Future<Booking?> getBookingById(String bookingId) async {
+    final isOnline = await _networkInfo.isConnected;
+    if (!isOnline) {
+      final cached = await _localDataSource.getCachedBooking(bookingId);
+      if (cached != null) return cached;
+    }
+
     try {
       final data = await _firestoreService.getDocument(
         collection: _collection,
@@ -29,16 +52,27 @@ class BookingRepository {
       );
 
       if (data != null) {
-        return Booking.fromJson(data);
+        final booking = Booking.fromJson(data);
+        _localDataSource.cacheBooking(booking);
+        return booking;
       }
       return null;
     } catch (e) {
+      final cached = await _localDataSource.getCachedBooking(bookingId);
+      if (cached != null) return cached;
       throw Exception('خطأ في جلب الحجز: ${e.toString()}');
     }
   }
 
-  /// Get user bookings
+  /// Get user bookings with offline-first support
   Future<List<Booking>> getUserBookings(String userId) async {
+    final isOnline = await _networkInfo.isConnected;
+    if (!isOnline) {
+      AppLogger.info('Device is offline. Loading bookings from local cache.');
+      final cached = await _localDataSource.getCachedUserBookings(userId);
+      if (cached.isNotEmpty) return cached;
+    }
+
     try {
       final data = await _firestoreService.queryCollection(
         collection: _collection,
@@ -49,8 +83,15 @@ class BookingRepository {
         descending: true,
       );
 
-      return data.map((json) => Booking.fromJson(json)).toList();
+      final bookings = data.map((json) => Booking.fromJson(json)).toList();
+      _localDataSource.cacheUserBookings(userId, bookings);
+      return bookings;
     } catch (e) {
+      final cached = await _localDataSource.getCachedUserBookings(userId);
+      if (cached.isNotEmpty) {
+        AppLogger.warn('Firestore fetch failed. Returning cached bookings fallback.');
+        return cached;
+      }
       throw Exception('خطأ في جلب الحجوزات: ${e.toString()}');
     }
   }
