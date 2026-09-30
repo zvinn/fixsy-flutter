@@ -64,6 +64,16 @@ jobs:
       with:
         path: build/web
 
+    - name: Build Android APK
+      run: flutter build apk --release --split-per-abi
+
+    - name: Upload Android APK Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: fixsy-android-apks
+        path: build/app/outputs/flutter-apk/*.apk
+        retention-days: 14
+
   deploy-pages:
     name: Deploy to GitHub Pages
     if: github.ref == 'refs/heads/main'
