@@ -111,6 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
           backgroundColor: AppTheme.successColor,
           toastLength: Toast.LENGTH_LONG,
         );
+        Navigator.pushNamedAndRemoveUntil(context, AppRoutes.home, (route) => false);
       }
     } on AuthException catch (e) {
       AppLogger.warn('Login failed', data: {'error': e.message});
@@ -164,6 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
           msg: 'تم تسجيل الدخول بنجاح! 🎉',
           backgroundColor: AppTheme.successColor,
         );
+        Navigator.pushNamedAndRemoveUntil(context, AppRoutes.home, (route) => false);
       }
     } catch (e) {
       if (mounted) {
@@ -190,6 +192,7 @@ class _LoginScreenState extends State<LoginScreen> {
           msg: 'تم تسجيل الدخول بواسطة Apple بنجاح! 🍏',
           backgroundColor: Colors.green,
         );
+        Navigator.pushNamedAndRemoveUntil(context, AppRoutes.home, (route) => false);
       }
     } catch (e) {
       if (mounted) {
@@ -217,6 +220,7 @@ class _LoginScreenState extends State<LoginScreen> {
           msg: 'تم الدخول كـ $roleName التجريبي بنجاح! 🚀',
           backgroundColor: AppTheme.successColor,
         );
+        Navigator.pushNamedAndRemoveUntil(context, AppRoutes.home, (route) => false);
       }
     } catch (e) {
       if (mounted) {
