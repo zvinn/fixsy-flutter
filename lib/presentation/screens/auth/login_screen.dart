@@ -10,7 +10,7 @@ import '../../../core/error/app_error_handler.dart';
 import '../../../core/utils/app_logger.dart';
 import '../../../core/security/security_utils.dart';
 import '../../../core/theme/app_theme.dart';
-import 'register_screen.dart';
+import '../../../routes/app_routes.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -538,12 +538,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       // Register Link
                       TextButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const RegisterScreen(),
-                            ),
-                          );
+                          Navigator.pushNamed(context, AppRoutes.register);
                         },
                         child: RichText(
                           text: TextSpan(

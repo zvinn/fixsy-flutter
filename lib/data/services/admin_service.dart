@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../core/utils/app_logger.dart';
 import '../models/admin_model.dart';
 
 /// Admin Service for managing Fixsy backend operations
@@ -12,7 +13,8 @@ class AdminService {
     try {
       _firestore = FirebaseFirestore.instance;
       return _firestore;
-    } catch (_) {
+    } catch (e) {
+      AppLogger.warn('FirebaseFirestore not available in AdminService: $e');
       return null;
     }
   }
@@ -157,7 +159,9 @@ class AdminService {
           'isVerified': true,
           'approvedAt': FieldValue.serverTimestamp(),
         });
-      } catch (_) {}
+      } catch (e) {
+        AppLogger.warn('Failed to update Firestore for approved technician $id: $e');
+      }
     }
 
     final index = _mockTechnicians.indexWhere((t) => t.id == id);
@@ -178,7 +182,9 @@ class AdminService {
           'rejectionReason': reason,
           'rejectedAt': FieldValue.serverTimestamp(),
         });
-      } catch (_) {}
+      } catch (e) {
+        AppLogger.warn('Failed to update Firestore for rejected technician $id: $e');
+      }
     }
 
     final index = _mockTechnicians.indexWhere((t) => t.id == id);
@@ -228,7 +234,9 @@ class AdminService {
           'unpaidOrdersCount': 0,
           'lastSettledAt': FieldValue.serverTimestamp(),
         });
-      } catch (_) {}
+      } catch (e) {
+        AppLogger.warn('Failed to settle debt in Firestore for tech $id: $e');
+      }
     }
 
     final index = _mockTechnicians.indexWhere((t) => t.id == id);
@@ -255,7 +263,8 @@ class AdminService {
       return snap.docs
           .map((d) => AdminCoupon.fromJson({...d.data(), 'id': d.id}))
           .toList();
-    } catch (_) {
+    } catch (e) {
+      AppLogger.warn('Failed to fetch coupons from Firestore, using fallback: $e');
       return List<AdminCoupon>.from(_mockCoupons);
     }
   }
@@ -274,7 +283,9 @@ class AdminService {
     if (fs != null) {
       try {
         await fs.collection('coupons').doc(newCoupon.id).set(newCoupon.toJson());
-      } catch (_) {}
+      } catch (e) {
+        AppLogger.warn('Failed to persist new coupon $code to Firestore: $e');
+      }
     }
 
     _mockCoupons.add(newCoupon);
@@ -289,7 +300,9 @@ class AdminService {
         await fs.collection('coupons').doc(id).update({
           'isActive': !currentStatus,
         });
-      } catch (_) {}
+      } catch (e) {
+        AppLogger.warn('Failed to toggle coupon $id status in Firestore: $e');
+      }
     }
 
     final index = _mockCoupons.indexWhere((c) => c.id == id);
@@ -306,7 +319,9 @@ class AdminService {
     if (fs != null) {
       try {
         await fs.collection('coupons').doc(id).delete();
-      } catch (_) {}
+      } catch (e) {
+        AppLogger.warn('Failed to delete coupon $id from Firestore: $e');
+      }
     }
 
     _mockCoupons.removeWhere((c) => c.id == id);
@@ -327,7 +342,8 @@ class AdminService {
       return snap.docs
           .map((d) => AdminDispute.fromJson({...d.data(), 'id': d.id}))
           .toList();
-    } catch (_) {
+    } catch (e) {
+      AppLogger.warn('Failed to fetch disputes from Firestore, using fallback: $e');
       return List<AdminDispute>.from(_mockDisputes);
     }
   }
@@ -338,7 +354,9 @@ class AdminService {
     if (fs != null) {
       try {
         await fs.collection('disputes').doc(id).delete();
-      } catch (_) {}
+      } catch (e) {
+        AppLogger.warn('Failed to resolve dispute $id in Firestore: $e');
+      }
     }
 
     _mockDisputes.removeWhere((d) => d.id == id);
@@ -359,7 +377,9 @@ class AdminService {
           'targetGroup': targetGroup,
           'createdAt': FieldValue.serverTimestamp(),
         });
-      } catch (_) {}
+      } catch (e) {
+        AppLogger.warn('Failed to send broadcast push notification: $e');
+      }
     }
   }
 

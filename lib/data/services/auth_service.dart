@@ -1,12 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import '../../core/config/env_config.dart';
 import '../models/user.dart';
 
 class AuthService {
   final firebase_auth.FirebaseAuth _firebaseAuth = firebase_auth.FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+
+  bool _isAdminEmail(String? email) {
+    if (email == null || email.isEmpty) return false;
+    final configuredAdmin = EnvConfig.adminEmail.trim().toLowerCase();
+    if (configuredAdmin.isEmpty) return false;
+    return email.trim().toLowerCase() == configuredAdmin;
+  }
 
   // Get current user stream
   Stream<User?> get authStateChanges {
@@ -26,7 +34,7 @@ class AuthService {
         email: firebaseUser.email ?? '',
         displayName: firebaseUser.displayName ?? 'مستخدم',
         photoURL: firebaseUser.photoURL,
-        role: firebaseUser.email == 'mhamed.saad.ibrahim@gmail.com' ? 'admin' : 'customer',
+        role: _isAdminEmail(firebaseUser.email) ? 'admin' : 'customer',
         createdAt: DateTime.now(),
       );
     });
@@ -55,7 +63,7 @@ class AuthService {
               email: credential.user!.email!,
               displayName: credential.user!.displayName ?? 'مستخدم',
               photoURL: credential.user!.photoURL,
-              role: credential.user!.email == 'mhamed.saad.ibrahim@gmail.com' ? 'admin' : 'customer',
+              role: _isAdminEmail(credential.user!.email) ? 'admin' : 'customer',
               createdAt: DateTime.now(),
             );
             
@@ -155,7 +163,7 @@ class AuthService {
             email: userCredential.user!.email!,
             displayName: userCredential.user!.displayName ?? 'مستخدم',
             photoURL: userCredential.user!.photoURL,
-            role: userCredential.user!.email == 'mhamed.saad.ibrahim@gmail.com' ? 'admin' : 'customer',
+            role: _isAdminEmail(userCredential.user!.email) ? 'admin' : 'customer',
             createdAt: DateTime.now(),
           );
 
@@ -168,7 +176,7 @@ class AuthService {
             email: userCredential.user!.email!,
             displayName: userCredential.user!.displayName ?? 'مستخدم',
             photoURL: userCredential.user!.photoURL,
-            role: userCredential.user!.email == 'mhamed.saad.ibrahim@gmail.com' ? 'admin' : 'customer',
+            role: _isAdminEmail(userCredential.user!.email) ? 'admin' : 'customer',
             createdAt: DateTime.now(),
           );
         }
@@ -186,8 +194,8 @@ class AuthService {
       final doc = await _firestore.collection('users').doc(uid).get();
       if (doc.exists) {
         final userData = doc.data()!;
-        // Enforce admin role for specific email even if Firestore has old data
-        if (userData['email'] == 'mhamed.saad.ibrahim@gmail.com') {
+        // Enforce admin role for configured admin email even if Firestore has old data
+        if (_isAdminEmail(userData['email'] as String?)) {
           userData['role'] = 'admin';
         }
         return User.fromJson({...userData, 'id': doc.id});
@@ -231,7 +239,7 @@ class AuthService {
             email: userCredential.user!.email ?? '',
             displayName: userCredential.user!.displayName ?? 'مستخدم Apple',
             photoURL: userCredential.user!.photoURL,
-            role: userCredential.user!.email == 'mhamed.saad.ibrahim@gmail.com' ? 'admin' : 'customer',
+            role: _isAdminEmail(userCredential.user!.email) ? 'admin' : 'customer',
             createdAt: DateTime.now(),
           );
 

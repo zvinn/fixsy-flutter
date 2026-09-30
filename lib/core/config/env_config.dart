@@ -20,6 +20,9 @@ class EnvConfig {
   static String get groqApiKey => _getEnv('GROQ_API_KEY');
   static String get geminiApiKey => _getEnv('GEMINI_API_KEY');
 
+  // Admin Configuration
+  static String get adminEmail => _getEnv('ADMIN_EMAIL');
+
   /// Initialize environment configuration
   /// Should be called in main() before runApp()
   static Future<void> init() async {

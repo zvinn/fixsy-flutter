@@ -32,6 +32,9 @@ import '../presentation/screens/store/store_screen.dart';
 import '../presentation/screens/contracts/contracts_screen.dart';
 import '../presentation/screens/technician/technician_profile_screen.dart';
 import '../presentation/screens/client/price_estimator_screen.dart';
+import '../presentation/screens/ratings/add_rating_screen.dart';
+import '../presentation/screens/chat/chat_room_screen.dart';
+import '../data/models/booking_model.dart';
 
 /// App Routes Configuration
 /// Centralized routing for the entire application
@@ -69,6 +72,8 @@ class AppRoutes {
   static const String contracts = '/contracts';
   static const String techProfile = '/technician-profile';
   static const String priceEstimator = '/price-estimator';
+  static const String addRating = '/add-rating';
+  static const String chatRoom = '/chat-room';
 
   // Route generator
   static Route<dynamic> generateRoute(RouteSettings routeSettings) {
@@ -212,6 +217,14 @@ class AppRoutes {
       
       case priceEstimator:
         return MaterialPageRoute(builder: (_) => const PriceEstimatorScreen());
+
+      case addRating:
+        final booking = routeSettings.arguments as Booking;
+        return MaterialPageRoute(builder: (_) => AddRatingScreen(booking: booking));
+
+      case chatRoom:
+        final booking = routeSettings.arguments as Booking;
+        return MaterialPageRoute(builder: (_) => ChatRoomScreen(booking: booking));
 
       default:
         return MaterialPageRoute(

@@ -353,7 +353,7 @@ class _SlotSchedulingWidgetState extends State<SlotSchedulingWidget> {
                 if (index == 1) topLabel = 'غداً';
 
                 return Padding(
-                  padding: const EdgeInsets.only(left: 8),
+                  padding: const EdgeInsetsDirectional.only(end: 8),
                   child: InkWell(
                     onTap: () {
                       setState(() {

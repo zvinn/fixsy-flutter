@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/utils/ui_helpers.dart';
 import '../../providers/auth_provider.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/config/env_config.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -115,7 +116,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             onPressed: () {
                               setState(() {
                                 _nameController.text = 'Admin User';
-                                _emailController.text = 'mhamed.saad.ibrahim@gmail.com';
+                                _emailController.text = EnvConfig.adminEmail.isNotEmpty
+                                    ? EnvConfig.adminEmail
+                                    : 'admin@fixsy.com';
                                 _passwordController.text = 'Admin@Fixsy2026';
                                 _confirmPasswordController.text = 'Admin@Fixsy2026';
                                 _selectedRole = 'technician';

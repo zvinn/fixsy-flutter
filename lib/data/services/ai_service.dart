@@ -1,10 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import '../../core/config/env_config.dart';
 import '../../core/error/error_logger.dart';
+import '../../core/network/api_client.dart';
 
 /// AI Diagnosis Result Model
 class AiDiagnosis {
@@ -73,8 +72,10 @@ class AiDiagnosis {
 class AiService {
   static const String _groqApiUrl = 'https://api.groq.com/openai/v1/chat/completions';
   
-  final Dio _dio = Dio();
+  final ApiClient _apiClient;
   final String _apiKey = EnvConfig.groqApiKey;
+
+  AiService({ApiClient? apiClient}) : _apiClient = apiClient ?? ApiClient();
 
   /// Analyze problem with AI using description and optional images (vision support)
   Future<AiDiagnosis> analyzeProblem({
@@ -120,7 +121,7 @@ class AiService {
           }
         }
 
-        final response = await _dio.post(
+        final response = await _apiClient.dio.post(
           _groqApiUrl,
           options: Options(
             headers: {
@@ -159,12 +160,10 @@ class AiService {
   }
 
   /// Analyze image specifically
-  Future<String> analyzeImage(File image) async {
+  Future<String> analyzeImage(XFile image) async {
     try {
-      final bytes = await image.readAsBytes();
-      final xFile = XFile.fromData(bytes, path: image.path);
       final diagnosis = await analyzeProblem(
-        images: [xFile],
+        images: [image],
         description: 'تحليل صورة العطل المرفقة',
       );
       return '${diagnosis.problem}: ${diagnosis.solution}';
@@ -357,13 +356,17 @@ ${problemDescription != null ? 'وصف المشكلة: $problemDescription' : ''
 قدم نصيحة قصيرة (جملتين فقط) للمستخدم حول كيفية اختيار الفني المناسب لهذه الخدمة.
 ''';
 
-      final response = await http.post(
-        Uri.parse(_groqApiUrl),
-        headers: {
-          'Authorization': 'Bearer $_apiKey',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
+      final response = await _apiClient.dio.post(
+        _groqApiUrl,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $_apiKey',
+            'Content-Type': 'application/json',
+          },
+          sendTimeout: const Duration(seconds: 15),
+          receiveTimeout: const Duration(seconds: 20),
+        ),
+        data: {
           'model': 'llama-3.3-70b-versatile',
           'messages': [
             {
@@ -373,12 +376,14 @@ ${problemDescription != null ? 'وصف المشكلة: $problemDescription' : ''
           ],
           'temperature': 0.7,
           'max_tokens': 200,
-        }),
+        },
       );
 
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        return data['choices'][0]['message']['content'];
+        final data = response.data is Map
+            ? response.data as Map<String, dynamic>
+            : jsonDecode(response.data.toString()) as Map<String, dynamic>;
+        return data['choices'][0]['message']['content'] as String;
       }
       
       throw Exception('API Error');

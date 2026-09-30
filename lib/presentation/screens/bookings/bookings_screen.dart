@@ -4,10 +4,9 @@ import '../../providers/auth_provider.dart';
 import '../../providers/bookings_provider.dart';
 import '../../../data/models/booking_model.dart';
 import '../../../core/utils/responsive_utils.dart';
-import '../ratings/add_rating_screen.dart';
-import '../chat/chat_room_screen.dart';
 import '../../widgets/common/skeleton_loaders.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../routes/app_routes.dart';
 
 class BookingsScreen extends StatefulWidget {
   const BookingsScreen({super.key});
@@ -339,13 +338,10 @@ class _BookingsScreenState extends State<BookingsScreen> {
                   width: double.infinity,
                   child: OutlinedButton.icon(
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushNamed(
                         context,
-                        MaterialPageRoute(
-                          builder: (_) => AddRatingScreen(
-                            booking: booking,
-                          ),
-                        ),
+                        AppRoutes.addRating,
+                        arguments: booking,
                       );
                     },
                     icon: const Icon(Icons.star_rate_rounded, color: Colors.amber),
@@ -531,11 +527,10 @@ class _BookingsScreenState extends State<BookingsScreen> {
                   child: OutlinedButton.icon(
                     onPressed: () {
                       Navigator.pop(context);
-                      Navigator.push(
+                      Navigator.pushNamed(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => ChatRoomScreen(booking: booking),
-                        ),
+                        AppRoutes.chatRoom,
+                        arguments: booking,
                       );
                     },
                     icon: const Icon(Icons.chat),
@@ -557,11 +552,10 @@ class _BookingsScreenState extends State<BookingsScreen> {
                   child: ElevatedButton.icon(
                     onPressed: () async {
                       Navigator.pop(context);
-                      final result = await Navigator.push(
+                      final result = await Navigator.pushNamed(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => AddRatingScreen(booking: booking),
-                        ),
+                        AppRoutes.addRating,
+                        arguments: booking,
                       );
                       if (result == true) {
                         _loadBookings(); // Refresh to update isRated status

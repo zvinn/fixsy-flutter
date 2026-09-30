@@ -101,7 +101,7 @@ class _PriceEstimatorScreenState extends State<PriceEstimatorScreen> {
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 300),
                             width: 85,
-                            margin: const EdgeInsets.only(left: 12),
+                            margin: const EdgeInsetsDirectional.only(end: 12),
                             decoration: BoxDecoration(
                               color: isSelected ? AppTheme.primaryColor : (isDark ? AppTheme.darkCardColor : Colors.white),
                               borderRadius: BorderRadius.circular(16),

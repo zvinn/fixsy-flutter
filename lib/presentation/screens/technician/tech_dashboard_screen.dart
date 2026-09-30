@@ -71,7 +71,7 @@ class _TechDashboardScreenState extends State<TechDashboardScreen>
         actions: [
           // Availability Toggle
           Padding(
-            padding: const EdgeInsets.only(left: 12),
+            padding: const EdgeInsetsDirectional.only(end: 12),
             child: Row(
               children: [
                 Text(
