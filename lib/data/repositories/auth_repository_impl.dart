@@ -6,6 +6,7 @@ import '../../core/network/api_client.dart';
 import '../../core/security/token_vault.dart';
 import '../../core/utils/app_logger.dart';
 import '../../domain/repositories/auth_repository.dart';
+import '../datasources/local/cache_manager.dart';
 import '../models/user.dart';
 
 /// Clean Implementation of IAuthRepository
@@ -15,16 +16,19 @@ class AuthRepositoryImpl implements IAuthRepository {
   final FirebaseFirestore _firestore;
   final GoogleSignIn _googleSignIn;
   final TokenVault _tokenVault;
+  final CacheManager _cacheManager;
 
   AuthRepositoryImpl({
     fb_auth.FirebaseAuth? firebaseAuth,
     FirebaseFirestore? firestore,
     GoogleSignIn? googleSignIn,
     TokenVault? tokenVault,
+    CacheManager? cacheManager,
   })  : _firebaseAuth = firebaseAuth ?? fb_auth.FirebaseAuth.instance,
         _firestore = firestore ?? FirebaseFirestore.instance,
         _googleSignIn = googleSignIn ?? GoogleSignIn(),
-        _tokenVault = tokenVault ?? TokenVault() {
+        _tokenVault = tokenVault ?? TokenVault(),
+        _cacheManager = cacheManager ?? CacheManager() {
     // Automatically wire TokenVault with ApiClient
     ApiClient().configureAuth(
       tokenProvider: () => _tokenVault.getAccessToken(),
@@ -37,6 +41,7 @@ class AuthRepositoryImpl implements IAuthRepository {
     return _firebaseAuth.authStateChanges().asyncMap((fbUser) async {
       if (fbUser == null) {
         await _tokenVault.clear();
+        await _cacheManager.clearPrefix('cached_');
         return null;
       }
 
@@ -220,7 +225,8 @@ class AuthRepositoryImpl implements IAuthRepository {
       await _firebaseAuth.signOut();
       await _googleSignIn.signOut();
       await _tokenVault.clear();
-      AppLogger.info('Signed out and cleared all secure credentials.');
+      await _cacheManager.clearPrefix('cached_');
+      AppLogger.info('Signed out and cleared all secure credentials and local cache.');
     } catch (e) {
       AppLogger.error('Error during signOut', error: e);
     }

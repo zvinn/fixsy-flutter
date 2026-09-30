@@ -3,7 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 /// Generic Firestore Service
 /// Provides CRUD operations for Firestore collections
 class FirestoreService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore? _firestoreInstance;
+
+  FirestoreService({FirebaseFirestore? firestore})
+      : _firestoreInstance = firestore;
+
+  FirebaseFirestore get _firestore =>
+      _firestoreInstance ?? FirebaseFirestore.instance;
 
   /// Get a single document
   Future<Map<String, dynamic>?> getDocument({
