@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "hindsight": {
+      "serverUrl": "http://localhost:8888/mcp/"
+    }
+  }
+}

@@ -56,3 +56,5 @@ backend/dist/
 *.txt
 .snapshots/
 
+
+**/__pycache__/
