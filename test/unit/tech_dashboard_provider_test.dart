@@ -1,12 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fixsy_flutter/presentation/providers/tech_dashboard_provider.dart';
+import '../helpers/fake_tech_repository.dart';
 
 void main() {
   group('TechDashboardProvider Unit Tests', () {
     late TechDashboardProvider provider;
 
     setUp(() {
-      provider = TechDashboardProvider();
+      provider = TechDashboardProvider(repository: FakeTechRepository());
+    });
+
+    tearDown(() {
+      provider.dispose();
     });
 
     test('initializes with default metrics and fallback requests', () {

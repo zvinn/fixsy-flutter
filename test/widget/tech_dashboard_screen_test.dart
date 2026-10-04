@@ -3,14 +3,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:fixsy_flutter/presentation/screens/technician/tech_dashboard_screen.dart';
 import 'package:fixsy_flutter/presentation/providers/tech_dashboard_provider.dart';
-
+import '../helpers/fake_tech_repository.dart';
 void main() {
   group('TechDashboardScreen Widget Tests', () {
     testWidgets('renders technician header, stats, and jobs tabs', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: ChangeNotifierProvider(
-            create: (_) => TechDashboardProvider(),
+            create: (_) => TechDashboardProvider(repository: FakeTechRepository()),
             child: const TechDashboardScreen(),
           ),
         ),
@@ -31,7 +31,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: ChangeNotifierProvider(
-            create: (_) => TechDashboardProvider(),
+            create: (_) => TechDashboardProvider(repository: FakeTechRepository()),
             child: const TechDashboardScreen(),
           ),
         ),
@@ -49,7 +49,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: ChangeNotifierProvider(
-            create: (_) => TechDashboardProvider(),
+            create: (_) => TechDashboardProvider(repository: FakeTechRepository()),
             child: const TechDashboardScreen(),
           ),
         ),
@@ -67,7 +67,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: ChangeNotifierProvider(
-            create: (_) => TechDashboardProvider(),
+            create: (_) => TechDashboardProvider(repository: FakeTechRepository()),
             child: const TechDashboardScreen(),
           ),
         ),
