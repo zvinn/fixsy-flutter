@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import '../../providers/auth_provider.dart';
 import '../../../core/utils/validators.dart';
 import '../../../core/error/exceptions.dart';
@@ -300,271 +302,382 @@ class _LoginScreenState extends State<LoginScreen> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        body: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 48.0),
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 400),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      // Logo
-                      const SizedBox(height: 32),
-                      
-                      const Text(
-                        'Fixsy',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 56, // Increased from 48
-                          fontWeight: FontWeight.w900, // Heavier weight
-                          color: AppTheme.primaryColor,
-                          letterSpacing: -1.5,
-                        ),
-                      ).animate().fadeIn(duration: 500.ms).slideY(begin: -0.2, end: 0),
-                      
-                      const SizedBox(height: 8),
-                      
-                      Text(
-                        'منصة صيانة المنازل المتكاملة',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 18, // Slightly larger
-                          fontWeight: FontWeight.bold, // Bold for clarity
-                          color: AppTheme.textPrimaryLight.withOpacity(0.8),
-                        ),
-                      ).animate().fadeIn(delay: 200.ms, duration: 500.ms).slideY(begin: -0.2, end: 0),
-                      
-                      const SizedBox(height: 48),
-
-                      // Email Field
-                      TextFormField(
-                        controller: _emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        autofillHints: const [AutofillHints.email],
-                        validator: Validators.validateEmail,
-                        decoration: const InputDecoration(
-                          labelText: 'البريد الإلكتروني',
-                          hintText: 'example@email.com',
-                          prefixIcon: Icon(Icons.email_outlined),
-                        ),
-                      ).animate().fadeIn(delay: 400.ms).slideX(begin: -0.2, end: 0),
-                      
-                      const SizedBox(height: 20), // Increased from 16
-
-                      // Password Field
-                      TextFormField(
-                        controller: _passwordController,
-                        obscureText: _obscurePassword,
-                        autofillHints: const [AutofillHints.password],
-                        validator: Validators.validatePassword,
-                        decoration: InputDecoration(
-                          labelText: 'كلمة المرور',
-                          prefixIcon: const Icon(Icons.lock_outline),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                            ),
-                            onPressed: () {
-                              setState(() => _obscurePassword = !_obscurePassword);
-                            },
-                          ),
-                        ),
-                      ).animate().fadeIn(delay: 500.ms).slideX(begin: -0.2, end: 0),
-                      
-                      const SizedBox(height: 20), // Increased from 16
-
-                      // Remember Me Checkbox & Forgot Password
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFFF6F8FD), Color(0xFFE9F0F9)], // Soft premium light background
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+                child: Container(
+                  constraints: const BoxConstraints(maxWidth: 420),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(32),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.04),
+                        blurRadius: 40,
+                        offset: const Offset(0, 10),
+                      )
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(32.0),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
+                          // Logo & Header
+                          const SizedBox(height: 8),
+                          Text(
+                            'Fixsy',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.outfit(
+                              fontSize: 56,
+                              fontWeight: FontWeight.w900,
+                              color: AppTheme.primaryColor,
+                              letterSpacing: -1.5,
+                            ),
+                          ).animate().fadeIn(duration: 600.ms, curve: Curves.easeOutQuad).slideY(begin: -0.2, end: 0),
+                          
+                          const SizedBox(height: 8),
+                          Text(
+                            'منصة صيانة المنازل المتكاملة',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.cairo(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: AppTheme.textPrimaryLight.withOpacity(0.6),
+                            ),
+                          ).animate().fadeIn(delay: 200.ms, duration: 600.ms).slideY(begin: -0.2, end: 0),
+                          
+                          const SizedBox(height: 48),
+
+                          // Email Field
+                          TextFormField(
+                            controller: _emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            autofillHints: const [AutofillHints.email],
+                            validator: Validators.validateEmail,
+                            style: GoogleFonts.cairo(fontSize: 15),
+                            decoration: InputDecoration(
+                              labelText: 'البريد الإلكتروني',
+                              hintText: 'example@email.com',
+                              labelStyle: GoogleFonts.cairo(color: Colors.grey.shade600),
+                              prefixIcon: const Icon(LucideIcons.mail, size: 20, color: AppTheme.primaryColor),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: BorderSide.none,
+                              ),
+                              filled: true,
+                              fillColor: Colors.grey.shade50,
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                            ),
+                          ).animate().fadeIn(delay: 400.ms).slideX(begin: 0.1, end: 0),
+                          
+                          const SizedBox(height: 20),
+
+                          // Password Field
+                          TextFormField(
+                            controller: _passwordController,
+                            obscureText: _obscurePassword,
+                            autofillHints: const [AutofillHints.password],
+                            validator: Validators.validatePassword,
+                            style: GoogleFonts.cairo(fontSize: 15),
+                            decoration: InputDecoration(
+                              labelText: 'كلمة المرور',
+                              labelStyle: GoogleFonts.cairo(color: Colors.grey.shade600),
+                              prefixIcon: const Icon(LucideIcons.lock, size: 20, color: AppTheme.primaryColor),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _obscurePassword ? LucideIcons.eyeOff : LucideIcons.eye,
+                                  size: 20,
+                                  color: Colors.grey.shade600,
+                                ),
+                                onPressed: () {
+                                  setState(() => _obscurePassword = !_obscurePassword);
+                                },
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: BorderSide.none,
+                              ),
+                              filled: true,
+                              fillColor: Colors.grey.shade50,
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                            ),
+                          ).animate().fadeIn(delay: 500.ms).slideX(begin: 0.1, end: 0),
+                          
+                          const SizedBox(height: 16),
+
+                          // Remember Me & Forgot Password
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Checkbox(
+                                    value: _rememberMe,
+                                    onChanged: (value) {
+                                      setState(() => _rememberMe = value ?? false);
+                                    },
+                                    activeColor: AppTheme.primaryColor,
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                                  ),
+                                  Text('تذكرني', style: GoogleFonts.cairo(fontSize: 14)),
+                                ],
+                              ),
+                              TextButton(
+                                onPressed: _showForgotPasswordDialog,
+                                style: TextButton.styleFrom(
+                                  foregroundColor: AppTheme.primaryColor,
+                                  textStyle: GoogleFonts.cairo(fontSize: 14, fontWeight: FontWeight.w600),
+                                ),
+                                child: const Text('نسيت كلمة المرور؟'),
+                              ),
+                            ],
+                          ).animate().fadeIn(delay: 600.ms),
+                          
+                          const SizedBox(height: 24),
+
+                          // Login Button
+                          Container(
+                            height: 56,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              gradient: const LinearGradient(
+                                colors: [AppTheme.primaryColor, Color(0xFF2A5298)], // Assuming primary is blueish
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppTheme.primaryColor.withOpacity(0.3),
+                                  blurRadius: 20,
+                                  offset: const Offset(0, 8),
+                                ),
+                              ],
+                            ),
+                            child: ElevatedButton(
+                              onPressed: _isLoading ? null : _handleLogin,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.transparent,
+                                shadowColor: Colors.transparent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                              ),
+                              child: _isLoading
+                                  ? const SizedBox(
+                                      height: 24,
+                                      width: 24,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                      ),
+                                    )
+                                  : Text(
+                                      'تسجيل الدخول',
+                                      style: GoogleFonts.cairo(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                        letterSpacing: 0.5,
+                                      ),
+                                    ),
+                            ),
+                          ).animate().fadeIn(delay: 700.ms).slideY(begin: 0.2, end: 0),
+                          
+                          const SizedBox(height: 24),
+
+                          // Social Sign-In (Google & Apple)
                           Row(
                             children: [
-                              Checkbox(
-                                value: _rememberMe,
-                                onChanged: (value) {
-                                  setState(() => _rememberMe = value ?? false);
-                                },
-                                activeColor: AppTheme.primaryColor,
-                              ),
-                              const Text('تذكرني'),
-                            ],
-                          ),
-                          TextButton(
-                            onPressed: _showForgotPasswordDialog,
-                            child: const Text('نسيت كلمة المرور؟'),
-                          ),
-                        ],
-                      ).animate().fadeIn(delay: 600.ms),
-                      
-                      const SizedBox(height: 24),
-
-                      // Login Button
-                      SizedBox(
-                        height: 56,
-                        child: ElevatedButton(
-                          onPressed: _isLoading ? null : _handleLogin,
-                          child: _isLoading
-                              ? const SizedBox(
-                                  height: 24,
-                                  width: 24,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                                  ),
-                                )
-                              : const Text(
-                                  'تسجيل الدخول',
-                                  style: TextStyle(
-                                    fontSize: 18, // Slightly larger
-                                    fontWeight: FontWeight.w800, // Extra bold
-                                    letterSpacing: 0.5,
-                                  ),
-                                ),
-                        ),
-                      ).animate().fadeIn(delay: 700.ms).scale(),
-                      
-                      const SizedBox(height: 16),
-
-                      // Social Sign-In (Google & Apple)
-                      Row(
-                        children: [
-                          const Expanded(child: Divider()),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Text(
-                              'أو تسجيل الدخول عبر',
-                              style: TextStyle(color: Theme.of(context).disabledColor),
-                            ),
-                          ),
-                          const Expanded(child: Divider()),
-                        ],
-                      ).animate().fadeIn(delay: 800.ms),
-                      
-                      const SizedBox(height: 16),
-
-                      Row(
-                        children: [
-                          Expanded(
-                            child: OutlinedButton.icon(
-                              onPressed: _isLoading ? null : _handleGoogleSignIn,
-                              icon: const Icon(Icons.g_mobiledata, size: 28, color: Colors.red),
-                              label: const Text('Google'),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: OutlinedButton.icon(
-                              onPressed: _isLoading ? null : _handleAppleSignIn,
-                              icon: const Icon(Icons.apple, size: 24),
-                              label: const Text('Apple'),
-                            ),
-                          ),
-                        ],
-                      ).animate().fadeIn(delay: 900.ms).scale(),
-                      
-                      const SizedBox(height: 20),
-
-                      // Quick Demo Access (مطابق لمشروع Fixy Web App)
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: AppTheme.primaryColor.withValues(alpha: 0.05),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: AppTheme.primaryColor.withValues(alpha: 0.15),
-                          ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.flash_on, size: 18, color: Colors.amber),
-                                SizedBox(width: 6),
-                                Text(
-                                  'دخول تجريبي سريع (Demo Accounts)',
-                                  style: TextStyle(
+                              Expanded(child: Divider(color: Colors.grey.shade200)),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                child: Text(
+                                  'أو الدخول عبر',
+                                  style: GoogleFonts.cairo(
+                                    color: Colors.grey.shade500,
                                     fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppTheme.primaryColor,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: OutlinedButton(
-                                    style: OutlinedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(vertical: 8),
-                                      textStyle: const TextStyle(fontSize: 12),
-                                    ),
-                                    onPressed: _isLoading ? null : () => _handleDemoLogin('client'),
-                                    child: const Text('عميل'),
-                                  ),
-                                ),
-                                const SizedBox(width: 6),
-                                Expanded(
-                                  child: OutlinedButton(
-                                    style: OutlinedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(vertical: 8),
-                                      textStyle: const TextStyle(fontSize: 12),
-                                    ),
-                                    onPressed: _isLoading ? null : () => _handleDemoLogin('tech'),
-                                    child: const Text('فني'),
-                                  ),
-                                ),
-                                const SizedBox(width: 6),
-                                Expanded(
-                                  child: OutlinedButton(
-                                    style: OutlinedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(vertical: 8),
-                                      textStyle: const TextStyle(fontSize: 12),
-                                    ),
-                                    onPressed: _isLoading ? null : () => _handleDemoLogin('admin'),
-                                    child: const Text('مدير'),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ).animate().fadeIn(delay: 950.ms),
+                              ),
+                              Expanded(child: Divider(color: Colors.grey.shade200)),
+                            ],
+                          ).animate().fadeIn(delay: 800.ms),
+                          
+                          const SizedBox(height: 24),
 
-                      const SizedBox(height: 24),
-
-                      // Register Link
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, AppRoutes.register);
-                        },
-                        child: RichText(
-                          text: TextSpan(
-                            style: TextStyle(
-                              color: Theme.of(context).textTheme.bodyMedium?.color,
-                              fontFamily: 'Cairo', // Ensure font consistency
-                              fontSize: 14,
-                            ),
-                            children: const [
-                              TextSpan(text: 'ليس لديك حساب؟ '),
-                              TextSpan(
-                                text: 'سجل الآن',
-                                style: TextStyle(
-                                  color: AppTheme.primaryColor,
-                                  fontWeight: FontWeight.bold,
+                          Row(
+                            children: [
+                              Expanded(
+                                child: OutlinedButton.icon(
+                                  onPressed: _isLoading ? null : _handleGoogleSignIn,
+                                  style: OutlinedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(vertical: 14),
+                                    side: BorderSide(color: Colors.grey.shade200),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                  ),
+                                  icon: const Icon(LucideIcons.chrome, size: 20, color: Colors.red),
+                                  label: Text('Google', style: GoogleFonts.inter(color: Colors.black87, fontWeight: FontWeight.w600)),
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: OutlinedButton.icon(
+                                  onPressed: _isLoading ? null : _handleAppleSignIn,
+                                  style: OutlinedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(vertical: 14),
+                                    side: BorderSide(color: Colors.grey.shade200),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                  ),
+                                  icon: const Icon(LucideIcons.apple, size: 20, color: Colors.black),
+                                  label: Text('Apple', style: GoogleFonts.inter(color: Colors.black87, fontWeight: FontWeight.w600)),
                                 ),
                               ),
                             ],
-                          ),
-                        ),
-                      ).animate().fadeIn(delay: 1000.ms),
-                    ],
+                          ).animate().fadeIn(delay: 900.ms).scale(begin: const Offset(0.95, 0.95)),
+                          
+                          const SizedBox(height: 32),
+
+                          // Quick Demo Access
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: AppTheme.primaryColor.withOpacity(0.03),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: AppTheme.primaryColor.withOpacity(0.1),
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(LucideIcons.zap, size: 16, color: Colors.orange),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      'دخول تجريبي سريع',
+                                      style: GoogleFonts.cairo(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppTheme.primaryColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 12),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          elevation: 0,
+                                          backgroundColor: Colors.white,
+                                          foregroundColor: AppTheme.primaryColor,
+                                          padding: const EdgeInsets.symmetric(vertical: 10),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(12),
+                                            side: BorderSide(color: AppTheme.primaryColor.withOpacity(0.2)),
+                                          ),
+                                        ),
+                                        onPressed: _isLoading ? null : () => _handleDemoLogin('client'),
+                                        child: Text('عميل', style: GoogleFonts.cairo(fontWeight: FontWeight.w600)),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          elevation: 0,
+                                          backgroundColor: Colors.white,
+                                          foregroundColor: AppTheme.primaryColor,
+                                          padding: const EdgeInsets.symmetric(vertical: 10),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(12),
+                                            side: BorderSide(color: AppTheme.primaryColor.withOpacity(0.2)),
+                                          ),
+                                        ),
+                                        onPressed: _isLoading ? null : () => _handleDemoLogin('tech'),
+                                        child: Text('فني', style: GoogleFonts.cairo(fontWeight: FontWeight.w600)),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          elevation: 0,
+                                          backgroundColor: Colors.white,
+                                          foregroundColor: AppTheme.primaryColor,
+                                          padding: const EdgeInsets.symmetric(vertical: 10),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(12),
+                                            side: BorderSide(color: AppTheme.primaryColor.withOpacity(0.2)),
+                                          ),
+                                        ),
+                                        onPressed: _isLoading ? null : () => _handleDemoLogin('admin'),
+                                        child: Text('مدير', style: GoogleFonts.cairo(fontWeight: FontWeight.w600)),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ).animate().fadeIn(delay: 1000.ms),
+
+                          const SizedBox(height: 16),
+
+                          // Register Link
+                          Center(
+                            child: TextButton(
+                              onPressed: () {
+                                Navigator.pushNamed(context, AppRoutes.register);
+                              },
+                              style: TextButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                              ),
+                              child: RichText(
+                                text: TextSpan(
+                                  style: GoogleFonts.cairo(
+                                    color: Colors.grey.shade600,
+                                    fontSize: 15,
+                                  ),
+                                  children: [
+                                    const TextSpan(text: 'ليس لديك حساب؟ '),
+                                    TextSpan(
+                                      text: 'سجل الآن',
+                                      style: GoogleFonts.cairo(
+                                        color: AppTheme.primaryColor,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ).animate().fadeIn(delay: 1100.ms),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),

@@ -3,10 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   // Brand Colors
-  static const Color primaryColor = Color(0xFF0056D2);
-  static const Color primaryLight = Color(0xFF3B82F6);
-  static const Color secondaryColor = Color(0xFF0EA5E9);
-  static const Color accentColor = Color(0xFFF59E0B);
+  static const Color primaryColor = Color(0xFF1E3A8A); // Deep Trust Blue (Concept A)
+  static const Color primaryLight = Color(0xFF3B82F6); // Electric Blue (Concept B)
+  static const Color secondaryColor = Color(0xFFFF6B00); // Vibrant Orange (Concept B)
+  static const Color accentColor = Color(0xFFFF6B00);
   
   // Status Colors
   static const Color successColor = Color(0xFF10B981);

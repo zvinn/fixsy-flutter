@@ -55,6 +55,7 @@ backend/dist/
 # Temporary verification logs
 *.txt
 .snapshots/
+emulator_screenshot*.png
 
 
 **/__pycache__/

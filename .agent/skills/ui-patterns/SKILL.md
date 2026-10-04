@@ -16,6 +16,31 @@ This skill defines the visual and interaction standards for the Fixsy Flutter ap
 - When adding animations or transitions.
 - When handling form validation and input.
 
+## Premium UI & Aesthetics (CRITICAL)
+
+To ensure Fixsy feels like a high-end, premium application, strictly adhere to these aesthetic rules:
+
+### 1. Glassmorphism & Blurs
+- Use `BackdropFilter` with `ImageFilter.blur(sigmaX: 10, sigmaY: 10)` for floating elements, bottom nav bars, and dialogs.
+- Combine with a semi-transparent background color (e.g., `Colors.white.withOpacity(0.1)` or `0.8` depending on dark/light mode) and a subtle border.
+
+### 2. Smooth Gradients
+- Avoid flat, harsh colors for primary backgrounds or large prominent buttons.
+- Use `LinearGradient` or `RadialGradient`.
+- Example: `LinearGradient(colors: [Color(0xFF4A00E0), Color(0xFF8E2DE2)], begin: Alignment.topLeft, end: Alignment.bottomRight)`
+
+### 3. Soft Shadows (Neumorphic touch)
+- Buttons and cards should have soft, dispersed shadows instead of harsh drop shadows.
+- Example: `BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 20, offset: Offset(0, 10))`
+
+### 4. Spacing & Border Radius
+- Use generous padding (`24.0` or `32.0` around main content blocks).
+- Use smooth, rounded corners for cards and buttons (e.g., `BorderRadius.circular(16)` or `BorderRadius.circular(24)`).
+
+### 5. Typography & Icons
+- Always use modern fonts from `google_fonts` (e.g., `GoogleFonts.inter()` or `GoogleFonts.outfit()`).
+- Use modern, lightweight icons from `lucide_icons`.
+
 ## RTL Support (Mandatory — Constitution §IX)
 
 ### ✅ Use directional-aware properties:

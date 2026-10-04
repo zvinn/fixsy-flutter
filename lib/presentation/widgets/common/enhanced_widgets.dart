@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
 
-/// Minimal Service Card - Clean design without gradients
-class EnhancedServiceCard extends StatelessWidget { // Kept for compatibility but ignored
-
+class EnhancedServiceCard extends StatelessWidget {
   const EnhancedServiceCard({
     required this.icon, required this.title, required this.subtitle, required this.onTap, super.key,
     this.gradientColors,
@@ -16,13 +14,34 @@ class EnhancedServiceCard extends StatelessWidget { // Kept for compatibility bu
 
   @override
   Widget build(BuildContext context) {
+    final hasGradient = gradientColors != null && gradientColors!.isNotEmpty;
     return GestureDetector(
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: AppTheme.surfaceColor,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppTheme.borderColor, width: 1),
+          color: hasGradient ? null : AppTheme.surfaceColor,
+          gradient: hasGradient 
+              ? LinearGradient(
+                  colors: gradientColors!,
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                )
+              : null,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: hasGradient ? [
+            BoxShadow(
+              color: gradientColors!.first.withOpacity(0.3),
+              blurRadius: 15,
+              offset: const Offset(0, 8),
+            )
+          ] : [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            )
+          ],
+          border: hasGradient ? null : Border.all(color: AppTheme.borderColor, width: 1),
         ),
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -30,33 +49,36 @@ class EnhancedServiceCard extends StatelessWidget { // Kept for compatibility bu
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Simple Icon - no background
-              Icon(
-                icon,
-                size: 32,
-                color: AppTheme.primaryColor,
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(hasGradient ? 0.2 : 1.0),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  icon,
+                  size: 28,
+                  color: hasGradient ? Colors.white : AppTheme.primaryColor,
+                ),
               ),
-              
               const Spacer(),
-              
-              // Text Content
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: AppTheme.textPrimaryColor,
+                      fontWeight: FontWeight.bold,
+                      color: hasGradient ? Colors.white : AppTheme.textPrimaryColor,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     subtitle,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
-                      color: AppTheme.textSecondaryColor,
+                      color: hasGradient ? Colors.white.withOpacity(0.8) : AppTheme.textSecondaryColor,
                     ),
                   ),
                 ],

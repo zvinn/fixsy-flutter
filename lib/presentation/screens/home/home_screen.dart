@@ -195,16 +195,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   child: Container(
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
-                        colors: [Color(0xFF1E3A8A), Color(0xFF2563EB), Color(0xFF3B82F6)],
+                        colors: [AppTheme.primaryColor, AppTheme.primaryLight],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
-                      borderRadius: BorderRadius.circular(18),
+                      borderRadius: BorderRadius.circular(24),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFF2563EB).withValues(alpha: 0.25),
-                          blurRadius: 16,
-                          offset: const Offset(0, 6),
+                          color: AppTheme.primaryLight.withOpacity(0.3),
+                          blurRadius: 20,
+                          offset: const Offset(0, 8),
                         ),
                       ],
                     ),
@@ -320,7 +320,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         icon: Icons.plumbing,
                         title: context.t('plumbing'),
                         subtitle: context.t('available24_7'),
-                        gradientColors: const [Color(0xFF3B82F6), Color(0xFF2563EB)],
+                        gradientColors: const [AppTheme.primaryLight, AppTheme.primaryColor],
                         onTap: () => _navigateToService('plumbing'),
                       ).animate().scale(delay: 300.ms, duration: 400.ms).fadeIn(),
                       
@@ -328,7 +328,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         icon: Icons.electrical_services,
                         title: context.t('electrical'),
                         subtitle: context.t('fastService'),
-                        gradientColors: const [Color(0xFFF59E0B), Color(0xFFEF4444)],
+                        gradientColors: const [AppTheme.secondaryColor, Color(0xFFE65100)],
                         onTap: () => _navigateToService('electrical'),
                       ).animate().scale(delay: 400.ms, duration: 400.ms).fadeIn(),
                       
@@ -336,7 +336,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         icon: Icons.carpenter,
                         title: context.t('carpentry'),
                         subtitle: context.t('highQuality'),
-                        gradientColors: const [Color(0xFF8B5CF6), Color(0xFF7C3AED)],
+                        gradientColors: const [Color(0xFF8B5CF6), Color(0xFF5B21B6)],
                         onTap: () => _navigateToService('carpentry'),
                       ).animate().scale(delay: 500.ms, duration: 400.ms).fadeIn(),
                       
@@ -405,7 +405,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         title: 'برنامج الولاء',
                         subtitle: 'نقاط ومكافآت',
                         icon: Icons.stars,
-                        color: Colors.blue,
+                        color: AppTheme.primaryLight,
                         onTap: () => Navigator.pushNamed(context, '/loyalty'),
                       ),
                     ],
@@ -518,9 +518,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         width: 140,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: color.withOpacity(0.2)),
+          color: color.withOpacity(0.08),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: color.withOpacity(0.15)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
