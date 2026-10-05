@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/ui_helpers.dart';
 import '../../../data/repositories/user_repository.dart';
@@ -259,46 +261,71 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               // User Avatar and Header Card
               Container(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(22),
                 decoration: BoxDecoration(
                   color: isDark ? const Color(0xFF1E293B) : Colors.white,
                   borderRadius: BorderRadius.circular(24),
-                  boxShadow: isDark
-                      ? null
-                      : [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.04),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
+                  border: Border.all(color: isDark ? Colors.white12 : const Color(0xFFE2E8F0)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF0F172A).withOpacity(0.04),
+                      blurRadius: 18,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
                 ),
                 child: Column(
                   children: [
                     Center(
                       child: Stack(
                         children: [
-                          CircleAvatar(
-                            radius: 46,
-                            backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.12),
-                            backgroundImage: photoUrl != null
-                                ? CachedNetworkImageProvider(photoUrl)
-                                : null,
-                            child: photoUrl == null
-                                ? const Icon(Icons.person, size: 48, color: AppTheme.primaryColor)
-                                : null,
+                          Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: LinearGradient(
+                                colors: [
+                                  AppTheme.primaryColor.withOpacity(0.8),
+                                  AppTheme.primaryLight,
+                                ],
+                              ),
+                            ),
+                            child: CircleAvatar(
+                              radius: 46,
+                              backgroundColor: Colors.white,
+                              child: CircleAvatar(
+                                radius: 43,
+                                backgroundColor: AppTheme.primaryColor.withOpacity(0.08),
+                                backgroundImage: photoUrl != null
+                                    ? CachedNetworkImageProvider(photoUrl)
+                                    : null,
+                                child: photoUrl == null
+                                    ? const Icon(LucideIcons.user, size: 40, color: AppTheme.primaryColor)
+                                    : null,
+                              ),
+                            ),
                           ),
                           Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: CircleAvatar(
-                              backgroundColor: AppTheme.primaryColor,
-                              radius: 16,
-                              child: IconButton(
-                                icon: const Icon(Icons.camera_alt, size: 16),
-                                color: Colors.white,
-                                padding: EdgeInsets.zero,
-                                onPressed: _isLoading ? null : _uploadAvatar,
+                            bottom: 2,
+                            right: 2,
+                            child: InkWell(
+                              onTap: _isLoading ? null : _uploadAvatar,
+                              borderRadius: BorderRadius.circular(16),
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: AppTheme.primaryColor,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: Colors.white, width: 2),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: AppTheme.primaryColor.withOpacity(0.3),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: const Icon(LucideIcons.camera, size: 14, color: Colors.white),
                               ),
                             ),
                           ),
@@ -308,42 +335,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     const SizedBox(height: 14),
                     Text(
                       displayName,
-                      style: TextStyle(
+                      style: GoogleFonts.cairo(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: isDark ? Colors.white : Colors.black87,
+                        color: isDark ? Colors.white : AppTheme.textPrimaryLight,
                       ),
                     ),
-                    const SizedBox(height: 4),
                     Text(
                       email,
-                      style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                      style: GoogleFonts.cairo(
+                        fontSize: 13,
+                        color: AppTheme.textSecondaryLight,
+                      ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 12),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                       decoration: BoxDecoration(
-                        color: role == 'tech' ? Colors.orange.shade50 : Colors.blue.shade50,
+                        color: role == 'tech' ? const Color(0xFFFFF7ED) : const Color(0xFFEFF6FF),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                          color: role == 'tech' ? Colors.orange.shade200 : Colors.blue.shade200,
+                          color: role == 'tech' ? const Color(0xFFFED7AA) : const Color(0xFFBFDBFE),
                         ),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            role == 'tech' ? Icons.engineering : Icons.verified_user_rounded,
+                            role == 'tech' ? LucideIcons.wrench : LucideIcons.shieldCheck,
                             size: 14,
-                            color: role == 'tech' ? Colors.orange.shade800 : Colors.blue.shade800,
+                            color: role == 'tech' ? const Color(0xFFC2410C) : const Color(0xFF1D4ED8),
                           ),
-                          const SizedBox(width: 4),
+                          const SizedBox(width: 6),
                           Text(
-                            role == 'tech' ? 'فني صيانة معتمد' : 'عميل معتمد لدى Fixsy',
-                            style: TextStyle(
-                              fontSize: 11,
+                            role == 'tech' ? 'فني صيانة معتمد' : 'عميل موثق لدى Fixsy ✨',
+                            style: GoogleFonts.cairo(
+                              fontSize: 12,
                               fontWeight: FontWeight.bold,
-                              color: role == 'tech' ? Colors.orange.shade900 : Colors.blue.shade900,
+                              color: role == 'tech' ? const Color(0xFFC2410C) : const Color(0xFF1D4ED8),
                             ),
                           ),
                         ],
@@ -357,19 +386,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               // Gamification & Loyalty VIP Card
               Container(
-                padding: const EdgeInsets.all(18),
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
                     colors: [Color(0xFFD97706), Color(0xFFF59E0B)],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(22),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFFD97706).withValues(alpha: 0.3),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
+                      color: const Color(0xFFD97706).withOpacity(0.3),
+                      blurRadius: 16,
+                      offset: const Offset(0, 6),
                     ),
                   ],
                 ),
@@ -378,10 +407,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
+                        color: Colors.white.withOpacity(0.2),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.workspace_premium_rounded, color: Colors.white, size: 28),
+                      child: const Icon(LucideIcons.award, color: Colors.white, size: 28),
                     ),
                     const SizedBox(width: 14),
                     Expanded(
@@ -390,25 +419,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         children: [
                           Text(
                             loyaltyTier,
-                            style: const TextStyle(
+                            style: GoogleFonts.cairo(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
-                              fontSize: 15,
+                              fontSize: 14,
                             ),
                           ),
-                          const SizedBox(height: 2),
                           Text(
                             '$loyaltyPoints نقطة Fixsy مكافآت',
-                            style: const TextStyle(
+                            style: GoogleFonts.cairo(
                               color: Colors.white,
                               fontWeight: FontWeight.w900,
                               fontSize: 18,
+                              height: 1.2,
                             ),
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            'استبدل نقاطك بخصم على طلبات الصيانة القادمة',
-                            style: TextStyle(color: Colors.white.withValues(alpha: 0.9), fontSize: 11),
+                            'استبدل نقاطك بخصم مباشر على طلبات الصيانة القادمة',
+                            style: GoogleFonts.cairo(
+                              color: Colors.white.withOpacity(0.9),
+                              fontSize: 11,
+                            ),
                           ),
                         ],
                       ),

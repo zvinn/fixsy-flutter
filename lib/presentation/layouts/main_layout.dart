@@ -73,26 +73,36 @@ class _MainLayoutState extends State<MainLayout> {
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Colors.white,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          border: Border(
+            top: BorderSide(color: Colors.grey.withOpacity(0.12), width: 1),
+          ),
           boxShadow: [
             BoxShadow(
               blurRadius: 20,
-              color: Colors.black.withOpacity(.1),
+              offset: const Offset(0, -4),
+              color: const Color(0xFF0F172A).withOpacity(0.06),
             )
           ],
         ),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
             child: GNav(
-              rippleColor: Colors.grey[300]!,
-              hoverColor: Colors.grey[100]!,
+              rippleColor: AppTheme.primaryLight.withOpacity(0.1),
+              hoverColor: const Color(0xFFF1F5F9),
               gap: 8,
               activeColor: AppTheme.primaryColor,
-              iconSize: 24,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              duration: const Duration(milliseconds: 400),
-              tabBackgroundColor: AppTheme.primaryColor.withOpacity(0.1),
-              color: Colors.grey[600],
+              iconSize: 22,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              duration: const Duration(milliseconds: 350),
+              tabBackgroundColor: AppTheme.primaryLight.withOpacity(0.12),
+              color: const Color(0xFF64748B),
+              textStyle: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+                color: AppTheme.primaryColor,
+              ),
               tabs: isTechnician 
                   ? _buildTechnicianTabs() 
                   : _buildClientTabs(),
