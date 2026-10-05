@@ -338,30 +338,71 @@ class _LoginScreenState extends State<LoginScreen> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           // Logo & Header
-                          const SizedBox(height: 8),
-                          Text(
-                            'Fixsy',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.outfit(
-                              fontSize: 56,
-                              fontWeight: FontWeight.w900,
-                              color: AppTheme.primaryColor,
-                              letterSpacing: -1.5,
+                          Center(
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                // Ambient soft glow ring
+                                Container(
+                                  width: 110,
+                                  height: 110,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppTheme.primaryLight.withOpacity(0.08),
+                                  ),
+                                ),
+                                // Floating Logo Card
+                                Container(
+                                  width: 95,
+                                  height: 95,
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(24),
+                                    border: Border.all(
+                                      color: const Color(0xFFE2E8F0),
+                                      width: 1.2,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: const Color(0xFF1E3A8A).withOpacity(0.08),
+                                        blurRadius: 20,
+                                        offset: const Offset(0, 6),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Image.asset(
+                                    'assets/images/logo.png',
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ).animate().fadeIn(duration: 600.ms, curve: Curves.easeOutQuad).slideY(begin: -0.2, end: 0),
+                          ).animate().scale(duration: 500.ms, curve: Curves.easeOutBack).fadeIn(duration: 400.ms),
                           
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 14),
+                          Text(
+                            'Fixsy • فيكسي',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.cairo(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.textPrimaryLight,
+                            ),
+                          ).animate().fadeIn(delay: 150.ms, duration: 400.ms).slideY(begin: 0.1, end: 0),
+                          
+                          const SizedBox(height: 4),
                           Text(
                             'منصة صيانة المنازل المتكاملة',
                             textAlign: TextAlign.center,
                             style: GoogleFonts.cairo(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: AppTheme.textPrimaryLight.withOpacity(0.6),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: AppTheme.textSecondaryLight,
                             ),
-                          ).animate().fadeIn(delay: 200.ms, duration: 600.ms).slideY(begin: -0.2, end: 0),
+                          ).animate().fadeIn(delay: 250.ms, duration: 400.ms).slideY(begin: 0.1, end: 0),
                           
-                          const SizedBox(height: 48),
+                          const SizedBox(height: 36),
 
                           // Email Field
                           TextFormField(
